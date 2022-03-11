@@ -548,7 +548,7 @@ These CLI scripts are used for development and
 
 To install development dependencies (primarily [Puppeteer](https://pptr.dev)):
 
-```
+```sh
 ./scripts/install.sh
 ```
 
@@ -556,7 +556,7 @@ To install development dependencies (primarily [Puppeteer](https://pptr.dev)):
 
 Beforehand, run the install script. To run the tests:
 
-```
+```sh
 ./scripts/test.sh
 ```
 
@@ -565,7 +565,7 @@ Beforehand, run the install script. To run the tests:
 To serve the Ruck project files for testing in other local projects (argument 1
 is the localhost port for the HTTP server to listen on):
 
-```
+```sh
 ./scripts/serve.sh 3001
 ```
 
@@ -573,7 +573,7 @@ is the localhost port for the HTTP server to listen on):
 
 To format the project:
 
-```
+```sh
 deno fmt
 ```
 
@@ -581,6 +581,6 @@ deno fmt
 
 To lint the project:
 
-```
+```sh
 deno lint
 ```
