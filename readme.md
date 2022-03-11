@@ -155,38 +155,39 @@ A Ruck project contains:
   #!/bin/sh
   # Serves the Ruck app.
 
-  # Check for missing environment variables.
-  {
-    for envVarName in RUCK_DEV RUCK_PORT
-    do
-      if [ -z "${!envVarName}" ]
-      then
-        echo "Missing environment variable \`$envVarName\`." >&2
-        exit 1
-      fi
-    done
-  } &&
-
-  # Serve the Ruck app.
-  {
-    if [ "$RUCK_DEV" = "true" ]
+  # Asserts an environment variable is set.
+  # Argument 1: Name.
+  # Argument 2: Value.
+  assertEnvVar() {
+    if [ -z "$2" ]
     then
-      deno run \
-        --allow-env \
-        --allow-net \
-        --allow-read \
-        --import-map=importMap.server.dev.json \
-        --watch=. \
-        scripts/serve.mjs
-    else
-      deno run \
-        --allow-env \
-        --allow-net \
-        --allow-read \
-        --import-map=importMap.server.json \
-        scripts/serve.mjs
+      echo "Missing environment variable \`$1\`." >&2
+      exit 1
     fi
   }
+
+  # Assert environment variables are set.
+  assertEnvVar RUCK_DEV $RUCK_DEV
+  assertEnvVar RUCK_PORT $RUCK_PORT
+
+  # Serve the Ruck app.
+  if [ "$RUCK_DEV" = "true" ]
+  then
+    deno run \
+      --allow-env \
+      --allow-net \
+      --allow-read \
+      --import-map=importMap.server.dev.json \
+      --watch=. \
+      scripts/serve.mjs
+  else
+    deno run \
+      --allow-env \
+      --allow-net \
+      --allow-read \
+      --import-map=importMap.server.json \
+      scripts/serve.mjs
+  fi
   ```
 
   First, ensure it’s executable:
