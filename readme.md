@@ -70,7 +70,7 @@ A Ruck project contains:
         "react": "https://esm.sh/react@17.0.2?dev",
         "react-dom/server": "https://esm.sh/react-dom@17.0.2/server?dev",
         "react-waterfall-render/": "https://unpkg.com/react-waterfall-render@4.0.0/",
-        "ruck/": "https://deno.land/ruck@v1.0.0/",
+        "ruck/": "https://deno.land/x/ruck@v1.0.0/",
         "std/": "https://deno.land/std@0.129.0/"
       }
     }
@@ -85,7 +85,7 @@ A Ruck project contains:
         "react": "https://esm.sh/react@17.0.2",
         "react-dom/server": "https://esm.sh/react-dom@17.0.2/server",
         "react-waterfall-render/": "https://unpkg.com/react-waterfall-render@4.0.0/",
-        "ruck/": "https://deno.land/ruck@v1.0.0/",
+        "ruck/": "https://deno.land/x/ruck@v1.0.0/",
         "std/": "https://deno.land/std@0.129.0/"
       }
     }
@@ -99,7 +99,7 @@ A Ruck project contains:
         "react": "https://cdn.esm.sh/v67/react@17.0.2/es2021/react.development.js",
         "react-dom": "https://cdn.esm.sh/v67/react-dom@17.0.2/es2021/react-dom.development.js",
         "react-waterfall-render/": "https://unpkg.com/react-waterfall-render@4.0.0/",
-        "ruck/": "https://deno.land/ruck@v1.0.0/"
+        "ruck/": "https://deno.land/x/ruck@v1.0.0/"
       }
     }
     ```
@@ -112,7 +112,7 @@ A Ruck project contains:
         "react": "https://cdn.esm.sh/v67/react@17.0.2/es2021/react.js",
         "react-dom": "https://cdn.esm.sh/v67/react-dom@17.0.2/es2021/react-dom.js",
         "react-waterfall-render/": "https://unpkg.com/react-waterfall-render@4.0.0/",
-        "ruck/": "https://deno.land/ruck@v1.0.0/"
+        "ruck/": "https://deno.land/x/ruck@v1.0.0/"
       }
     }
     ```
