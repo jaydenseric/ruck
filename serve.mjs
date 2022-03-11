@@ -1,0 +1,322 @@
+// @ts-check
+
+import Cache from "graphql-react/Cache.mjs";
+import CacheContext from "graphql-react/CacheContext.mjs";
+import Loading from "graphql-react/Loading.mjs";
+import LoadingContext from "graphql-react/LoadingContext.mjs";
+import { createElement as h, Fragment } from "react";
+import { renderToString } from "react-dom/server";
+import waterfallRender from "react-waterfall-render/waterfallRender.mjs";
+import { Status, STATUS_TEXT } from "std/http/http_status.ts";
+import { serve as serveHttp } from "std/http/server.ts";
+import { toFileUrl } from "std/path/mod.ts";
+
+import HeadManager from "./HeadManager.mjs";
+import HeadManagerContext from "./HeadManagerContext.mjs";
+import Html from "./Html.mjs";
+import publicFileResponse from "./publicFileResponse.mjs";
+import readImportMapFile from "./readImportMapFile.mjs";
+import RouteContext from "./RouteContext.mjs";
+import TransferContext from "./TransferContext.mjs";
+
+/**
+ * Serves a Ruck app.
+ * @param {object} options Options.
+ * @param {URL} options.clientImportMap Client import map JSON file URL.
+ * @param {string} [options.esModuleShimsSrc]
+ *   [`es-module-shims`](https://github.com/guybedford/es-module-shims) script
+ *   `src` URL. Defaults to `"https://unpkg.com/es-module-shims"`.
+ * @param {URL} [options.publicDir] Public directory file URL. Defaults to a
+ *   `public` directory in the CWD.
+ * @param {HtmlComponent} [options.htmlComponent] React component that renders
+ *   the HTML for Ruck app page responses. Defaults to {@linkcode Html}.
+ * @param {number} options.port Port to serve on.
+ * @param {AbortSignal} [options.signal] Abort controller signal to close the
+ *   server.
+ * @returns {Promise<{ close: Promise<void> }>} Resolves once the server is
+ *   listening a `close` promise that resolves once the server closes.
+ */
+export default async function serve({
+  clientImportMap,
+  esModuleShimsSrc = "https://unpkg.com/es-module-shims",
+  publicDir = new URL("public/", toFileUrl(Deno.cwd() + "/")),
+  htmlComponent = Html,
+  port,
+  signal,
+}) {
+  if (!(clientImportMap instanceof URL)) {
+    throw new TypeError("Option `clientImportMap` must be a `URL` instance.");
+  }
+
+  if (typeof esModuleShimsSrc !== "string") {
+    throw new TypeError("Option `esModuleShimsSrc` must be a string.");
+  }
+
+  if (!(publicDir instanceof URL)) {
+    throw new TypeError("Option `publicDir` must be a `URL` instance.");
+  }
+
+  if (!publicDir.href.endsWith("/")) {
+    throw new TypeError("Option `publicDir` must be a URL ending with `/`.");
+  }
+
+  if (typeof htmlComponent !== "function") {
+    throw new TypeError("Option `htmlComponent` must be a function.");
+  }
+
+  if (typeof port !== "number") {
+    throw new TypeError("Option `port` must be a number.");
+  }
+
+  if (signal !== undefined && !(signal instanceof AbortSignal)) {
+    throw new TypeError("Option `signal` must be an `AbortSignal` instance.");
+  }
+
+  // Todo: Validate and handle predictable client import map issues.
+  const clientImportMapContent = await readImportMapFile(clientImportMap);
+  const routerFileUrl = new URL("router.mjs", publicDir);
+
+  /** @type {Router} */
+  let router;
+
+  try {
+    ({ default: router } = await import(routerFileUrl.href));
+  } catch (cause) {
+    throw new Error(`Error importing \`${routerFileUrl.href}\`.`, { cause });
+  }
+
+  const appFileUrl = new URL("components/App.mjs", publicDir);
+
+  /** @type {AppComponent} */
+  let App;
+
+  try {
+    ({ default: App } = await import(appFileUrl.href));
+  } catch (cause) {
+    throw new Error(`Error importing \`${appFileUrl.href}\`.`, { cause });
+  }
+
+  const close = serveHttp(
+    async (request) => {
+      const requestUrl = new URL(request.url);
+
+      // First, try serving the request as a file from the public directory.
+      // If no such file exists the request is for an app route.
+
+      if (
+        // Public files have a URL pathname; the homepage is an app route.
+        requestUrl.pathname !== "/"
+      ) {
+        try {
+          return await publicFileResponse(request, publicDir);
+        } catch (cause) {
+          if (!(cause instanceof Deno.errors.NotFound)) {
+            throw new Error("Ruck couldn’t serve a public file.", { cause });
+          }
+        }
+      }
+
+      const headManager = new HeadManager();
+
+      /** @type {RouteDetails} */
+      let routeDetails;
+
+      try {
+        routeDetails = router(requestUrl, headManager, true);
+      } catch (cause) {
+        throw new Error(
+          `Ruck couldn’t get the route for URL ${requestUrl.href}.`,
+          { cause },
+        );
+      }
+
+      if (typeof routeDetails !== "object" || !routeDetails) {
+        throw new TypeError(
+          `Ruck route is invalid for URL ${requestUrl.href}.`,
+        );
+      }
+
+      /** @type {import("react").ReactNode} */
+      let routeContent;
+
+      try {
+        routeContent = await routeDetails.content;
+      } catch (cause) {
+        throw new Error(
+          `Ruck couldn’t resolve the route content for URL ${requestUrl.href}.`,
+          { cause },
+        );
+      }
+
+      // Todo: Validate the route content.
+
+      try {
+        const cache = new Cache();
+        const loading = new Loading();
+
+        /** @type {ResponseInit} */
+        const responseInit = {
+          status: Status.OK,
+          statusText: STATUS_TEXT.get(Status.OK),
+          headers: new Headers({
+            "content-type": "text/html; charset=utf-8",
+          }),
+        };
+
+        /** @type {Transfer} */
+        const transfer = { request, responseInit };
+
+        const bodyReactRootInnerHtml = await waterfallRender(
+          h(
+            TransferContext.Provider,
+            { value: transfer },
+            h(
+              RouteContext.Provider,
+              {
+                value: {
+                  url: requestUrl,
+                  content: routeContent,
+                },
+              },
+              h(
+                HeadManagerContext.Provider,
+                { value: headManager },
+                h(
+                  CacheContext.Provider,
+                  { value: cache },
+                  h(LoadingContext.Provider, { value: loading }, h(App)),
+                ),
+              ),
+            ),
+          ),
+          renderToString,
+        );
+
+        const responseBody = `<!DOCTYPE html>
+${
+          renderToString(
+            h(
+              TransferContext.Provider,
+              { value: transfer },
+              h(htmlComponent, {
+                esModuleShimsScript: h("script", {
+                  async: true,
+                  src: esModuleShimsSrc,
+                }),
+                importMapScript: h("script", {
+                  type: "importmap",
+                  dangerouslySetInnerHTML: {
+                    __html: JSON.stringify(clientImportMapContent),
+                  },
+                }),
+                headReactRoot: h(
+                  Fragment,
+                  null,
+                  h("meta", { name: "ruck-head-start" }),
+                  headManager.getHeadContent(),
+                  h("meta", { name: "ruck-head-end" }),
+                ),
+                bodyReactRoot: h("div", {
+                  id: "ruck-app",
+                  dangerouslySetInnerHTML: { __html: bodyReactRootInnerHtml },
+                }),
+                hydrationScript: h("script", {
+                  type: "module",
+                  dangerouslySetInnerHTML: {
+                    __html: /* JS */ `import hydrate from "ruck/hydrate.mjs";
+import App from "/components/App.mjs";
+import router from "/router.mjs";
+
+hydrate({
+  router,
+  appComponent: App,
+  cacheData: ${JSON.stringify(cache.store)},
+});
+`,
+                  },
+                }),
+              }),
+            ),
+          )
+        }`;
+
+        return new Response(responseBody, responseInit);
+      } catch (cause) {
+        throw new Error("Ruck couldn’t serve the rendered route.", { cause });
+      }
+    },
+    { port, signal },
+  );
+
+  return { close };
+}
+
+/**
+ * Isomorphic React component that renders the Ruck React app.
+ * @callback AppComponent
+ * @returns {import("react").ReactElement}
+ */
+
+/**
+ * Server only React component that renders a HTML page for a server side
+ * rendered Ruck app page.
+ * @callback HtmlComponent
+ * @param {HtmlComponentProps} props Props.
+ * @returns {import("react").ReactElement}
+ */
+
+/**
+ * {@linkcode HtmlComponent} React component props.
+ * @typedef {object} HtmlComponentProps
+ * @prop {import("react").ReactElement} esModuleShimsScript
+ *   [`es-module-shims`](https://github.com/guybedford/es-module-shims) script.
+ * @prop {import("react").ReactElement} importMapScript Import map script.
+ *   Should be the first script in the HTML.
+ * @prop {import("react").ReactNode} headReactRoot HTML head React root for Ruck
+ *   managed head tags. Should be early in the HTML head, typically after the
+ *   import map script as it may contain scripts.
+ * @prop {import("react").ReactNode} bodyReactRoot HTML body React root for the
+ *   main Ruck app content.
+ * @prop {import("react").ReactElement} hydrationScript Ruck app hydration
+ *   script. Should be towards the end of the HTML body.
+ */
+
+/**
+ * Ruck response init.
+ * @typedef {object} ResponseInit
+ * @prop {Headers} headers Headers.
+ * @prop {number} status HTTP status code.
+ * @prop {string} [statusText] HTTP status text.
+ */
+
+/**
+ * Ruck app route.
+ * @typedef {object} Route
+ * @prop {URL} url Route URL.
+ * @prop {import("react").ReactNode
+ *   | Promise<import("react").ReactNode>} content Route content.
+ * @prop {() => void} [cleanup] Callback that runs when navigation to this route
+ *   aborts, or after navigation to the next route for a different page. Doesn’t
+ *   run during SSR.
+ */
+
+/**
+ * Ruck app route details.
+ * @typedef {Omit<Route, "url">} RouteDetails
+ */
+
+/**
+ * Isomorphic function that gets the Ruck app route for a URL.
+ * @callback Router
+ * @param {URL} url Ruck app route URL.
+ * @param {import("./HeadManager.mjs").default} headManager Head tag manager.
+ * @param {boolean} isInitialRoute Is it the initial route.
+ * @returns {RouteDetails}
+ */
+
+/**
+ * Ruck app request and response context.
+ * @typedef {object} Transfer
+ * @prop {Readonly<Request>} request Request.
+ * @prop {ResponseInit} responseInit Response initialization options.
+ */

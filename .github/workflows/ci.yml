@@ -1,0 +1,24 @@
+name: CI
+on: [push, pull_request]
+jobs:
+  test:
+    name: Test with ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v2
+      - name: Setup Deno
+        uses: denoland/setup-deno@v1
+        with:
+          deno-version: "^1.0.0"
+      - name: Format check
+        run: deno fmt --check
+      - name: Lint
+        run: deno lint
+      - name: Install
+        run: ./scripts/install.sh
+      - name: Test
+        run: ./scripts/test.sh
