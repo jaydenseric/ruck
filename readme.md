@@ -542,7 +542,7 @@ A Ruck project contains:
 ### Scripts
 
 These CLI scripts are used for development and
-[GitHub Actions CI](./github/workflows/ci.yml) checks.
+[GitHub Actions CI](./.github/workflows/ci.yml) checks.
 
 #### Install
 
