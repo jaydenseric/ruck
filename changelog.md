@@ -4,7 +4,7 @@
 
 ### Patch
 
-- Fixed a relative URL to a project file in the readme.
+- Fixed relative URLs to project files in the readme.
 - Corrected an example shell script in the readme.
 - Removed a redundant image from the `.github` directory.
 

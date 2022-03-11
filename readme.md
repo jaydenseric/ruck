@@ -22,9 +22,9 @@ easy with Ruck, for example…
 - Matching dynamic routes with RegEx or custom logic. Ideally an invalid slug in
   a route URL results in a error page without loading the route’s components or
   data.
-- Components can use the [`TransferContext`](./TransferContext) React context
-  during SSR to read the page HTTP request and modify the response. This is
-  surprisingly difficult with [Next.js](https://nextjs.org), see
+- Components can use the [`TransferContext`](./TransferContext.mjs) React
+  context during SSR to read the page HTTP request and modify the response. This
+  is surprisingly difficult with [Next.js](https://nextjs.org), see
   [`next-server-context`](https://github.com/jaydenseric/next-server-context).
 - Proper React rendering of head tags specified by the
   [`useHead`](./useHead.mjs) React hook. React components with a normal
