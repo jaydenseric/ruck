@@ -345,12 +345,12 @@ A Ruck project contains:
   }
 
   /**
-   * Handles a dynamic import error for a styled route.
+   * Catches a dynamic import error for route content with CSS.
    * @param {Error} cause Import error.
    * @returns {import("ruck/routeDetailsForContentWithCss.mjs").RouteContentWithCss}
    */
   function catchImportContentWithCss(cause) {
-    console.error(new Error("Styled route import rejection.", { cause }));
+    console.error(new Error("Import rejection for route with CSS.", { cause }));
 
     return {
       content: h(PageError, {
