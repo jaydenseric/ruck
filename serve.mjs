@@ -98,14 +98,33 @@ export default async function serve({
 
   const close = serveHttp(
     async (request) => {
-      const requestUrl = new URL(request.url);
+      // The route URL should be what the client originally used to start the
+      // request.
+      const routeUrl = new URL(request.url);
+
+      // Reverse proxy servers (load balancers, CDNs, etc.) may have forwarded
+      // the original client request using a different protocol or host. E.g.
+      // Fly.io forwards `https:` requests to the deployed server using `http:`.
+
+      const headerXForwardedProto = request.headers.get("x-forwarded-proto");
+      if (headerXForwardedProto) {
+        routeUrl.protocol = headerXForwardedProto + ":";
+      }
+
+      const headerXForwardedHost = request.headers.get("x-forwarded-host");
+      if (headerXForwardedHost) {
+        routeUrl.hostname = headerXForwardedHost;
+      }
+
+      // Todo: Investigate supporting the `x-forwarded-port` header.
+      // Todo: Investigate supporting the standard `Forwarded` header.
 
       // First, try serving the request as a file from the public directory.
       // If no such file exists the request is for an app route.
 
       if (
         // Public files have a URL pathname; the homepage is an app route.
-        requestUrl.pathname !== "/"
+        routeUrl.pathname !== "/"
       ) {
         try {
           return await publicFileResponse(request, publicDir);
@@ -122,18 +141,16 @@ export default async function serve({
       let routeDetails;
 
       try {
-        routeDetails = router(requestUrl, headManager, true);
+        routeDetails = router(routeUrl, headManager, true);
       } catch (cause) {
         throw new Error(
-          `Ruck couldn’t get the route for URL ${requestUrl.href}.`,
+          `Ruck couldn’t get the route for URL ${routeUrl.href}.`,
           { cause },
         );
       }
 
       if (typeof routeDetails !== "object" || !routeDetails) {
-        throw new TypeError(
-          `Ruck route is invalid for URL ${requestUrl.href}.`,
-        );
+        throw new TypeError(`Ruck route is invalid for URL ${routeUrl.href}.`);
       }
 
       /** @type {import("react").ReactNode} */
@@ -143,7 +160,7 @@ export default async function serve({
         routeContent = await routeDetails.content;
       } catch (cause) {
         throw new Error(
-          `Ruck couldn’t resolve the route content for URL ${requestUrl.href}.`,
+          `Ruck couldn’t resolve the route content for URL ${routeUrl.href}.`,
           { cause },
         );
       }
@@ -174,7 +191,7 @@ export default async function serve({
               RouteContext.Provider,
               {
                 value: {
-                  url: requestUrl,
+                  url: routeUrl,
                   content: routeContent,
                 },
               },
