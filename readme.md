@@ -465,7 +465,7 @@ A Ruck project contains:
   export default function App() {
     useHead(
       // Head tag fragments render in the document head in key order. A good
-      // convention is to use group and subgroup numbers, followed buy a
+      // convention is to use group and subgroup numbers, followed by a
       // descriptive name.
       "1-1-meta",
       headMetaFragment,
