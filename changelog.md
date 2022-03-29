@@ -29,6 +29,7 @@
 
 - Updated dependencies.
 - Fixed a readme code example comment typo.
+- Improved the readme code example for a Ruck app component.
 
 ## 1.1.0
 

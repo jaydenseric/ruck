@@ -249,7 +249,7 @@ A Ruck project contains:
   unloading of component CSS file dependencies served by Ruck via the public
   directory or CDN. Ruck’s
   [`routePlanForContentWithCss`](./routePlanForContentWithCss.mjs) function can
-  be imported and used to create route details for content with CSS file
+  be imported and used to create route plan for content with CSS file
   dependencies.
 
   Here is an example for a website that has a home page, a `/blog` page that
@@ -415,9 +415,9 @@ A Ruck project contains:
   - [`useCss`](./useCss.mjs) to declare CSS files that apply to the entire app.
   - [`useHead`](./useHead.mjs) to establish head tags that apply to the entire
     app such as `meta[name="viewport"]` and `link[rel="manifest"]`.
-  - [`useRoute`](./useRoute.mjs) to get the current route content, and render it
-    in a persistent layout containing global content such as a header and
-    footer.
+  - [`useRoute`](./useRoute.mjs) to get the current route URL and content, and
+    render it in a persistent layout containing global content such as a header
+    and footer.
 
   Here’s an example `public/components/App.mjs` module for a website with home
   and blog pages:
@@ -425,7 +425,7 @@ A Ruck project contains:
   ```js
   // @ts-check
 
-  import { createElement as h, Fragment } from "react";
+  import { createElement as h, Fragment, useMemo } from "react";
   import useCss from "ruck/useCss.mjs";
   import useHead from "ruck/useHead.mjs";
   import useRoute from "ruck/useRoute.mjs";
@@ -437,38 +437,37 @@ A Ruck project contains:
     "/components/App.css",
   ]);
 
-  // React fragment containing globally applicable head tags. It’s defined
-  // outside the component so it has a stable identity for React hooks.
-  const headMetaFragment = h(
-    Fragment,
-    null,
-    h("meta", {
-      name: "viewport",
-      content: "width=device-width, initial-scale=1",
-    }),
-    h("meta", { name: "theme-color", content: "white" }),
-    h("link", { rel: "icon", href: "/favicon.ico" }),
-    h("link", {
-      rel: "icon",
-      type: "image/svg+xml",
-      sizes: "any",
-      href: "/favicon.svg",
-    }),
-    h("link", { rel: "apple-touch-icon", href: "/apple-touch-icon.png" }),
-    h("link", { rel: "manifest", href: "/manifest.webmanifest" }),
-  );
-
   /**
    * React component for the Ruck app.
    * @type {import("ruck/serve.mjs").AppComponent}
    */
   export default function App() {
+    const route = useRoute();
+
     useHead(
       // Head tag fragments render in the document head in key order. A good
       // convention is to use group and subgroup numbers, followed by a
       // descriptive name.
       "1-1-meta",
-      headMetaFragment,
+      // Must be memoized. If it’s dynamic use the `useMemo` React hook,
+      // otherwise define it outside the component function scope.
+      useMemo(() =>
+        h(
+          Fragment,
+          null,
+          h("meta", {
+            name: "viewport",
+            content: "width=device-width, initial-scale=1",
+          }),
+          h("meta", {
+            name: "og:image",
+            content:
+              // Sometimes an absolute URL is necessary.
+              `${route.url.origin}/social-preview.png`,
+          }),
+          h("link", { rel: "manifest", href: "/manifest.webmanifest" }),
+          // More head tags here…
+        ), [route.url.origin]),
     );
 
     // This loop doesn’t break React hook rules as the list never changes.
@@ -485,7 +484,7 @@ A Ruck project contains:
         h(NavLink, { href: "/blog" }, "Blog"),
       ),
       // Route content…
-      useRoute().content,
+      route.content,
       // Global footer…
       h("footer", { className: "App__footer" }, "Global footer content."),
     );
