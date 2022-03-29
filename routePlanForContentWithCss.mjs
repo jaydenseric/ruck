@@ -13,7 +13,7 @@ import HeadManager from "./HeadManager.mjs";
 import LinkCss from "./LinkCss.mjs";
 
 /**
- * Creates Ruck app route details for route content with CSS dependencies that
+ * Creates a Ruck app route plan for route content with CSS dependencies that
  * must be loaded in the document head before the route content mounts and be
  * removed again when navigation to this route aborts, or after navigation to
  * the next route for a different page.
@@ -22,9 +22,9 @@ import LinkCss from "./LinkCss.mjs";
  *   dependencies.
  * @param {import("./HeadManager.mjs").default} headManager Head tag manager.
  * @param {boolean} isInitialRoute Is it the initial route.
- * @returns {import("./serve.mjs").RouteDetails}
+ * @returns {import("./serve.mjs").RoutePlan}
  */
-export default function routeDetailsForContentWithCss(
+export default function routePlanForContentWithCss(
   routeContentWithCss,
   headManager,
   isInitialRoute,
@@ -56,7 +56,7 @@ export default function routeDetailsForContentWithCss(
       async (resolvedRouteContent) => {
         if (typeof routeContentWithCss !== "object" || !routeContentWithCss) {
           throw new TypeError(
-            "Function `routeDetailsForContentWithCss` argument 1 `routeContentWithCss` must resolve an object.",
+            "Function `routePlanForContentWithCss` argument 1 `routeContentWithCss` must resolve an object.",
           );
         }
 

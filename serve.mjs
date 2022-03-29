@@ -137,27 +137,29 @@ export default async function serve({
 
       const headManager = new HeadManager();
 
-      /** @type {RouteDetails} */
-      let routeDetails;
+      /** @type {RoutePlan} */
+      let routePlan;
 
       try {
-        routeDetails = router(routeUrl, headManager, true);
+        routePlan = router(routeUrl, headManager, true);
       } catch (cause) {
         throw new Error(
-          `Ruck couldn’t get the route for URL ${routeUrl.href}.`,
+          `Ruck couldn’t plan the route for URL ${routeUrl.href}.`,
           { cause },
         );
       }
 
-      if (typeof routeDetails !== "object" || !routeDetails) {
-        throw new TypeError(`Ruck route is invalid for URL ${routeUrl.href}.`);
+      if (typeof routePlan !== "object" || !routePlan) {
+        throw new TypeError(
+          `Ruck route plan is invalid for URL ${routeUrl.href}.`,
+        );
       }
 
       /** @type {import("react").ReactNode} */
       let routeContent;
 
       try {
-        routeContent = await routeDetails.content;
+        routeContent = await routePlan.content;
       } catch (cause) {
         throw new Error(
           `Ruck couldn’t resolve the route content for URL ${routeUrl.href}.`,
@@ -307,9 +309,18 @@ hydrate({
  */
 
 /**
- * Ruck app route.
+ * Ruck app route that has loaded and is ready to render.
  * @typedef {object} Route
  * @prop {URL} url Route URL.
+ * @prop {import("react").ReactNode} content Route content.
+ * @prop {() => void} [cleanup] Callback that runs when navigation to this route
+ *   aborts, or after navigation to the next route for a different page. Doesn’t
+ *   run during SSR.
+ */
+
+/**
+ * Ruck app route plan.
+ * @typedef {object} RoutePlan
  * @prop {import("react").ReactNode
  *   | Promise<import("react").ReactNode>} content Route content.
  * @prop {() => void} [cleanup] Callback that runs when navigation to this route
@@ -318,17 +329,12 @@ hydrate({
  */
 
 /**
- * Ruck app route details.
- * @typedef {Omit<Route, "url">} RouteDetails
- */
-
-/**
  * Isomorphic function that gets the Ruck app route for a URL.
  * @callback Router
  * @param {URL} url Ruck app route URL.
  * @param {import("./HeadManager.mjs").default} headManager Head tag manager.
  * @param {boolean} isInitialRoute Is it the initial route.
- * @returns {RouteDetails}
+ * @returns {RoutePlan}
  */
 
 /**

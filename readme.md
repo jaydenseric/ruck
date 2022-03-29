@@ -248,9 +248,9 @@ A Ruck project contains:
   Ruck provides an (optional) declarative system for automatic loading and
   unloading of component CSS file dependencies served by Ruck via the public
   directory or CDN. Ruck’s
-  [`routeDetailsForContentWithCss`](./routeDetailsForContentWithCss.mjs)
-  function can be imported and used to create route details for content with CSS
-  file dependencies.
+  [`routePlanForContentWithCss`](./routePlanForContentWithCss.mjs) function can
+  be imported and used to create route details for content with CSS file
+  dependencies.
 
   Here is an example for a website that has a home page, a `/blog` page that
   lists blog posts, and a `/blog/post-id-slug-here` page for individual blog
@@ -260,7 +260,7 @@ A Ruck project contains:
   // @ts-check
 
   import { createElement as h } from "react";
-  import routeDetailsForContentWithCss from "ruck/routeDetailsForContentWithCss.mjs";
+  import routePlanForContentWithCss from "ruck/routePlanForContentWithCss.mjs";
 
   // The component used to display a route loading error (e.g. due to an
   // internet dropout) should be imported up front instead of dynamically
@@ -271,12 +271,12 @@ A Ruck project contains:
   } from "./components/PageError.mjs";
 
   /**
-   * Gets the Ruck app route details for a URL.
+   * Gets the Ruck app route plan for a URL.
    * @type {import("ruck/serve.mjs").Router}
    */
   export default function router(url, headManager, isInitialRoute) {
     if (url.pathname === "/") {
-      return routeDetailsForContentWithCss(
+      return routePlanForContentWithCss(
         // Dynamically import route components so they only load when needed.
         import("./components/PageHome.mjs").then(
           ({ default: PageHome, css }) => ({
@@ -292,7 +292,7 @@ A Ruck project contains:
     }
 
     if (url.pathname === "/blog") {
-      return routeDetailsForContentWithCss(
+      return routePlanForContentWithCss(
         import("./components/PageBlog.mjs").then(
           ({ default: PageBlog, css }) => ({
             content: h(PageBlog),
@@ -314,7 +314,7 @@ A Ruck project contains:
     if (matchPagePost?.groups) {
       const { postId } = matchPagePost.groups;
 
-      return routeDetailsForContentWithCss(
+      return routePlanForContentWithCss(
         import("./components/PagePost.mjs").then(
           ({ default: PagePost, css }) => ({
             content: h(PagePost, { postId }),
@@ -327,7 +327,7 @@ A Ruck project contains:
     }
 
     // Fallback to a 404 error page.
-    return routeDetailsForContentWithCss(
+    return routePlanForContentWithCss(
       // If you have a component specifically for a 404 error page, it would be
       // ok to dynamically import it here. In this particular example the
       // component was already imported for the loading error page.
@@ -347,7 +347,7 @@ A Ruck project contains:
   /**
    * Catches a dynamic import error for route content with CSS.
    * @param {Error} cause Import error.
-   * @returns {import("ruck/routeDetailsForContentWithCss.mjs").RouteContentWithCss}
+   * @returns {import("ruck/routePlanForContentWithCss.mjs").RouteContentWithCss}
    */
   function catchImportContentWithCss(cause) {
     console.error(new Error("Import rejection for route with CSS.", { cause }));

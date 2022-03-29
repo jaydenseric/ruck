@@ -3,12 +3,12 @@
 import { assertThrows } from "std/testing/asserts.ts";
 
 import HeadManager from "./HeadManager.mjs";
-import routeDetailsForContentWithCss from "./routeDetailsForContentWithCss.mjs";
+import routePlanForContentWithCss from "./routePlanForContentWithCss.mjs";
 
-Deno.test("`routeDetailsForContentWithCss` with argument 1 `routeContentWithCss` not an object or promise.", () => {
+Deno.test("`routePlanForContentWithCss` with argument 1 `routeContentWithCss` not an object or promise.", () => {
   assertThrows(
     () => {
-      routeDetailsForContentWithCss(
+      routePlanForContentWithCss(
         // @ts-expect-error Testing invalid.
         true,
         new HeadManager(),
@@ -20,10 +20,10 @@ Deno.test("`routeDetailsForContentWithCss` with argument 1 `routeContentWithCss`
   );
 });
 
-Deno.test("`routeDetailsForContentWithCss` with argument 2 `headManager` not a `HeadManager` instance.", () => {
+Deno.test("`routePlanForContentWithCss` with argument 2 `headManager` not a `HeadManager` instance.", () => {
   assertThrows(
     () => {
-      routeDetailsForContentWithCss(
+      routePlanForContentWithCss(
         {
           content: null,
           css: new Set(["/"]),
@@ -38,10 +38,10 @@ Deno.test("`routeDetailsForContentWithCss` with argument 2 `headManager` not a `
   );
 });
 
-Deno.test("`routeDetailsForContentWithCss` with argument 3 `isInitialRoute` not a boolean.", () => {
+Deno.test("`routePlanForContentWithCss` with argument 3 `isInitialRoute` not a boolean.", () => {
   assertThrows(
     () => {
-      routeDetailsForContentWithCss(
+      routePlanForContentWithCss(
         {
           content: null,
           css: new Set(["/"]),
