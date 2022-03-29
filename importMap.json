@@ -2,12 +2,12 @@
   "imports": {
     "free_port/": "https://deno.land/x/free_port@v1.2.0/",
     "graphql-react/": "https://unpkg.com/graphql-react@17.0.0/",
-    "media_types/": "https://deno.land/x/media_types@v2.12.2/",
+    "media_types/": "https://deno.land/x/media_types@v3.0.2/",
     "puppeteer": "https://deno.land/x/puppeteer@9.0.2/mod.ts",
     "react": "https://esm.sh/react@17.0.2",
     "react-dom": "https://esm.sh/react-dom@17.0.2",
     "react-dom/": "https://esm.sh/react-dom@17.0.2/",
     "react-waterfall-render/": "https://unpkg.com/react-waterfall-render@4.0.0/",
-    "std/": "https://deno.land/std@0.129.0/"
+    "std/": "https://deno.land/std@0.132.0/"
   }
 }

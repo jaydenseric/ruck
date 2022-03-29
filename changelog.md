@@ -27,6 +27,7 @@
 
 ### Patch
 
+- Updated dependencies.
 - Fixed a readme code example comment typo.
 
 ## 1.1.0
