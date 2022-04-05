@@ -65,13 +65,13 @@ A Ruck project contains:
     ```json
     {
       "imports": {
-        "graphql-react/": "https://unpkg.com/graphql-react@17.0.0/",
+        "graphql-react/": "https://unpkg.com/graphql-react@18.0.0/",
         "media_types/": "https://deno.land/x/media_types@v3.0.2/",
         "react": "https://esm.sh/react@17.0.2?dev",
         "react-dom/server": "https://esm.sh/react-dom@17.0.2/server?dev",
         "react-waterfall-render/": "https://unpkg.com/react-waterfall-render@4.0.0/",
         "ruck/": "https://deno.land/x/ruck@v2.0.0/",
-        "std/": "https://deno.land/std@0.132.0/"
+        "std/": "https://deno.land/std@0.133.0/"
       }
     }
     ```
@@ -80,13 +80,13 @@ A Ruck project contains:
     ```json
     {
       "imports": {
-        "graphql-react/": "https://unpkg.com/graphql-react@17.0.0/",
+        "graphql-react/": "https://unpkg.com/graphql-react@18.0.0/",
         "media_types/": "https://deno.land/x/media_types@v3.0.2/",
         "react": "https://esm.sh/react@17.0.2",
         "react-dom/server": "https://esm.sh/react-dom@17.0.2/server",
         "react-waterfall-render/": "https://unpkg.com/react-waterfall-render@4.0.0/",
         "ruck/": "https://deno.land/x/ruck@v2.0.0/",
-        "std/": "https://deno.land/std@0.132.0/"
+        "std/": "https://deno.land/std@0.133.0/"
       }
     }
     ```
@@ -95,9 +95,9 @@ A Ruck project contains:
     ```json
     {
       "imports": {
-        "graphql-react/": "https://unpkg.com/graphql-react@17.0.0/",
-        "react": "https://cdn.esm.sh/v74/react@17.0.2/es2021/react.development.js",
-        "react-dom": "https://cdn.esm.sh/v74/react-dom@17.0.2/es2021/react-dom.development.js",
+        "graphql-react/": "https://unpkg.com/graphql-react@18.0.0/",
+        "react": "https://cdn.esm.sh/v76/react@17.0.2/es2021/react.development.js",
+        "react-dom": "https://cdn.esm.sh/v76/react-dom@17.0.2/es2021/react-dom.development.js",
         "react-waterfall-render/": "https://unpkg.com/react-waterfall-render@4.0.0/",
         "ruck/": "https://deno.land/x/ruck@v2.0.0/"
       }
@@ -108,9 +108,9 @@ A Ruck project contains:
     ```json
     {
       "imports": {
-        "graphql-react/": "https://unpkg.com/graphql-react@17.0.0/",
-        "react": "https://cdn.esm.sh/v74/react@17.0.2/es2021/react.js",
-        "react-dom": "https://cdn.esm.sh/v74/react-dom@17.0.2/es2021/react-dom.js",
+        "graphql-react/": "https://unpkg.com/graphql-react@18.0.0/",
+        "react": "https://cdn.esm.sh/v76/react@17.0.2/es2021/react.js",
+        "react-dom": "https://cdn.esm.sh/v76/react-dom@17.0.2/es2021/react-dom.js",
         "react-waterfall-render/": "https://unpkg.com/react-waterfall-render@4.0.0/",
         "ruck/": "https://deno.land/x/ruck@v2.0.0/"
       }

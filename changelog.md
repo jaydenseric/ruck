@@ -10,6 +10,7 @@
 
 ### Patch
 
+- Updated dependencies.
 - Updated `publicFileResponse.mjs`:
   - Prevent directories within a Ruck project public directory from being served
     as if they are files.
