@@ -1,5 +1,15 @@
 # Ruck changelog
 
+## Next
+
+### Patch
+
+- Updated `publicFileResponse.mjs`:
+  - Prevent directories within a Ruck project public directory from being served
+    as if they are files.
+  - Close the open file if there’s an error when preparing a public file
+    response.
+
 ## 2.0.0
 
 ### Major

@@ -73,6 +73,18 @@ Deno.test(
   },
 );
 
+Deno.test("`publicFileResponse` with a directory.", async () => {
+  await assertRejects(
+    () =>
+      publicFileResponse(
+        new Request("http://localhost/directory"),
+        new URL("./test/fixtures/publicFileResponse/public/", import.meta.url),
+      ),
+    Deno.errors.NotFound,
+    "",
+  );
+});
+
 Deno.test("`publicFileResponse` with a missing file.", async () => {
   await assertRejects(
     () =>
@@ -126,7 +138,28 @@ Deno.test("`publicFileResponse` with a JavaScript module.", async () => {
 });
 
 Deno.test(
-  "`publicFileResponse` with a JavaScript module, customized response.",
+  "`publicFileResponse` with a JavaScript module, customized response, error.",
+  async () => {
+    const errorA = new Error("A.");
+
+    try {
+      await publicFileResponse(
+        new Request("http://localhost/A.mjs"),
+        new URL("./test/fixtures/publicFileResponse/public/", import.meta.url),
+        () => {
+          throw errorA;
+        },
+      );
+
+      throw new Error("Expected an error.");
+    } catch (error) {
+      assertStrictEquals(error, errorA);
+    }
+  },
+);
+
+Deno.test(
+  "`publicFileResponse` with a JavaScript module, customized response, no error.",
   async () => {
     const publicDir = new URL(
       "./test/fixtures/publicFileResponse/public/",

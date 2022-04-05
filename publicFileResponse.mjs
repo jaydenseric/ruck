@@ -47,28 +47,41 @@ export default async function publicFileResponse(
   const requestUrl = new URL(request.url);
   const fileUrl = new URL("." + requestUrl.pathname, publicDir);
   const file = await Deno.open(fileUrl);
-  const body = readableStreamFromReader(file);
 
-  /** @type {import("./serve.mjs").ResponseInit} */
-  let responseInit = {
-    status: Status.OK,
-    statusText: STATUS_TEXT.get(Status.OK),
-    headers: new Headers(),
-  };
+  try {
+    const { isFile } = await file.stat();
 
-  const mimeType = lookup(requestUrl.pathname);
+    if (!isFile) throw new Deno.errors.NotFound();
 
-  if (mimeType) {
-    const contentTypeHeader = contentType(mimeType);
+    const body = readableStreamFromReader(file);
 
-    if (contentTypeHeader) {
-      responseInit.headers.set("content-type", contentTypeHeader);
+    /** @type {import("./serve.mjs").ResponseInit} */
+    let responseInit = {
+      status: Status.OK,
+      statusText: STATUS_TEXT.get(Status.OK),
+      headers: new Headers(),
+    };
+
+    const mimeType = lookup(requestUrl.pathname);
+
+    if (mimeType) {
+      const contentTypeHeader = contentType(mimeType);
+
+      if (contentTypeHeader) {
+        responseInit.headers.set("content-type", contentTypeHeader);
+      }
     }
-  }
 
-  if (typeof customizeResponseInit === "function") {
-    responseInit = await customizeResponseInit(request, responseInit);
-  }
+    if (typeof customizeResponseInit === "function") {
+      responseInit = await customizeResponseInit(request, responseInit);
+    }
 
-  return new Response(body, responseInit);
+    return new Response(body, responseInit);
+  } catch (error) {
+    // Avoid closing an already closed file, see:
+    // https://github.com/denoland/deno/issues/14210
+    if (file.rid in Deno.resources()) Deno.close(file.rid);
+
+    throw error;
+  }
 }
