@@ -2,6 +2,12 @@
 
 ## Next
 
+### Major
+
+- Updated the required Deno version to v1.20.1+.
+- Removed a `@ts-ignore` comment within tests that’s redundant for TypeScript
+  v4.6+.
+
 ### Patch
 
 - Updated `publicFileResponse.mjs`:

@@ -77,12 +77,7 @@ export default async function testPuppeteerPage(
         if (scriptCoverage.url.startsWith(projectFilesOriginUrl.href)) {
           writes.push(
             Deno.writeTextFile(
-              new URL(
-                `${crypto // @ts-ignore This type will be added to TypeScript v4.6 libs:
-                // https://github.com/denoland/deno/issues/12754#issuecomment-1016111068
-                .randomUUID()}.json`,
-                coverageDirUrl,
-              ),
+              new URL(`${crypto.randomUUID()}.json`, coverageDirUrl),
               JSON.stringify({
                 ...scriptCoverage,
                 url: projectDirUrl.href +
