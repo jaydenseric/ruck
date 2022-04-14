@@ -5,6 +5,8 @@
 ### Patch
 
 - Updated dependencies.
+- Use development versions of React related dependencies in the development
+  import map.
 
 ## 3.0.0
 
