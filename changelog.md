@@ -1,5 +1,11 @@
 # Ruck changelog
 
+## Next
+
+### Patch
+
+- Updated dependencies.
+
 ## 3.0.0
 
 ### Major

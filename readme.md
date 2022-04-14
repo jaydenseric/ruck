@@ -71,7 +71,7 @@ A Ruck project contains:
         "react-dom/server": "https://esm.sh/react-dom@17.0.2/server?dev",
         "react-waterfall-render/": "https://unpkg.com/react-waterfall-render@4.0.0/",
         "ruck/": "https://deno.land/x/ruck@v3.0.0/",
-        "std/": "https://deno.land/std@0.133.0/"
+        "std/": "https://deno.land/std@0.134.0/"
       }
     }
     ```
@@ -86,7 +86,7 @@ A Ruck project contains:
         "react-dom/server": "https://esm.sh/react-dom@17.0.2/server",
         "react-waterfall-render/": "https://unpkg.com/react-waterfall-render@4.0.0/",
         "ruck/": "https://deno.land/x/ruck@v3.0.0/",
-        "std/": "https://deno.land/std@0.133.0/"
+        "std/": "https://deno.land/std@0.134.0/"
       }
     }
     ```
