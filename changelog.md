@@ -7,6 +7,7 @@
 - Updated dependencies.
 - Use development versions of React related dependencies in the development
   import map.
+- Added tests for the React component `Effect`.
 
 ## 3.0.0
 
