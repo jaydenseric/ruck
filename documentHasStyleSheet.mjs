@@ -11,12 +11,17 @@
  * or not). This is not intended to detect pending or in progress reloading.
  * It’s possible for the document to have multiple style sheets with the same
  * `href`; if any are loaded the CSS is considered loaded.
- * @param {string} href CSS absolute or relative URL.
+ * @param {string} href CSS URL that’s absolute or relative to the
+ *   `document.baseURI`.
  * @returns {boolean} Is the CSS loaded.
  */
 export default function documentHasStyleSheet(href) {
+  if (typeof href !== "string") {
+    throw new TypeError("Argument 1 `href` must be a string.");
+  }
+
   /** CSS absolute URL. */
-  const url = new URL(href, location.origin).href;
+  const url = new URL(href, document.baseURI).href;
 
   for (const cssStyleSheet of document.styleSheets) {
     if (cssStyleSheet.href === url) {

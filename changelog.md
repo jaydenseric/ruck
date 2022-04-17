@@ -2,11 +2,25 @@
 
 ## Next
 
+### Major
+
+- The `navigate` function powering Ruck app route navigation on the client
+  that’s populated in the React context `NavigateContext` by the React component
+  `ClientProvider` now converts a relative URL used for option `url` to an
+  absolute URL using `document.baseURI` as the base instead of
+  `location.origin`. This is consistent with how a native `a` element with a
+  `href` attribute relative to a document `base` element navigates.
+
 ### Patch
 
 - Updated dependencies.
 - Use development versions of React related dependencies in the development
   import map.
+- Function `documentHasStyleSheet` fixes and improvements:
+  - A relative URL used for argument 1 `href` now converts to an absolute URL
+    using `document.baseURI` as the base instead of `location.origin`.
+  - Added runtime argument type checks.
+  - Added tests.
 - Added tests for the React component `Effect`.
 
 ## 3.0.0

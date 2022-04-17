@@ -83,7 +83,7 @@ export default function ClientProvider({
       if (!abortController.signal.aborted) {
         const oldUrl = route.url;
         // Normalize a possibly absolute or relative `url`.
-        const newUrl = new URL(String(url), location.origin);
+        const newUrl = new URL(String(url), document.baseURI);
         const samePage =
           newUrl.pathname + newUrl.search === oldUrl.pathname + oldUrl.search;
 
@@ -269,7 +269,8 @@ export default function ClientProvider({
 /**
  * {@linkcode Navigate} options.
  * @typedef {object} NavigateOptions
- * @prop {string | URL} url Ruck app route URL to navigate to.
+ * @prop {string | URL} url Ruck app route URL to navigate to that’s absolute or
+ *   relative to the `document.baseURI`.
  * @prop {boolean} [updateHistory] Update the browser `history` API? Defaults
  *   to `true`.
  * @prop {AbortController} [abortController] Abort controller to abort the
