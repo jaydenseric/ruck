@@ -23,11 +23,11 @@ Deno.test("`scrollToHash` with argument 1 `hash` not a string.", () => {
 Deno.test("`scrollToHash` with target existing.", async () => {
   const abortController = new AbortController();
   const projectFileServer = await serveProjectFiles(abortController.signal);
-  const projectFilesOriginUrl = new URL(
-    `http://localhost:${projectFileServer.port}`,
-  );
 
   try {
+    const projectFilesOriginUrl = new URL(
+      `http://localhost:${projectFileServer.port}`,
+    );
     const browser = await puppeteer.launch();
 
     try {

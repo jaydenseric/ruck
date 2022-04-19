@@ -27,6 +27,7 @@
   - Added runtime argument type checks.
   - Added tests.
 - Added tests for the React component `Effect`.
+- Moved code into `try` blocks in tests.
 
 ## 3.0.0
 

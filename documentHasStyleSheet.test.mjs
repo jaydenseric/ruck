@@ -8,11 +8,11 @@ import testPuppeteerPage from "./test/testPuppeteerPage.mjs";
 Deno.test("`documentHasStyleSheet` in a DOM environment.", async () => {
   const abortController = new AbortController();
   const projectFileServer = await serveProjectFiles(abortController.signal);
-  const projectFilesOriginUrl = new URL(
-    `http://localhost:${projectFileServer.port}`,
-  );
 
   try {
+    const projectFilesOriginUrl = new URL(
+      `http://localhost:${projectFileServer.port}`,
+    );
     const browser = await puppeteer.launch();
 
     try {
