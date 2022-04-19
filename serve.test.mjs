@@ -4,7 +4,7 @@ import { assertRejects } from "std/testing/asserts.ts";
 
 import serve from "./serve.mjs";
 
-Deno.test("`serve` with option `clientImportMap` not a `URL` instance.", async () => {
+Deno.test("`serve` with option `clientImportMap` not an import map object or `URL` instance.", async () => {
   await assertRejects(
     () =>
       serve({
@@ -13,7 +13,22 @@ Deno.test("`serve` with option `clientImportMap` not a `URL` instance.", async (
         port: 3000,
       }),
     TypeError,
-    "Option `clientImportMap` must be a `URL` instance.",
+    "Option `clientImportMap` must be an import map object or `URL` instance.",
+  );
+});
+
+Deno.test("`serve` with option `clientImportMap` an invalid import map object.", async () => {
+  await assertRejects(
+    () =>
+      serve({
+        clientImportMap: {
+          // @ts-expect-error Testing invalid.
+          imports: true,
+        },
+        port: 3000,
+      }),
+    TypeError,
+    "Option `clientImportMap` must be an import map object.",
   );
 });
 

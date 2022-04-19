@@ -11,6 +11,11 @@
   `location.origin`. This is consistent with how a native `a` element with a
   `href` attribute relative to a document `base` element navigates.
 
+### Minor
+
+- The function `serve` option `clientImportMap` now also accepts an import map
+  object.
+
 ### Patch
 
 - Updated dependencies.

@@ -11,6 +11,7 @@ import { Status, STATUS_TEXT } from "std/http/http_status.ts";
 import { serve as serveHttp } from "std/http/server.ts";
 import { toFileUrl } from "std/path/mod.ts";
 
+import assertImportMap from "./assertImportMap.mjs";
 import HeadManager from "./HeadManager.mjs";
 import HeadManagerContext from "./HeadManagerContext.mjs";
 import Html from "./Html.mjs";
@@ -22,7 +23,8 @@ import TransferContext from "./TransferContext.mjs";
 /**
  * Serves a Ruck app.
  * @param {object} options Options.
- * @param {URL} options.clientImportMap Client import map JSON file URL.
+ * @param {import("./assertImportMap.mjs").ImportMap
+ *   | URL} options.clientImportMap Client import map object or JSON file URL.
  * @param {string} [options.esModuleShimsSrc]
  *   [`es-module-shims`](https://github.com/guybedford/es-module-shims) script
  *   `src` URL. Defaults to `"https://unpkg.com/es-module-shims"`.
@@ -44,8 +46,13 @@ export default async function serve({
   port,
   signal,
 }) {
-  if (!(clientImportMap instanceof URL)) {
-    throw new TypeError("Option `clientImportMap` must be a `URL` instance.");
+  if (
+    !(clientImportMap instanceof URL) &&
+    (typeof clientImportMap !== "object" || !clientImportMap)
+  ) {
+    throw new TypeError(
+      "Option `clientImportMap` must be an import map object or `URL` instance.",
+    );
   }
 
   if (typeof esModuleShimsSrc !== "string") {
@@ -72,8 +79,27 @@ export default async function serve({
     throw new TypeError("Option `signal` must be an `AbortSignal` instance.");
   }
 
-  // Todo: Validate and handle predictable client import map issues.
-  const clientImportMapContent = await readImportMapFile(clientImportMap);
+  /** @type {import("./assertImportMap.mjs").ImportMap} */
+  let clientImportMapContent;
+
+  if (clientImportMap instanceof URL) {
+    clientImportMapContent = await readImportMapFile(clientImportMap);
+  } else {
+    try {
+      assertImportMap(clientImportMap);
+    } catch (cause) {
+      throw new TypeError(
+        "Option `clientImportMap` must be an import map object.",
+        { cause },
+      );
+    }
+
+    clientImportMapContent = clientImportMap;
+  }
+
+  // Todo: Validate and handle predictable client import map issues, such as
+  // missing Ruck dependencies.
+
   const routerFileUrl = new URL("router.mjs", publicDir);
 
   /** @type {Router} */
