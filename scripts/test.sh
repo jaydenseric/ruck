@@ -11,9 +11,11 @@ deno test \
   --allow-write \
   --import-map=importMap.json \
   --coverage=.coverage &&
+
 # Report code coverage.
 deno coverage \
   --exclude=[\/.]test[\/.] \
   .coverage
+
 # Clean the code coverage data.
 rm -rf .coverage
