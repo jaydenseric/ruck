@@ -2,16 +2,79 @@
 
 import { getFreePort } from "free_port/mod.ts";
 import puppeteer from "puppeteer";
+import { createElement as h } from "react";
+import { act, create } from "react-test-renderer";
 import {
   assert,
   assertEquals,
   assertStrictEquals,
 } from "std/testing/asserts.ts";
 
+import ReactHookTest from "./test/ReactHookTest.mjs";
 import serveProjectFiles from "./test/serveProjectFiles.mjs";
 import testPuppeteerPage from "./test/testPuppeteerPage.mjs";
+import NavigateContext from "./NavigateContext.mjs";
 import readImportMapFile from "./readImportMapFile.mjs";
 import serve from "./serve.mjs";
+import useOnClickRouteLink from "./useOnClickRouteLink.mjs";
+
+Deno.test("`useOnClickRouteLink` memoization.", () => {
+  /** @type {Array<unknown>} */
+  const results = [];
+
+  /** @type {any} */
+  const navigate1 = () => {};
+
+  /** @type {import("react-test-renderer").ReactTestRenderer | undefined} */
+  let testRenderer;
+
+  act(() => {
+    testRenderer = create(
+      h(
+        NavigateContext.Provider,
+        { value: navigate1 },
+        h(ReactHookTest, { hook: useOnClickRouteLink, results }),
+      ),
+    );
+  });
+
+  const tr =
+    /** @type {import("react-test-renderer").ReactTestRenderer} */
+    (testRenderer);
+
+  assertStrictEquals(results.length, 1);
+  assertStrictEquals(typeof results[0], "function");
+
+  act(() => {
+    tr.update(
+      h(
+        NavigateContext.Provider,
+        { value: navigate1 },
+        h(ReactHookTest, { hook: useOnClickRouteLink, results }),
+      ),
+    );
+  });
+
+  assertStrictEquals(results.length, 2);
+  assertStrictEquals(results[0], results[1]);
+
+  /** @type {any} */
+  const navigate2 = () => {};
+
+  act(() => {
+    tr.update(
+      h(
+        NavigateContext.Provider,
+        { value: navigate2 },
+        h(ReactHookTest, { hook: useOnClickRouteLink, results }),
+      ),
+    );
+  });
+
+  assertStrictEquals(results.length, 3);
+  assertStrictEquals(typeof results[2], "function");
+  assert(results[2] !== results[1]);
+});
 
 Deno.test("`useOnClickRouteLink` in a DOM environment.", async () => {
   const abortController = new AbortController();
