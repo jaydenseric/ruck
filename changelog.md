@@ -26,6 +26,15 @@
     using `document.baseURI` as the base instead of `location.origin`.
   - Added runtime argument type checks.
   - Added tests.
+- React hook `useOnClickRouteLink` fixes and improvements:
+  - Now the click event handler doesn’t do anything if the event default action
+    is already prevented, if a non main mouse button was pressed, or if any of
+    the following keys were pressed during the click:
+    - Alt (typically downloads the link)
+    - Control (typically opens the link in a new tab)
+    - Meta
+    - Shift (typically opens the link in a new tab)
+  - Added tests.
 - Added tests for the React component `Effect`.
 - Moved code into `try` blocks in tests.
 
