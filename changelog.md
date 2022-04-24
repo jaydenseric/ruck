@@ -38,6 +38,7 @@
 - Added tests for the React component `Effect`.
 - Added tests for the function `hydrate`.
 - Moved code into `try` blocks in tests.
+- Tidied order of imports in tests.
 - Tweaked whitespace in `scripts/test.sh`.
 - Added to the readme “Examples” section.
 

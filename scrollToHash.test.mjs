@@ -3,9 +3,9 @@
 import puppeteer from "puppeteer";
 import { assertThrows } from "std/testing/asserts.ts";
 
-import scrollToHash from "./scrollToHash.mjs";
 import serveProjectFiles from "./test/serveProjectFiles.mjs";
 import testPuppeteerPage from "./test/testPuppeteerPage.mjs";
+import scrollToHash from "./scrollToHash.mjs";
 
 Deno.test("`scrollToHash` with argument 1 `hash` not a string.", () => {
   assertThrows(
