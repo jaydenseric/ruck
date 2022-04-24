@@ -17,10 +17,10 @@ import useNavigate from "./useNavigate.mjs";
  * is already prevented, if a non main mouse button was pressed, or if any of
  * the following keys were pressed during the click:
  *
- * - Alt (typically downloads the link)
- * - Control (typically opens the link in a new tab)
- * - Meta
- * - Shift (typically opens the link in a new tab)
+ * - Alt (in Safari, downloads the link)
+ * - Control (in Safari, displays the link context menu)
+ * - Meta (in Safari, opens the link in a new tab)
+ * - Shift (in Safari, adds the link to Reading List)
  */
 export default function useOnClickRouteLink() {
   const navigate = useNavigate();
