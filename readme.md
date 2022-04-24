@@ -532,6 +532,10 @@ A Ruck project contains:
 ## Examples
 
 - [Ruck website repo](https://github.com/jaydenseric/ruck-website).
+- [`graphql-react` examples repo](https://github.com/jaydenseric/graphql-react-examples).
+- [`device-agnostic-ui` website repo](https://github.com/jaydenseric/device-agnostic-ui-website).
+- [SVG symbol viewer repo](https://github.com/jaydenseric/svg-symbol-viewer).
+- [Jayden Seric’s website](https://jaydenseric.com).
 
 ## Requirements
 

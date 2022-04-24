@@ -38,6 +38,7 @@
 - Added tests for the React component `Effect`.
 - Moved code into `try` blocks in tests.
 - Tweaked whitespace in `scripts/test.sh`.
+- Added to the readme “Examples” section.
 
 ## 3.0.0
 
