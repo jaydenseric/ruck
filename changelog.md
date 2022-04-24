@@ -36,6 +36,7 @@
     - Shift (typically opens the link in a new tab)
   - Added tests.
 - Added tests for the React component `Effect`.
+- Added tests for the function `hydrate`.
 - Moved code into `try` blocks in tests.
 - Tweaked whitespace in `scripts/test.sh`.
 - Added to the readme “Examples” section.
