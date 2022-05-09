@@ -1,10 +1,4 @@
 // @ts-check
-/// <reference no-default-lib="true" />
-/// <reference lib="dom" />
-/// <reference lib="dom.iterable" />
-/// <reference lib="dom.asynciterable" />
-/// <reference lib="deno.ns" />
-/// <reference lib="deno.unstable" />
 
 /**
  * Checks if the document has a style sheet that finished loading (successfully

@@ -1,6 +1,5 @@
 {
   "editor.defaultFormatter": "denoland.vscode-deno",
   "deno.enable": true,
-  "deno.importMap": "importMap.json",
   "deno.lint": true
 }

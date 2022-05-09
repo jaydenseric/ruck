@@ -1,5 +1,31 @@
 # Ruck changelog
 
+## Next
+
+### Major
+
+- Removed TypeScript triple slash reference comments from Ruck modules that were
+  originally intended to enable DOM types. Ruck projects now must have a Deno
+  config file (`deno.json` or `deno.jsonc`), containing:
+
+  ```json
+  {
+    "compilerOptions": {
+      "lib": [
+        "dom",
+        "dom.iterable",
+        "dom.asynciterable",
+        "deno.ns",
+        "deno.unstable"
+      ]
+    }
+  }
+  ```
+
+### Patch
+
+- Implemented a `deno.json` Deno config file.
+
 ## 4.0.0
 
 ### Major

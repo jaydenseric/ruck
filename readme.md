@@ -47,6 +47,25 @@ easy with Ruck, for example…
 
 A Ruck project contains:
 
+- A
+  [Deno config file](https://deno.land/manual/getting_started/configuration_file)
+  called `deno.json` or `deno.jsonc`, containing:
+
+  ```json
+  {
+    "compilerOptions": {
+      "lib": [
+        "dom",
+        "dom.iterable",
+        "dom.asynciterable",
+        "deno.ns",
+        "deno.unstable"
+      ]
+    }
+  }
+  ```
+
+  This enables Deno and DOM types for project and imported dependency modules.
 - [Import map](https://github.com/WICG/import-maps) JSON files that tell your
   IDE, Deno, and browsers where to import dependencies from. Ruck automatically
   uses [`es-module-shims`](https://github.com/guybedford/es-module-shims) so you

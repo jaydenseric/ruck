@@ -9,7 +9,6 @@ deno test \
   --allow-run \
   --allow-read \
   --allow-write \
-  --import-map=importMap.json \
   --coverage=.coverage &&
 
 # Report code coverage.
