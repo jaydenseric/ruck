@@ -24,6 +24,8 @@
 
 ### Patch
 
+- Updated GitHub Actions CI config:
+  - Updated `actions/checkout` to v3.
 - Implemented a `deno.json` Deno config file.
 
 ## 4.0.0
