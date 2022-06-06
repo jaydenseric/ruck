@@ -10,6 +10,7 @@
 ### Patch
 
 - Fixed the test script not exiting with an error status when tests fail.
+- Added a script for finding Ruck’s minimum compatible Deno version.
 - Use a more specific Deno version for the setup Deno step in the GitHub Actions
   CI config.
 

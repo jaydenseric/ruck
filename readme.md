@@ -592,6 +592,14 @@ is the localhost port for the HTTP server to listen on):
 ./scripts/serve.sh 3001
 ```
 
+#### Find min compatible Deno version
+
+To find Ruck’s minimum compatible Deno version:
+
+```sh
+deno run --allow-net --allow-run ./scripts/findMinCompatibleDenoVersion.mjs
+```
+
 #### Format
 
 To format the project:
