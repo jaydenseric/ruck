@@ -2,6 +2,11 @@
 
 ## Next
 
+### Major
+
+- Updated the required Deno version to v1.21.2+.
+- Updated dependencies.
+
 ### Patch
 
 - Fixed the test script not exiting with an error status when tests fail.

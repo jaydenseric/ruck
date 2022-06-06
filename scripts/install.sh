@@ -7,4 +7,4 @@ deno run \
   --allow-net \
   --allow-read \
   --allow-write \
-  https://deno.land/x/puppeteer@9.0.2/install.ts
+  https://deno.land/x/puppeteer@14.1.1/install.ts
