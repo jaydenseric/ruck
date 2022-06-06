@@ -16,5 +16,12 @@ deno coverage \
   --exclude=[\/.]test[\/.] \
   .coverage
 
+# Test and code coverage status.
+testStatus="$?"
+
 # Clean the code coverage data.
-rm -rf .coverage
+rm -rf .coverage &&
+
+# If cleaning the code coverage data succeeded, exit with the test and code
+# coverage status.
+exit $testStatus

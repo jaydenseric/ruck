@@ -1,5 +1,11 @@
 # Ruck changelog
 
+## Next
+
+### Patch
+
+- Fixed the test script not exiting with an error status when tests fail.
+
 ## 5.0.0
 
 ### Major
