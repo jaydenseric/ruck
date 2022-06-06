@@ -10,6 +10,8 @@
 ### Patch
 
 - Fixed the test script not exiting with an error status when tests fail.
+- Use a more specific Deno version for the setup Deno step in the GitHub Actions
+  CI config.
 
 ## 5.0.0
 
