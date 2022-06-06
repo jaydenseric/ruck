@@ -85,7 +85,6 @@ A Ruck project contains:
     {
       "imports": {
         "graphql-react/": "https://unpkg.com/graphql-react@18.0.0/",
-        "media_types/": "https://deno.land/x/media_types@v3.0.3/",
         "react": "https://esm.sh/react@17.0.2?dev",
         "react-dom/server": "https://esm.sh/react-dom@17.0.2/server?dev",
         "react-waterfall-render/": "https://unpkg.com/react-waterfall-render@4.0.0/",
@@ -100,7 +99,6 @@ A Ruck project contains:
     {
       "imports": {
         "graphql-react/": "https://unpkg.com/graphql-react@18.0.0/",
-        "media_types/": "https://deno.land/x/media_types@v3.0.3/",
         "react": "https://esm.sh/react@17.0.2",
         "react-dom/server": "https://esm.sh/react-dom@17.0.2/server",
         "react-waterfall-render/": "https://unpkg.com/react-waterfall-render@4.0.0/",

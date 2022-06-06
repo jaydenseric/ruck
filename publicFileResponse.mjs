@@ -1,7 +1,8 @@
 // @ts-check
 
-import { contentType, lookup } from "media_types/mod.ts";
 import { Status, STATUS_TEXT } from "std/http/http_status.ts";
+import { contentType } from "std/media_types/mod.ts";
+import { extname } from "std/path/mod.ts";
 import { readableStreamFromReader } from "std/streams/conversion.ts";
 
 /**
@@ -62,10 +63,10 @@ export default async function publicFileResponse(
       headers: new Headers(),
     };
 
-    const mimeType = lookup(requestUrl.pathname);
+    const fileExtension = extname(fileUrl.pathname);
 
-    if (mimeType) {
-      const contentTypeHeader = contentType(mimeType);
+    if (fileExtension) {
+      const contentTypeHeader = contentType(fileExtension);
 
       if (contentTypeHeader) {
         responseInit.headers.set("content-type", contentTypeHeader);

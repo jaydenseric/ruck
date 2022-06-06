@@ -9,6 +9,9 @@
 
 ### Patch
 
+- Replaced the [`media_types`](https://deno.land/x/media_types) dependency with
+  new Deno `std` APIs, fixing
+  [#5](https://github.com/jaydenseric/ruck/issues/5).
 - Fixed the test script not exiting with an error status when tests fail.
 - Added a script for finding Ruck’s minimum compatible Deno version.
 - Use a more specific Deno version for the setup Deno step in the GitHub Actions

@@ -97,6 +97,42 @@ Deno.test("`publicFileResponse` with a missing file.", async () => {
   );
 });
 
+Deno.test("`publicFileResponse` with an extensionless file.", async () => {
+  const publicDir = new URL(
+    "./test/fixtures/publicFileResponse/public/",
+    import.meta.url,
+  );
+  const response = await publicFileResponse(
+    new Request("http://localhost/A"),
+    publicDir,
+  );
+
+  assert(response.headers instanceof Headers);
+  assertEquals(Array.from(response.headers.entries()), []);
+  assertStrictEquals(
+    await response.text(),
+    await Deno.readTextFile(new URL("./A", publicDir)),
+  );
+});
+
+Deno.test("`publicFileResponse` with an unknown file extension.", async () => {
+  const publicDir = new URL(
+    "./test/fixtures/publicFileResponse/public/",
+    import.meta.url,
+  );
+  const response = await publicFileResponse(
+    new Request("http://localhost/A.abcdefg"),
+    publicDir,
+  );
+
+  assert(response.headers instanceof Headers);
+  assertEquals(Array.from(response.headers.entries()), []);
+  assertStrictEquals(
+    await response.text(),
+    await Deno.readTextFile(new URL("./A.abcdefg", publicDir)),
+  );
+});
+
 Deno.test("`publicFileResponse` with a CSS file.", async () => {
   const publicDir = new URL(
     "./test/fixtures/publicFileResponse/public/",
@@ -109,7 +145,7 @@ Deno.test("`publicFileResponse` with a CSS file.", async () => {
 
   assert(response.headers instanceof Headers);
   assertEquals(Array.from(response.headers.entries()), [
-    ["content-type", "text/css; charset=utf-8"],
+    ["content-type", "text/css; charset=UTF-8"],
   ]);
   assertStrictEquals(
     await response.text(),
@@ -129,7 +165,7 @@ Deno.test("`publicFileResponse` with a JavaScript module.", async () => {
 
   assert(response.headers instanceof Headers);
   assertEquals(Array.from(response.headers.entries()), [
-    ["content-type", "application/javascript; charset=utf-8"],
+    ["content-type", "application/javascript; charset=UTF-8"],
   ]);
   assertStrictEquals(
     await response.text(),
@@ -181,7 +217,7 @@ Deno.test(
     assert(response.headers instanceof Headers);
     assertEquals(Array.from(response.headers.entries()), [
       addedHeadersEntry,
-      ["content-type", "application/javascript; charset=utf-8"],
+      ["content-type", "application/javascript; charset=UTF-8"],
     ]);
     assertStrictEquals(
       await response.text(),
