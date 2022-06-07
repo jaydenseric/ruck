@@ -13,6 +13,9 @@
   new Deno `std` APIs, fixing
   [#5](https://github.com/jaydenseric/ruck/issues/5).
 - Fixed the test script not exiting with an error status when tests fail.
+- Fixed the React hook `useOnClickRouteLink` tests failing in Linux environments
+  due to the different macOS Chrome browser behavior when a “meta” key is
+  pressed while clicking a link.
 - Added a script for finding Ruck’s minimum compatible Deno version.
 - Use a more specific Deno version for the setup Deno step in the GitHub Actions
   CI config.

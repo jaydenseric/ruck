@@ -107,6 +107,7 @@ Deno.test("`useOnClickRouteLink` in a DOM environment.", async () => {
 
     try {
       const browser = await puppeteer.launch();
+      const browserUserAgent = await browser.userAgent();
 
       try {
         await testPuppeteerPage(
@@ -114,6 +115,7 @@ Deno.test("`useOnClickRouteLink` in a DOM environment.", async () => {
           projectFilesOriginUrl,
           async (page) => {
             const urlPageA = `http://localhost:${ruckAppPort}/`;
+            const urlPageB = `http://localhost:${ruckAppPort}/b`;
 
             await page.goto(urlPageA);
 
@@ -138,14 +140,27 @@ Deno.test("`useOnClickRouteLink` in a DOM environment.", async () => {
 
             assertStrictEquals(page.url(), urlPageA);
 
-            // Test holding the meta key when clicking the link prevents a
-            // client side navigation…
+            // Test holding a meta key when clicking the link prevents a client
+            // side navigation…
 
             await page.keyboard.down("Meta");
             await page.click('a[href="/b"]');
             await page.keyboard.up("Meta");
 
-            assertStrictEquals(page.url(), urlPageA);
+            if (browserUserAgent.includes("Macintosh")) {
+              // macOS Chrome opens a link clicked while the meta (command) key
+              // is pressed in a new tab, so the current page URL should not
+              // have changed.
+              assertStrictEquals(page.url(), urlPageA);
+            } else {
+              // Linux Chrome opens a link clicked while a meta (command) key is
+              // pressed in the current tab, so the current page URL should have
+              // changed.
+              assertStrictEquals(page.url(), urlPageB);
+
+              // Manually go to page A to prepare the next test.
+              await page.goto(urlPageA);
+            }
 
             // Test holding the shift key when clicking the link prevents a
             // client side navigation…
@@ -192,7 +207,7 @@ Deno.test("`useOnClickRouteLink` in a DOM environment.", async () => {
 
             await page.click('a[href="/a"]');
 
-            assertStrictEquals(page.url(), `http://localhost:${ruckAppPort}/b`);
+            assertStrictEquals(page.url(), urlPageB);
           },
         );
       } finally {
