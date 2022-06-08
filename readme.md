@@ -203,6 +203,7 @@ A Ruck project contains:
       --allow-net \
       --allow-read \
       --import-map=importMap.server.json \
+      --no-check \
       scripts/serve.mjs
   fi
   ```

@@ -1,5 +1,12 @@
 # Ruck changelog
 
+## Next
+
+### Patch
+
+- In the readme “Installation” section, recommend using the Deno `run` command
+  `--no-check` flag when serving the Ruck app in production.
+
 ## 6.0.0
 
 ### Major
