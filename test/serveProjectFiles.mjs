@@ -43,12 +43,12 @@ export default async function serveProjectFiles(signal) {
               error instanceof Deno.errors.NotFound
                 ? {
                   status: Status.NotFound,
-                  statusText: STATUS_TEXT.get(Status.NotFound),
+                  statusText: STATUS_TEXT[Status.NotFound],
                   headers,
                 }
                 : {
                   status: Status.InternalServerError,
-                  statusText: STATUS_TEXT.get(Status.InternalServerError),
+                  statusText: STATUS_TEXT[Status.InternalServerError],
                   headers,
                 },
             ),

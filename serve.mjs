@@ -203,7 +203,7 @@ export default async function serve({
         /** @type {ResponseInit} */
         const responseInit = {
           status: Status.OK,
-          statusText: STATUS_TEXT.get(Status.OK),
+          statusText: STATUS_TEXT[Status.OK],
           headers: new Headers({
             "content-type": "text/html; charset=utf-8",
           }),

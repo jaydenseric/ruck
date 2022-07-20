@@ -59,7 +59,7 @@ export default async function publicFileResponse(
     /** @type {import("./serve.mjs").ResponseInit} */
     let responseInit = {
       status: Status.OK,
-      statusText: STATUS_TEXT.get(Status.OK),
+      statusText: STATUS_TEXT[Status.OK],
       headers: new Headers(),
     };
 

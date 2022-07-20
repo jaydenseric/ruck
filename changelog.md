@@ -2,6 +2,10 @@
 
 ## Next
 
+### Major
+
+- Updated dependencies.
+
 ### Patch
 
 - Fixed SSR cache data not being HTML escaped within the HTML inline script for
