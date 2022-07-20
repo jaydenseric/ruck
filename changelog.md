@@ -1,5 +1,12 @@
 # Ruck changelog
 
+## Next
+
+### Patch
+
+- Updated esm.sh dependency URLs, removing the `cdn` subdomain that was
+  deprecated in esm.sh [v79](https://github.com/ije/esm.sh/releases/tag/v79).
+
 ## 7.0.0
 
 ### Major
