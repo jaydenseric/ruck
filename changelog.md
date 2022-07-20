@@ -4,6 +4,8 @@
 
 ### Patch
 
+- Fixed SSR cache data not being HTML escaped within the HTML inline script for
+  client side hydration.
 - In the readme “Installation” section, recommend using the Deno `run` command
   `--no-check` flag when serving the Ruck app in production.
 

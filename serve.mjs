@@ -15,6 +15,7 @@ import assertImportMap from "./assertImportMap.mjs";
 import HeadManager from "./HeadManager.mjs";
 import HeadManagerContext from "./HeadManagerContext.mjs";
 import Html from "./Html.mjs";
+import jsonToRawHtmlScriptValue from "./jsonToRawHtmlScriptValue.mjs";
 import publicFileResponse from "./publicFileResponse.mjs";
 import readImportMapFile from "./readImportMapFile.mjs";
 import RouteContext from "./RouteContext.mjs";
@@ -275,7 +276,7 @@ import router from "/router.mjs";
 hydrate({
   router,
   appComponent: App,
-  cacheData: ${JSON.stringify(cache.store)},
+  cacheData: ${jsonToRawHtmlScriptValue(JSON.stringify(cache.store))},
 });
 `,
                   },
