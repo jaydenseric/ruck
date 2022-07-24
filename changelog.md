@@ -6,6 +6,8 @@
 
 - Updated esm.sh dependency URLs, removing the `cdn` subdomain that was
   deprecated in esm.sh [v79](https://github.com/ije/esm.sh/releases/tag/v79).
+- Made it easier to run the script for finding the minimum compatible Deno
+  version by making it executable and adding a shebang.
 
 ## 7.0.0
 

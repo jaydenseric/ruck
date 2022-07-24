@@ -596,7 +596,7 @@ is the localhost port for the HTTP server to listen on):
 To find Ruck’s minimum compatible Deno version:
 
 ```sh
-deno run --allow-net --allow-run ./scripts/findMinCompatibleDenoVersion.mjs
+./scripts/findMinCompatibleDenoVersion.mjs
 ```
 
 #### Format

@@ -1,3 +1,5 @@
+#! /usr/bin/env -S deno run --allow-net --allow-run
+
 // @ts-check
 // Finds and outputs Ruck’s minimum compatible Deno version, by binary searching
 // Deno versions for the oldest that the tests (and types) pass with.
