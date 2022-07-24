@@ -599,6 +599,14 @@ To find Ruck’s minimum compatible Deno version:
 ./scripts/findMinCompatibleDenoVersion.mjs
 ```
 
+#### Type check
+
+To type check every JavaScript module in the project:
+
+```sh
+./scripts/type-check.mjs
+```
+
 #### Format
 
 To format the project:

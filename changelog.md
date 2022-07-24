@@ -8,6 +8,8 @@
   deprecated in esm.sh [v79](https://github.com/ije/esm.sh/releases/tag/v79).
 - Made it easier to run the script for finding the minimum compatible Deno
   version by making it executable and adding a shebang.
+- Added a new script to type check every JavaScript module in the project, and
+  configured GitHub Actions CI to use it.
 
 ## 7.0.0
 
