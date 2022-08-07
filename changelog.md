@@ -10,6 +10,7 @@
   version by making it executable and adding a shebang.
 - Added a new script to type check every JavaScript module in the project, and
   configured GitHub Actions CI to use it.
+- Improved console logging of Puppeteer browser console output in tests.
 
 ## 7.0.0
 

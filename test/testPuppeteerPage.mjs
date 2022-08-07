@@ -47,10 +47,31 @@ export default async function testPuppeteerPage(
       pageErrors.push(error);
     });
 
-    page.on("console", (message) => {
-      console.group(`Puppeteer page console ${message.type()}:`);
-      console.log(message.text());
-      console.groupEnd();
+    page.on("console", async (message) => {
+      const type = message.type();
+      const summary = `Puppeteer page console ${type}`;
+
+      switch (type) {
+        case "error":
+        case "info":
+        case "log":
+        case "warning": {
+          const args = [];
+
+          for (const arg of message.args()) {
+            args.push(await arg.jsonValue());
+          }
+
+          console.group(`${summary}:`);
+          console[type === "warning" ? "warn" : type](...args);
+          console.groupEnd();
+
+          break;
+        }
+
+        default:
+          console.log(`${summary} occurred.`);
+      }
     });
 
     await page.coverage.startJSCoverage();
