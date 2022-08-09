@@ -4,11 +4,7 @@ import { getFreePort } from "free_port/mod.ts";
 import puppeteer from "puppeteer";
 import { createElement as h } from "react";
 import { act, create } from "react-test-renderer";
-import {
-  assert,
-  assertEquals,
-  assertStrictEquals,
-} from "std/testing/asserts.ts";
+import { assert, assertStrictEquals } from "std/testing/asserts.ts";
 
 import ReactHookTest from "./test/ReactHookTest.mjs";
 import serveProjectFiles from "./test/serveProjectFiles.mjs";
@@ -180,7 +176,7 @@ Deno.test("`useOnClickRouteLink` in a DOM environment.", async () => {
             ]);
 
             // Check it was a client side navigation and not a native page load.
-            assertEquals(response1, null);
+            assert(response1 === null);
 
             assert(await page.$("#page-b"));
 
@@ -198,7 +194,7 @@ Deno.test("`useOnClickRouteLink` in a DOM environment.", async () => {
             ]);
 
             // Check it was a client side navigation and not a native page load.
-            assertEquals(response2, null);
+            assert(response2 === null);
 
             assert(await page.$("#page-b"));
 
