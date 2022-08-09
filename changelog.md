@@ -11,6 +11,7 @@
 - Added a new script to type check every JavaScript module in the project, and
   configured GitHub Actions CI to use it.
 - Improved console logging of Puppeteer browser console output in tests.
+- Refactored function `createPseudoNode` tests to better isolate each test.
 
 ## 7.0.0
 
