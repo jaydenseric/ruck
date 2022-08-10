@@ -12,6 +12,8 @@
   configured GitHub Actions CI to use it.
 - Improved console logging of Puppeteer browser console output in tests.
 - Refactored function `createPseudoNode` tests to better isolate each test.
+- Refactored function `hydrate` tests to better isolate each test and avoid
+  Puppeteer browser errors relating to modifying HTML and import maps.
 - Changed some test assertions to be less noisy if they fail.
 
 ## 7.0.0

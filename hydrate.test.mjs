@@ -51,6 +51,10 @@ Deno.test("`hydrate` in a DOM environment.", async () => {
     const browser = await puppeteer.launch();
 
     try {
+      // Todo: Refactor to use Deno test steps once this Deno bug is fixed:
+      // https://github.com/denoland/deno/issues/15425
+
+      // Test `hydrate` with Ruck body React app DOM node missing.
       await testPuppeteerPage(
         browser,
         projectFilesOriginUrl,
@@ -87,7 +91,14 @@ Deno.test("`hydrate` in a DOM environment.", async () => {
               }
             }
           });
+        },
+      );
 
+      // Test `hydrate` with Ruck head React app start DOM node missing.
+      await testPuppeteerPage(
+        browser,
+        projectFilesOriginUrl,
+        async (page) => {
           await page.setContent(/* HTML */ `<!DOCTYPE html>
 <html>
   <head>
@@ -120,7 +131,14 @@ Deno.test("`hydrate` in a DOM environment.", async () => {
               }
             }
           });
+        },
+      );
 
+      // Test `hydrate` with Ruck head React app end DOM node missing.
+      await testPuppeteerPage(
+        browser,
+        projectFilesOriginUrl,
+        async (page) => {
           await page.setContent(/* HTML */ `<!DOCTYPE html>
 <html>
   <head>
