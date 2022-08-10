@@ -56,10 +56,21 @@ export default async function testPuppeteerPage(
         case "info":
         case "log":
         case "warning": {
-          const args = [];
+          const args = await Promise.all(
+            message.args().map((arg) =>
+              arg.executionContext().evaluate(
+                /** @param {unknown} value */
+                (value) => value instanceof Error ? value.message : value,
+                arg,
+              )
+            ),
+          );
 
-          for (const arg of message.args()) {
-            args.push(await arg.jsonValue());
+          // Workaround Puppeteer not providing the arguments when the console
+          // method was called internally by Puppeteer instead of page code.
+          if (!args.length) {
+            const text = message.text();
+            if (text) args.push(text);
           }
 
           console.group(`${summary}:`);
