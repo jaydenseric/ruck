@@ -2,7 +2,6 @@
 # Installs Ruck development dependencies (primarily Puppeteer).
 
 deno run \
-  --unstable \
   --allow-env \
   --allow-net \
   --allow-read \

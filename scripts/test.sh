@@ -3,7 +3,6 @@
 
 # Run the tests with code coverage.
 deno test \
-  --unstable \
   --allow-env \
   --allow-net \
   --allow-run \
