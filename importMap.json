@@ -1,14 +1,14 @@
 {
   "imports": {
     "free_port/": "https://deno.land/x/free_port@v1.2.0/",
-    "graphql-react/": "https://unpkg.com/graphql-react@18.0.0/",
+    "graphql-react/": "https://unpkg.com/graphql-react@19.0.0/",
     "puppeteer": "https://deno.land/x/puppeteer@14.1.1/mod.ts",
     "react": "https://esm.sh/react@17.0.2?dev",
     "react-dom": "https://esm.sh/react-dom@17.0.2?dev",
     "react-dom/server": "https://esm.sh/react-dom@17.0.2/server?dev",
     "react-test-renderer": "https://esm.sh/react-test-renderer@17.0.2?dev",
-    "react-waterfall-render/": "https://unpkg.com/react-waterfall-render@4.0.0/",
+    "react-waterfall-render/": "https://unpkg.com/react-waterfall-render@4.0.1/",
     "ruck/": "./",
-    "std/": "https://deno.land/std@0.148.0/"
+    "std/": "https://deno.land/std@0.151.0/"
   }
 }

@@ -84,12 +84,12 @@ A Ruck project contains:
     ```json
     {
       "imports": {
-        "graphql-react/": "https://unpkg.com/graphql-react@18.0.0/",
-        "react": "https://esm.sh/react@17.0.2?dev",
-        "react-dom/server": "https://esm.sh/react-dom@17.0.2/server?dev",
-        "react-waterfall-render/": "https://unpkg.com/react-waterfall-render@4.0.0/",
+        "graphql-react/": "https://unpkg.com/graphql-react@19.0.0/",
+        "react": "https://esm.sh/react@17.0.2?target=deno&dev",
+        "react-dom/server": "https://esm.sh/react-dom@17.0.2/server?target=deno&dev",
+        "react-waterfall-render/": "https://unpkg.com/react-waterfall-render@4.0.1/",
         "ruck/": "https://deno.land/x/ruck@v7.0.0/",
-        "std/": "https://deno.land/std@0.148.0/"
+        "std/": "https://deno.land/std@0.151.0/"
       }
     }
     ```
@@ -98,12 +98,12 @@ A Ruck project contains:
     ```json
     {
       "imports": {
-        "graphql-react/": "https://unpkg.com/graphql-react@18.0.0/",
-        "react": "https://esm.sh/react@17.0.2",
-        "react-dom/server": "https://esm.sh/react-dom@17.0.2/server",
-        "react-waterfall-render/": "https://unpkg.com/react-waterfall-render@4.0.0/",
+        "graphql-react/": "https://unpkg.com/graphql-react@19.0.0/",
+        "react": "https://esm.sh/react@17.0.2?target=deno",
+        "react-dom/server": "https://esm.sh/react-dom@17.0.2/server?target=deno",
+        "react-waterfall-render/": "https://unpkg.com/react-waterfall-render@4.0.1/",
         "ruck/": "https://deno.land/x/ruck@v7.0.0/",
-        "std/": "https://deno.land/std@0.148.0/"
+        "std/": "https://deno.land/std@0.151.0/"
       }
     }
     ```
@@ -112,27 +112,43 @@ A Ruck project contains:
     ```json
     {
       "imports": {
-        "graphql-react/": "https://unpkg.com/graphql-react@18.0.0/",
-        "react": "https://esm.sh/v87/react@17.0.2/es2021/react.development.js",
-        "react-dom": "https://esm.sh/v87/react-dom@17.0.2/es2021/react-dom.development.js",
-        "react-waterfall-render/": "https://unpkg.com/react-waterfall-render@4.0.0/",
+        "graphql-react/": "https://unpkg.com/graphql-react@19.0.0/",
+        "react": "https://esm.sh/v90/react@17.0.2/es2021/react.development.js",
+        "react-dom": "https://esm.sh/v90/react-dom@17.0.2/es2021/react-dom.development.js",
+        "react-waterfall-render/": "https://unpkg.com/react-waterfall-render@4.0.1/",
         "ruck/": "https://deno.land/x/ruck@v7.0.0/"
       }
     }
     ```
+
+    The [esm.sh](https://esm.sh) URLs should be regularly updated to the latest
+    build URLs these modules re-export:
+
+    - `react`:
+      [https://esm.sh/react@17.0.2?target=es2021&dev](https://esm.sh/react@17.0.2?target=es2021&dev)
+    - `react-dom`:
+      [https://esm.sh/react-dom@17.0.2?target=es2021&dev](https://esm.sh/react-dom@17.0.2?target=es2021&dev)
   - `importMap.client.json`
 
     ```json
     {
       "imports": {
-        "graphql-react/": "https://unpkg.com/graphql-react@18.0.0/",
-        "react": "https://esm.sh/v87/react@17.0.2/es2021/react.js",
-        "react-dom": "https://esm.sh/v87/react-dom@17.0.2/es2021/react-dom.js",
-        "react-waterfall-render/": "https://unpkg.com/react-waterfall-render@4.0.0/",
+        "graphql-react/": "https://unpkg.com/graphql-react@19.0.0/",
+        "react": "https://esm.sh/v90/react@17.0.2/es2021/react.js",
+        "react-dom": "https://esm.sh/v90/react-dom@17.0.2/es2021/react-dom.js",
+        "react-waterfall-render/": "https://unpkg.com/react-waterfall-render@4.0.1/",
         "ruck/": "https://deno.land/x/ruck@v7.0.0/"
       }
     }
     ```
+
+    The [esm.sh](https://esm.sh) URLs should be regularly updated to the latest
+    build URLs these modules re-export:
+
+    - `react`:
+      [https://esm.sh/react@17.0.2?target=es2021](https://esm.sh/react@17.0.2?target=es2021)
+    - `react-dom`:
+      [https://esm.sh/react-dom@17.0.2?target=es2021](https://esm.sh/react-dom@17.0.2?target=es2021)
 
   A DRY approach is to Git ignore the import map files and generate them with a
   script that’s a single source of truth.
