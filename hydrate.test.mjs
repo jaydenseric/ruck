@@ -2,26 +2,10 @@
 
 import puppeteer from "puppeteer";
 import { createElement as h, Fragment } from "react";
-import { assertRejects } from "std/testing/asserts.ts";
 
 import serveProjectFiles from "./test/serveProjectFiles.mjs";
 import testPuppeteerPage from "./test/testPuppeteerPage.mjs";
-import hydrate from "./hydrate.mjs";
 import readImportMapFile from "./readImportMapFile.mjs";
-
-Deno.test("`hydrate` with option `router` not a function.", async () => {
-  await assertRejects(
-    () =>
-      hydrate({
-        appComponent: () => h(Fragment),
-        // @ts-expect-error Testing invalid.
-        router: true,
-        cacheData: {},
-      }),
-    TypeError,
-    "Option `router` must be a function.",
-  );
-});
 
 Deno.test("`hydrate` in a DOM environment.", async () => {
   const abortController = new AbortController();
@@ -54,19 +38,61 @@ Deno.test("`hydrate` in a DOM environment.", async () => {
       // Todo: Refactor to use Deno test steps once this Deno bug is fixed:
       // https://github.com/denoland/deno/issues/15425
 
+      // Test `hydrate` with option `router` not a function.
+      await testPuppeteerPage(
+        browser,
+        projectFilesOriginUrl,
+        async (page) => {
+          await page.setContent(/* HTML */ `<!DOCTYPE html>
+    <html>
+      <head>
+        ${scriptImportMap}
+        ${htmlRuckHeadStart}
+        ${htmlRuckHeadEnd}
+      </head>
+      ${htmlRuckBodyReactRoot}
+    </html>`);
+
+          await page.evaluate(async () => {
+            const { default: hydrate } =
+              await /** @type {Promise<import("./hydrate.mjs")>} */ (import(
+                "ruck/hydrate.mjs"
+              ));
+
+            try {
+              await hydrate({
+                appComponent: () => h(Fragment),
+                // @ts-expect-error Testing invalid.
+                router: true,
+                cacheData: {},
+              });
+
+              throw new Error("Expected an error.");
+            } catch (error) {
+              if (
+                !(error instanceof TypeError) ||
+                error.message !== "Option `router` must be a function."
+              ) {
+                throw error;
+              }
+            }
+          });
+        },
+      );
+
       // Test `hydrate` with Ruck body React app DOM node missing.
       await testPuppeteerPage(
         browser,
         projectFilesOriginUrl,
         async (page) => {
           await page.setContent(/* HTML */ `<!DOCTYPE html>
-<html>
-  <head>
-    ${scriptImportMap}
-    ${htmlRuckHeadStart}
-    ${htmlRuckHeadEnd}
-  </head>
-</html>`);
+    <html>
+      <head>
+        ${scriptImportMap}
+        ${htmlRuckHeadStart}
+        ${htmlRuckHeadEnd}
+      </head>
+    </html>`);
 
           await page.evaluate(async () => {
             const { default: hydrate } =
@@ -100,13 +126,13 @@ Deno.test("`hydrate` in a DOM environment.", async () => {
         projectFilesOriginUrl,
         async (page) => {
           await page.setContent(/* HTML */ `<!DOCTYPE html>
-<html>
-  <head>
-    ${scriptImportMap}
-    ${htmlRuckHeadEnd}
-  </head>
-  ${htmlRuckBodyReactRoot}
-</html>`);
+    <html>
+      <head>
+        ${scriptImportMap}
+        ${htmlRuckHeadEnd}
+      </head>
+      ${htmlRuckBodyReactRoot}
+    </html>`);
 
           await page.evaluate(async () => {
             const { default: hydrate } =
@@ -140,13 +166,13 @@ Deno.test("`hydrate` in a DOM environment.", async () => {
         projectFilesOriginUrl,
         async (page) => {
           await page.setContent(/* HTML */ `<!DOCTYPE html>
-<html>
-  <head>
-    ${scriptImportMap}
-    ${htmlRuckHeadStart}
-  </head>
-  ${htmlRuckBodyReactRoot}
-</html>`);
+    <html>
+      <head>
+        ${scriptImportMap}
+        ${htmlRuckHeadStart}
+      </head>
+      ${htmlRuckBodyReactRoot}
+    </html>`);
 
           await page.evaluate(async () => {
             const { default: hydrate } =
