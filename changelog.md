@@ -2,6 +2,15 @@
 
 ## Next
 
+### Major
+
+- Updated dependencies.
+- React v18 is now supported; dropping support for earlier versions.
+  - Project client import maps must now have a `react-dom/client` entry, instead
+    of `react-dom`.
+  - Ruck now uses in `hydrate.mjs` the new function `hydrateRoot` from
+    `react-dom/client` instead of the old function `hydrate` from `react-dom`.
+
 ### Patch
 
 - Updated dependencies.

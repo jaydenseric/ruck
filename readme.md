@@ -85,8 +85,8 @@ A Ruck project contains:
     {
       "imports": {
         "graphql-react/": "https://unpkg.com/graphql-react@20.0.0/",
-        "react": "https://esm.sh/react@17.0.2?target=deno&dev",
-        "react-dom/server": "https://esm.sh/react-dom@17.0.2/server?target=deno&dev",
+        "react": "https://esm.sh/react@18.2.0?target=deno&dev",
+        "react-dom/server": "https://esm.sh/react-dom@18.2.0/server?target=deno&dev",
         "react-waterfall-render/": "https://unpkg.com/react-waterfall-render@5.0.0/",
         "ruck/": "https://deno.land/x/ruck@v7.0.0/",
         "std/": "https://deno.land/std@0.154.0/"
@@ -99,8 +99,8 @@ A Ruck project contains:
     {
       "imports": {
         "graphql-react/": "https://unpkg.com/graphql-react@20.0.0/",
-        "react": "https://esm.sh/react@17.0.2?target=deno",
-        "react-dom/server": "https://esm.sh/react-dom@17.0.2/server?target=deno",
+        "react": "https://esm.sh/react@18.2.0?target=deno",
+        "react-dom/server": "https://esm.sh/react-dom@18.2.0/server?target=deno",
         "react-waterfall-render/": "https://unpkg.com/react-waterfall-render@5.0.0/",
         "ruck/": "https://deno.land/x/ruck@v7.0.0/",
         "std/": "https://deno.land/std@0.154.0/"
@@ -113,8 +113,8 @@ A Ruck project contains:
     {
       "imports": {
         "graphql-react/": "https://unpkg.com/graphql-react@20.0.0/",
-        "react": "https://esm.sh/stable/react@17.0.2/es2021/react.development.js",
-        "react-dom": "https://esm.sh/v92/react-dom@17.0.2/es2021/react-dom.development.js",
+        "react": "https://esm.sh/stable/react@18.2.0/es2021/react.development.js",
+        "react-dom/client": "https://esm.sh/v92/react-dom@18.2.0/es2021/client.development.js",
         "react-waterfall-render/": "https://unpkg.com/react-waterfall-render@5.0.0/",
         "ruck/": "https://deno.land/x/ruck@v7.0.0/"
       }
@@ -125,17 +125,17 @@ A Ruck project contains:
     build URLs these modules re-export:
 
     - `react`:
-      [https://esm.sh/react@17.0.2?target=es2021&dev](https://esm.sh/react@17.0.2?target=es2021&dev)
-    - `react-dom`:
-      [https://esm.sh/react-dom@17.0.2?target=es2021&dev](https://esm.sh/react-dom@17.0.2?target=es2021&dev)
+      [https://esm.sh/react@18.2.0?target=es2021&dev](https://esm.sh/react@18.2.0?target=es2021&dev)
+    - `react-dom/client`:
+      [https://esm.sh/react-dom@18.2.0/client?target=es2021&dev](https://esm.sh/react-dom@18.2.0/client?target=es2021&dev)
   - `importMap.client.json`
 
     ```json
     {
       "imports": {
         "graphql-react/": "https://unpkg.com/graphql-react@20.0.0/",
-        "react": "https://esm.sh/stable/react@17.0.2/es2021/react.js",
-        "react-dom": "https://esm.sh/v92/react-dom@17.0.2/es2021/react-dom.js",
+        "react": "https://esm.sh/stable/react@18.2.0/es2021/react.js",
+        "react-dom/client": "https://esm.sh/v92/react-dom@18.2.0/es2021/client.js",
         "react-waterfall-render/": "https://unpkg.com/react-waterfall-render@5.0.0/",
         "ruck/": "https://deno.land/x/ruck@v7.0.0/"
       }
@@ -146,9 +146,9 @@ A Ruck project contains:
     build URLs these modules re-export:
 
     - `react`:
-      [https://esm.sh/react@17.0.2?target=es2021](https://esm.sh/react@17.0.2?target=es2021)
-    - `react-dom`:
-      [https://esm.sh/react-dom@17.0.2?target=es2021](https://esm.sh/react-dom@17.0.2?target=es2021)
+      [https://esm.sh/react@18.2.0?target=es2021](https://esm.sh/react@18.2.0?target=es2021)
+    - `react-dom/client`:
+      [https://esm.sh/react-dom@18.2.0/client?target=es2021](https://esm.sh/react-dom@18.2.0/client?target=es2021)
 
   A DRY approach is to Git ignore the import map files and generate them with a
   script that’s a single source of truth.

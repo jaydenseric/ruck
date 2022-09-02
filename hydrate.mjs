@@ -3,7 +3,7 @@
 import Cache from "graphql-react/Cache.mjs";
 import Loading from "graphql-react/Loading.mjs";
 import { createElement as h } from "react";
-import { hydrate as reactHydrate } from "react-dom";
+import { hydrateRoot } from "react-dom/client";
 
 import ClientProvider from "./ClientProvider.mjs";
 import createPseudoNode from "./createPseudoNode.mjs";
@@ -23,9 +23,11 @@ export default async function hydrate({ router, appComponent, cacheData }) {
     throw new TypeError("Option `router` must be a function.");
   }
 
-  const bodyReactRoot = document.getElementById("ruck-app");
+  const bodyReactRootContainer = document.getElementById("ruck-app");
 
-  if (!bodyReactRoot) throw new Error("Ruck body React app DOM node missing.");
+  if (!bodyReactRootContainer) {
+    throw new Error("Ruck body React app DOM node missing.");
+  }
 
   const ruckHeadStart = document.head.querySelector('[name="ruck-head-start"]');
 
@@ -39,7 +41,7 @@ export default async function hydrate({ router, appComponent, cacheData }) {
     throw new Error("Ruck head React app end DOM node missing.");
   }
 
-  const headReactRoot = /** @type {HTMLHeadElement} */ (
+  const headReactRootContainer = /** @type {HTMLHeadElement} */ (
     createPseudoNode(ruckHeadStart, ruckHeadEnd)
   );
   const headManager = new HeadManager();
@@ -52,9 +54,10 @@ export default async function hydrate({ router, appComponent, cacheData }) {
     cleanup,
   };
 
-  // Hydrate the body React app first, so the head manager knows what content
-  // to render in the head app.
-  reactHydrate(
+  // Hydrate the body React app first, so the head manager knows what content to
+  // render in the head app.
+  hydrateRoot(
+    bodyReactRootContainer,
     h(
       ClientProvider,
       {
@@ -66,11 +69,10 @@ export default async function hydrate({ router, appComponent, cacheData }) {
         initialRoute,
         onEffectsDone() {
           // Hydrate the head React app.
-          reactHydrate(h(HeadContent, { headManager }), headReactRoot);
+          hydrateRoot(headReactRootContainer, h(HeadContent, { headManager }));
         },
       },
       h(appComponent),
     ),
-    bodyReactRoot,
   );
 }
