@@ -7,6 +7,14 @@
 [Deno](https://deno.land). It can be used to create basic sites or powerful
 apps.
 
+- [Features](#features)
+- [Installation](#installation)
+- [Examples](#examples)
+- [Requirements](#requirements)
+- [Contributing](#contributing)
+
+## Features
+
 Work with cutting edge standard technologies such as
 [ESM](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules),
 [dynamic imports](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules#dynamic_module_loading),
@@ -14,7 +22,8 @@ Work with cutting edge standard technologies such as
 [import maps](https://github.com/WICG/import-maps) to avoid build steps like
 transpilation or bundling. Deno and browsers directly run the source code. Ruck
 is _extremely_ lean with few dependencies. Modules are focused with default
-exports that are only deep imported when needed.
+exports that are only deep imported when needed, for
+[optimal JavaScript module design](https://jaydenseric.com/blog/optimal-javascript-module-design).
 
 Some things that are complicated or impossible with traditional frameworks are
 easy with Ruck, for example…

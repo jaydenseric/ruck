@@ -18,8 +18,12 @@
   - Remove the `cdn` subdomain that was deprecated in [esm.sh](https://esm.sh)
     [v79](https://github.com/ije/esm.sh/releases/tag/v79).
   - Use `?target=deno` in server import maps.
-- Update the readme to document how client import map [esm.sh](https://esm.sh)
-  URLs are updated.
+- Updated the readme:
+  - Added heading links to the intro.
+  - Added a “Features” heading.
+  - Mention
+    [optimal JavaScript module design](https://jaydenseric.com/blog/optimal-javascript-module-design).
+  - Document how client import map [esm.sh](https://esm.sh) URLs are updated.
 - No longer using the Deno `--unstable` flag for the install and test scripts.
 - Made it easier to run the script for finding the minimum compatible Deno
   version by making it executable and adding a shebang.
