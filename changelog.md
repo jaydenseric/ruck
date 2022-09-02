@@ -25,6 +25,7 @@
   version by making it executable and adding a shebang.
 - Added a new script to type check every JavaScript module in the project, and
   configured GitHub Actions CI to use it.
+- Updated Puppeteer for tests and modernized related test helper code.
 - Improved console logging of Puppeteer browser console output in tests.
 - Refactored function `createPseudoNode` tests to better isolate each test.
 - Refactored function `hydrate` tests to better isolate each test and avoid

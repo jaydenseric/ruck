@@ -1,5 +1,6 @@
 // @ts-check
 
+import { Browser } from "puppeteer";
 import { ensureDir } from "std/fs/mod.ts";
 import { fromFileUrl } from "std/path/mod.ts";
 import { assertEquals } from "std/testing/asserts.ts";
@@ -10,7 +11,7 @@ const coverageDirUrl = new URL(".coverage/", projectDirUrl);
 /**
  * Creates a new Puppeteer page for testing served project files with script
  * coverage enabled.
- * @param {import("puppeteer").Browser} browser Puppeteer browser.
+ * @param {Browser} browser Puppeteer browser.
  * @param {URL} projectFilesOriginUrl Project files origin URL.
  * @param {(page: import("puppeteer").Page) => void | Promise<void>} callback
  *   Receives the Puppeteer page, ready for testing.
@@ -20,8 +21,7 @@ export default async function testPuppeteerPage(
   projectFilesOriginUrl,
   callback,
 ) {
-  // Unable to do an `instanceof` check.
-  if (typeof browser !== "object" || !browser) {
+  if (!(browser instanceof Browser)) {
     throw new TypeError(
       "Argument 1 `browser` must be a Puppeteer `Browser` instance.",
     );
@@ -90,14 +90,11 @@ export default async function testPuppeteerPage(
     try {
       await callback(page);
     } finally {
-      // @ts-ignore This private API is the only way to get the raw V8 script
-      // coverage result, see:
+      // This private API is the only way to get the raw V8 script coverage
+      // result, see:
       // https://github.com/puppeteer/puppeteer/issues/2136#issuecomment-657080751
-      const pageClient = page._client;
-
-      /** @type {{ result: Array<ScriptCoverage>}} */
+      const pageClient = page._client();
       const { result } = await pageClient.send("Profiler.takePreciseCoverage");
-
       await page.coverage.stopJSCoverage();
 
       await ensureDir(fromFileUrl(coverageDirUrl));
@@ -128,30 +125,3 @@ export default async function testPuppeteerPage(
     await page.close();
   }
 }
-
-/**
- * Coverage data for a source range.
- * @typedef {object} CoverageRange
- * @prop {number} startOffset Source offset for the range start.
- * @prop {number} endOffset Source offset for the range end.
- * @prop {number} count Collected execution count for the source range.
- */
-
-/**
- * Coverage data for a JavaScript function.
- * @typedef {object} FunctionCoverage
- * @prop {string} functionName JavaScript function name.
- * @prop {Array<CoverageRange>} ranges Source ranges within the function with
- *   coverage data.
- * @prop {boolean} isBlockCoverage Does coverage data for this function have
- *   block granularity.
- */
-
-/**
- * Coverage data for a JavaScript script.
- * @typedef {object} ScriptCoverage
- * @prop {string} scriptId JavaScript script ID.
- * @prop {string} url JavaScript script name or URL.
- * @prop {Array<FunctionCoverage>} functions Functions within the script that
- *   have coverage data.
- */
