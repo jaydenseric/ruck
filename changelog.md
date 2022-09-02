@@ -30,6 +30,7 @@
 - Refactored function `hydrate` tests to better isolate each test and avoid
   Puppeteer browser errors relating to modifying HTML and import maps.
 - Changed some test assertions to be less noisy if they fail.
+- Updated GitHub Actions CI config.
 
 ## 7.0.0
 
