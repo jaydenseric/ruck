@@ -44,14 +44,14 @@ Deno.test("`hydrate` in a DOM environment.", async () => {
         projectFilesOriginUrl,
         async (page) => {
           await page.setContent(/* HTML */ `<!DOCTYPE html>
-    <html>
-      <head>
-        ${scriptImportMap}
-        ${htmlRuckHeadStart}
-        ${htmlRuckHeadEnd}
-      </head>
-      ${htmlRuckBodyReactRoot}
-    </html>`);
+<html>
+  <head>
+    ${scriptImportMap}
+    ${htmlRuckHeadStart}
+    ${htmlRuckHeadEnd}
+  </head>
+  ${htmlRuckBodyReactRoot}
+</html>`);
 
           await page.evaluate(async () => {
             const { default: hydrate } =
@@ -86,13 +86,13 @@ Deno.test("`hydrate` in a DOM environment.", async () => {
         projectFilesOriginUrl,
         async (page) => {
           await page.setContent(/* HTML */ `<!DOCTYPE html>
-    <html>
-      <head>
-        ${scriptImportMap}
-        ${htmlRuckHeadStart}
-        ${htmlRuckHeadEnd}
-      </head>
-    </html>`);
+<html>
+  <head>
+    ${scriptImportMap}
+    ${htmlRuckHeadStart}
+    ${htmlRuckHeadEnd}
+  </head>
+</html>`);
 
           await page.evaluate(async () => {
             const { default: hydrate } =
@@ -126,13 +126,13 @@ Deno.test("`hydrate` in a DOM environment.", async () => {
         projectFilesOriginUrl,
         async (page) => {
           await page.setContent(/* HTML */ `<!DOCTYPE html>
-    <html>
-      <head>
-        ${scriptImportMap}
-        ${htmlRuckHeadEnd}
-      </head>
-      ${htmlRuckBodyReactRoot}
-    </html>`);
+<html>
+  <head>
+    ${scriptImportMap}
+    ${htmlRuckHeadEnd}
+  </head>
+  ${htmlRuckBodyReactRoot}
+</html>`);
 
           await page.evaluate(async () => {
             const { default: hydrate } =
@@ -166,13 +166,13 @@ Deno.test("`hydrate` in a DOM environment.", async () => {
         projectFilesOriginUrl,
         async (page) => {
           await page.setContent(/* HTML */ `<!DOCTYPE html>
-    <html>
-      <head>
-        ${scriptImportMap}
-        ${htmlRuckHeadStart}
-      </head>
-      ${htmlRuckBodyReactRoot}
-    </html>`);
+<html>
+  <head>
+    ${scriptImportMap}
+    ${htmlRuckHeadStart}
+  </head>
+  ${htmlRuckBodyReactRoot}
+</html>`);
 
           await page.evaluate(async () => {
             const { default: hydrate } =
