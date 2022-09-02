@@ -20,7 +20,7 @@ await Deno.writeTextFile(typeCheckIndexModuleName, rawModule);
 console.log("Checking the temporary index module…");
 
 const process = Deno.run({
-  cmd: ["deno", "check", typeCheckIndexModuleName],
+  cmd: ["deno", "check", "--remote", typeCheckIndexModuleName],
   stdout: "piped",
   stderr: "piped",
 });
