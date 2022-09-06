@@ -1,6 +1,6 @@
 # Ruck changelog
 
-## Next
+## 8.0.1
 
 ### Patch
 
