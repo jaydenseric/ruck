@@ -1,5 +1,12 @@
 # Ruck changelog
 
+## Next
+
+### Patch
+
+- Fixed a bug in the function `createPseudoNode` where click events could
+  sometimes cause React rendering errors in the head app.
+
 ## 8.0.0
 
 ### Major

@@ -451,6 +451,44 @@ Deno.test("`createPseudoNode` in a DOM environment.", async () => {
           }, projectFileServer.port);
         },
       );
+
+      // Test `createPseudoNode` setting a custom property.
+      await testPuppeteerPage(
+        browser,
+        projectFilesOriginUrl,
+        async (page) => {
+          await page.setContent(
+            '<!DOCTYPE html><html><head><meta name="before"><meta name="start"><meta name="child1"><meta name="child2"><meta name="end"><meta name="after"></head></html>',
+          );
+
+          await page.evaluate(async (projectFileServerPort) => {
+            /** @type {import("./createPseudoNode.mjs")} */
+            const { default: createPseudoNode } = await import(
+              `http://localhost:${projectFileServerPort}/createPseudoNode.mjs`
+            );
+
+            const pseudoNode = createPseudoNode(
+              /** @type {Element} */ (document.querySelector('[name="start"]')),
+              /** @type {Element} */ (document.querySelector('[name="end"]')),
+            );
+
+            const key = "ruck_test_custom_property";
+            const value = {};
+
+            // @ts-ignore Testing a custom property.
+            pseudoNode[key] = value;
+
+            if (
+              // @ts-ignore Testing a custom property.
+              pseudoNode[key] !== value
+            ) {
+              throw new Error(
+                "Expected custom property to have set on the node.",
+              );
+            }
+          }, projectFileServer.port);
+        },
+      );
     } finally {
       await browser.close();
     }

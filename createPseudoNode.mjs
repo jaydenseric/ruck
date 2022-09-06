@@ -94,6 +94,12 @@ export default function createPseudoNode(startNode, endNode) {
           }
         }
       },
+
+      // React sets custom and standard properties.
+      // Todo: Avoid mutating the real DOM node.
+      set: function (target, propertyKey, propertyValue) {
+        return Reflect.set(target, propertyKey, propertyValue, target);
+      },
     })
   );
 }
