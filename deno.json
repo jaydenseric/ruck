@@ -8,5 +8,6 @@
       "deno.unstable"
     ]
   },
-  "importMap": "importMap.json"
+  "importMap": "importMap.json",
+  "lock": false
 }

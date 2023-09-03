@@ -1,5 +1,11 @@
 # Ruck changelog
 
+## Next
+
+### Patch
+
+- Configured Deno to not auto-generate a lockfile.
+
 ## 8.0.1
 
 ### Patch
