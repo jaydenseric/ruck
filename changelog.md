@@ -5,6 +5,8 @@
 ### Patch
 
 - Configured Deno to not auto-generate a lockfile.
+- Added a project `.zed/settings.json` file to make is easier to contribute
+  using the Zed editor.
 
 ## 8.0.1
 
