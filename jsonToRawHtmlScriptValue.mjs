@@ -5,13 +5,13 @@
 // https://github.com/zertosh/htmlescape/blob/02dbcc367dd3069b73253ac08d87a40d37984239/htmlescape.js
 
 /** @type {{ [key: string]: string }} */
-const escapeMap = ({
+const escapeMap = {
   "&": "\\u0026",
   "<": "\\u003c",
   ">": "\\u003e",
   "\u2028": "\\u2028",
   "\u2029": "\\u2029",
-});
+};
 
 /**
  * HTML escapes a JSON string for use as a raw JavaScript value within a

@@ -19,6 +19,7 @@
 
 - Updated the project and readme import maps for the latest React v18.3.1 URLs.
 - Configured Deno to not auto-generate a lockfile.
+- Fixed formatting issues caused by updating Deno.
 - Added a project `.zed/settings.json` file to make is easier to contribute
   using the Zed editor.
 

@@ -8,6 +8,12 @@
       "deno.unstable"
     ]
   },
+  "fmt": {
+    "exclude": [
+      "test/fixtures/documentHasStyleSheet/css/empty.css",
+      "test/fixtures/documentHasStyleSheet/css/unparsable.css"
+    ]
+  },
   "importMap": "importMap.json",
   "lock": false
 }
