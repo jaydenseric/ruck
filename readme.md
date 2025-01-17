@@ -582,7 +582,7 @@ A Ruck project contains:
 
 ## Requirements
 
-- [Deno CLI](https://deno.land/#installation) v1.21.2+.
+- [Deno CLI](https://deno.land/#installation) v2+.
 
 ## Contributing
 

@@ -2,6 +2,10 @@
 
 ## Next
 
+### Major
+
+- Updated the required Deno version to v2+.
+
 ### Patch
 
 - Configured Deno to not auto-generate a lockfile.
