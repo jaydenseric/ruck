@@ -4,6 +4,7 @@
 # Run the tests with code coverage.
 deno test \
   --allow-env \
+  --allow-import \
   --allow-net \
   --allow-run \
   --allow-read \

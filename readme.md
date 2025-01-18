@@ -221,6 +221,7 @@ A Ruck project contains:
   then
     deno run \
       --allow-env \
+      --allow-import \
       --allow-net \
       --allow-read \
       --import-map=importMap.server.dev.json \
@@ -229,6 +230,7 @@ A Ruck project contains:
   else
     deno run \
       --allow-env \
+      --allow-import \
       --allow-net \
       --allow-read \
       --import-map=importMap.server.json \
