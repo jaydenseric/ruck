@@ -76,9 +76,9 @@ export default async function publicFileResponse(
 
     return new Response(file.readable, responseInit);
   } catch (error) {
-    // Avoid closing an already closed file, see:
-    // https://github.com/denoland/deno/issues/14210
-    if (file.rid in Deno.resources()) Deno.close(file.rid);
+    // Safely ensure the file is closed, see:
+    // https://github.com/denoland/deno/issues/14210#issuecomment-2600381752
+    file[Symbol.dispose]();
 
     throw error;
   }

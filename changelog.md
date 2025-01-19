@@ -14,6 +14,9 @@
   `Deno.serve`.
 - Migrated from the deprecated Deno standard library function
   `readableStreamFromReader` to the new Deno API `Deno.FsFile.readable`.
+- Migrated from the deprecated Deno APIs `Deno.FsFile.rid`, `Deno.resources`,
+  and `Deno.close` to manually calling the modern `Deno.FsFile` method
+  `Symbol.dispose`.
 
 ### Patch
 
