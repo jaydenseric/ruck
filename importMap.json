@@ -1,5 +1,10 @@
 {
   "imports": {
+    "@std/assert/": "jsr:/@std/assert@^1.0.10/",
+    "@std/fs/": "jsr:/@std/fs@^1.0.9/",
+    "@std/http/": "jsr:/@std/http@^1.0.12/",
+    "@std/media-types/": "jsr:/@std/media-types@^1.1.0/",
+    "@std/path/": "jsr:/@std/path@^1.0.8/",
     "free_port/": "https://deno.land/x/free_port@v1.2.0/",
     "graphql-react/": "https://unpkg.com/graphql-react@20.0.0/",
     "puppeteer": "https://deno.land/x/puppeteer@16.2.0/mod.ts",
@@ -8,7 +13,6 @@
     "react-dom/server": "https://esm.sh/react-dom@18.2.0/server?dev",
     "react-test-renderer": "https://esm.sh/react-test-renderer@18.2.0?dev",
     "react-waterfall-render/": "https://unpkg.com/react-waterfall-render@5.0.0/",
-    "ruck/": "./",
-    "std/": "https://deno.land/std@0.154.0/"
+    "ruck/": "./"
   }
 }

@@ -1,6 +1,6 @@
 // @ts-check
 
-import { assertRejects } from "std/testing/asserts.ts";
+import { assertRejects } from "@std/assert/rejects";
 
 import serve from "./serve.mjs";
 

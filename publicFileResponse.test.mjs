@@ -1,11 +1,9 @@
 // @ts-check
 
-import {
-  assert,
-  assertEquals,
-  assertRejects,
-  assertStrictEquals,
-} from "std/testing/asserts.ts";
+import { assert } from "@std/assert/assert";
+import { assertEquals } from "@std/assert/equals";
+import { assertRejects } from "@std/assert/rejects";
+import { assertStrictEquals } from "@std/assert/strict-equals";
 
 import publicFileResponse from "./publicFileResponse.mjs";
 
@@ -165,7 +163,7 @@ Deno.test("`publicFileResponse` with a JavaScript module.", async () => {
 
   assert(response.headers instanceof Headers);
   assertEquals(Array.from(response.headers.entries()), [
-    ["content-type", "application/javascript; charset=UTF-8"],
+    ["content-type", "text/javascript; charset=UTF-8"],
   ]);
   assertStrictEquals(
     await response.text(),
@@ -217,7 +215,7 @@ Deno.test(
     assert(response.headers instanceof Headers);
     assertEquals(Array.from(response.headers.entries()), [
       addedHeadersEntry,
-      ["content-type", "application/javascript; charset=UTF-8"],
+      ["content-type", "text/javascript; charset=UTF-8"],
     ]);
     assertStrictEquals(
       await response.text(),

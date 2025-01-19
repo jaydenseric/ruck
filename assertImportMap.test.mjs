@@ -1,6 +1,7 @@
 // @ts-check
 
-import { assertIsError, fail } from "std/testing/asserts.ts";
+import { fail } from "@std/assert/fail";
+import { assertIsError } from "@std/assert/is-error";
 
 import assertImportMap from "./assertImportMap.mjs";
 

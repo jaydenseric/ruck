@@ -1,8 +1,7 @@
 // @ts-check
 
+import { STATUS_CODE, STATUS_TEXT } from "@std/http/status";
 import { getFreePort } from "free_port/mod.ts";
-import { Status, STATUS_TEXT } from "std/http/http_status.ts";
-import { serve } from "std/http/server.ts";
 
 import publicFileResponse from "../publicFileResponse.mjs";
 
@@ -23,40 +22,41 @@ export default async function serveProjectFiles(signal) {
   }
 
   const port = await getFreePort(3000);
+  const server = Deno.serve(
+    { port, signal },
+    async (request) => {
+      try {
+        return await publicFileResponse(
+          request,
+          publicDir,
+          customizeResponseInit,
+        );
+      } catch (error) {
+        const headers = new Headers();
+        return new Response(
+          null,
+          await customizeResponseInit(
+            request,
+            error instanceof Deno.errors.NotFound
+              ? {
+                status: STATUS_CODE.NotFound,
+                statusText: STATUS_TEXT[STATUS_CODE.NotFound],
+                headers,
+              }
+              : {
+                status: STATUS_CODE.InternalServerError,
+                statusText: STATUS_TEXT[STATUS_CODE.InternalServerError],
+                headers,
+              },
+          ),
+        );
+      }
+    },
+  );
 
   return {
     port,
-    close: serve(
-      async (request) => {
-        try {
-          return await publicFileResponse(
-            request,
-            publicDir,
-            customizeResponseInit,
-          );
-        } catch (error) {
-          const headers = new Headers();
-          return new Response(
-            null,
-            await customizeResponseInit(
-              request,
-              error instanceof Deno.errors.NotFound
-                ? {
-                  status: Status.NotFound,
-                  statusText: STATUS_TEXT[Status.NotFound],
-                  headers,
-                }
-                : {
-                  status: Status.InternalServerError,
-                  statusText: STATUS_TEXT[Status.InternalServerError],
-                  headers,
-                },
-            ),
-          );
-        }
-      },
-      { port, signal },
-    ),
+    close: server.finished,
   };
 }
 

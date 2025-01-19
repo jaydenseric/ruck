@@ -1,9 +1,9 @@
 // @ts-check
 
+import { assertEquals } from "@std/assert/equals";
+import { ensureDir } from "@std/fs/ensure-dir";
+import { fromFileUrl } from "@std/path/from-file-url";
 import { Browser } from "puppeteer";
-import { ensureDir } from "std/fs/mod.ts";
-import { fromFileUrl } from "std/path/mod.ts";
-import { assertEquals } from "std/testing/asserts.ts";
 
 const projectDirUrl = new URL("../", import.meta.url);
 const coverageDirUrl = new URL(".coverage/", projectDirUrl);

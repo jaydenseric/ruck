@@ -5,6 +5,15 @@
 ### Major
 
 - Updated the required Deno version to v2+.
+- Updated the Deno standard library dependencies.
+  - They are now [https://jsr.io/@std](https://jsr.io/@std) packages, instead of
+    the package [https://deno.land/std@0.154.0](https://deno.land/std@0.154.0).
+  - Ruck now serves JavaScript files with the content type `text/javascript`
+    instead of `application/javascript`.
+- Migrated the HTTP server from the deprecated Deno standard library function to
+  `Deno.serve`.
+- Migrated from the deprecated Deno standard library function
+  `readableStreamFromReader` to the new Deno API `Deno.FsFile.readable`.
 
 ### Patch
 

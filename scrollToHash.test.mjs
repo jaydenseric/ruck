@@ -1,7 +1,7 @@
 // @ts-check
 
+import { assertThrows } from "@std/assert/throws";
 import puppeteer from "puppeteer";
-import { assertThrows } from "std/testing/asserts.ts";
 
 import serveProjectFiles from "./test/serveProjectFiles.mjs";
 import testPuppeteerPage from "./test/testPuppeteerPage.mjs";

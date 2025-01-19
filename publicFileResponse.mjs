@@ -1,9 +1,8 @@
 // @ts-check
 
-import { Status, STATUS_TEXT } from "std/http/http_status.ts";
-import { contentType } from "std/media_types/mod.ts";
-import { extname } from "std/path/mod.ts";
-import { readableStreamFromReader } from "std/streams/conversion.ts";
+import { STATUS_CODE, STATUS_TEXT } from "@std/http/status";
+import { contentType } from "@std/media-types/content-type";
+import { extname } from "@std/path/extname";
 
 /**
  * Creates a response for a public file request.
@@ -54,12 +53,10 @@ export default async function publicFileResponse(
 
     if (!isFile) throw new Deno.errors.NotFound();
 
-    const body = readableStreamFromReader(file);
-
     /** @type {import("./serve.mjs").ResponseInit} */
     let responseInit = {
-      status: Status.OK,
-      statusText: STATUS_TEXT[Status.OK],
+      status: STATUS_CODE.OK,
+      statusText: STATUS_TEXT[STATUS_CODE.OK],
       headers: new Headers(),
     };
 
@@ -77,7 +74,7 @@ export default async function publicFileResponse(
       responseInit = await customizeResponseInit(request, responseInit);
     }
 
-    return new Response(body, responseInit);
+    return new Response(file.readable, responseInit);
   } catch (error) {
     // Avoid closing an already closed file, see:
     // https://github.com/denoland/deno/issues/14210

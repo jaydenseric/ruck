@@ -1,5 +1,7 @@
 // @ts-check
 
+import { STATUS_CODE, STATUS_TEXT } from "@std/http/status";
+import { toFileUrl } from "@std/path/to-file-url";
 import Cache from "graphql-react/Cache.mjs";
 import CacheContext from "graphql-react/CacheContext.mjs";
 import Loading from "graphql-react/Loading.mjs";
@@ -7,9 +9,6 @@ import LoadingContext from "graphql-react/LoadingContext.mjs";
 import { createElement as h, Fragment } from "react";
 import { renderToString } from "react-dom/server";
 import waterfallRender from "react-waterfall-render/waterfallRender.mjs";
-import { Status, STATUS_TEXT } from "std/http/http_status.ts";
-import { serve as serveHttp } from "std/http/server.ts";
-import { toFileUrl } from "std/path/mod.ts";
 
 import assertImportMap from "./assertImportMap.mjs";
 import HeadManager from "./HeadManager.mjs";
@@ -123,7 +122,8 @@ export default async function serve({
     throw new Error(`Error importing \`${appFileUrl.href}\`.`, { cause });
   }
 
-  const close = serveHttp(
+  const server = Deno.serve(
+    { port, signal },
     async (request) => {
       // The route URL should be what the client originally used to start the
       // request.
@@ -202,8 +202,8 @@ export default async function serve({
 
         /** @type {ResponseInit} */
         const responseInit = {
-          status: Status.OK,
-          statusText: STATUS_TEXT[Status.OK],
+          status: STATUS_CODE.OK,
+          statusText: STATUS_TEXT[STATUS_CODE.OK],
           headers: new Headers({
             "content-type": "text/html; charset=utf-8",
           }),
@@ -291,10 +291,9 @@ hydrate({
         throw new Error("Ruck couldn’t serve the rendered route.", { cause });
       }
     },
-    { port, signal },
   );
 
-  return { close };
+  return { close: server.finished };
 }
 
 /**

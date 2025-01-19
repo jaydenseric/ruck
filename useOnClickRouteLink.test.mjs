@@ -1,10 +1,11 @@
 // @ts-check
 
+import { assert } from "@std/assert/assert";
+import { assertStrictEquals } from "@std/assert/strict-equals";
 import { getFreePort } from "free_port/mod.ts";
 import puppeteer from "puppeteer";
 import { createElement as h } from "react";
 import { act, create } from "react-test-renderer";
-import { assert, assertStrictEquals } from "std/testing/asserts.ts";
 
 import ReactHookTest from "./test/ReactHookTest.mjs";
 import serveProjectFiles from "./test/serveProjectFiles.mjs";

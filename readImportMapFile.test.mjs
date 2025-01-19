@@ -1,11 +1,9 @@
 // @ts-check
 
-import {
-  assertEquals,
-  assertIsError,
-  assertRejects,
-  fail,
-} from "std/testing/asserts.ts";
+import { assertEquals } from "@std/assert/equals";
+import { fail } from "@std/assert/fail";
+import { assertIsError } from "@std/assert/is-error";
+import { assertRejects } from "@std/assert/rejects";
 
 import readImportMapFile from "./readImportMapFile.mjs";
 

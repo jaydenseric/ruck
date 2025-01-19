@@ -1,8 +1,8 @@
 // @ts-check
 
+import { assertStrictEquals } from "@std/assert/strict-equals";
 import { createElement as h, useContext } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
-import { assertStrictEquals } from "std/testing/asserts.ts";
 
 import TransferContext from "./TransferContext.mjs";
 

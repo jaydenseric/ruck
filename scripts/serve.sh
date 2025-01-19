@@ -9,6 +9,6 @@ fi
 deno run \
   --allow-net \
   --allow-read \
-  https://deno.land/std/http/file_server.ts \
+  jsr:@std/http/file-server \
     --port=$1 \
     --cors

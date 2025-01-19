@@ -3,7 +3,7 @@
 // @ts-check
 // Type checks every JavaScript module in the project.
 
-import { expandGlob } from "std/fs/mod.ts";
+import { expandGlob } from "@std/fs/expand-glob";
 
 const typeCheckIndexModuleName = "type-check-index.mjs";
 

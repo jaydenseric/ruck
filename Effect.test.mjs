@@ -1,8 +1,9 @@
 // @ts-check
 
+import { assertEquals } from "@std/assert/equals";
+import { assertStrictEquals } from "@std/assert/strict-equals";
 import { createElement as h } from "react";
 import { act, create } from "react-test-renderer";
-import { assertEquals, assertStrictEquals } from "std/testing/asserts.ts";
 
 import Effect from "./Effect.mjs";
 

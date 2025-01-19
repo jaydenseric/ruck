@@ -1,12 +1,10 @@
 // @ts-check
 
+import { assertEquals } from "@std/assert/equals";
+import { assertStrictEquals } from "@std/assert/strict-equals";
+import { assertThrows } from "@std/assert/throws";
 import { createElement as h } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
-import {
-  assertEquals,
-  assertStrictEquals,
-  assertThrows,
-} from "std/testing/asserts.ts";
 
 import HeadManager from "./HeadManager.mjs";
 

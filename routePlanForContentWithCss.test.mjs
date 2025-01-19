@@ -1,6 +1,6 @@
 // @ts-check
 
-import { assertThrows } from "std/testing/asserts.ts";
+import { assertThrows } from "@std/assert/throws";
 
 import HeadManager from "./HeadManager.mjs";
 import routePlanForContentWithCss from "./routePlanForContentWithCss.mjs";
