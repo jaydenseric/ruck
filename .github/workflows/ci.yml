@@ -1,24 +1,50 @@
 name: CI
-on: [push, pull_request]
+on: [push, workflow_dispatch]
+env:
+  DENO_VERSION: "^2.1.6"
 jobs:
+  format-check:
+    name: Format check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: denoland/setup-deno@v2
+        with:
+          deno-version: ${{ env.DENO_VERSION }}
+      - run: deno fmt --check
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: denoland/setup-deno@v2
+        with:
+          deno-version: ${{ env.DENO_VERSION }}
+      - run: deno lint
+  type-check:
+    name: Type check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: denoland/setup-deno@v2
+        with:
+          deno-version: ${{ env.DENO_VERSION }}
+      - run: ./scripts/type-check.sh
   test:
-    name: Test with ${{ matrix.os }}
-    runs-on: ${{ matrix.os }}
+    name: Test
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v3
-      - name: Setup Deno
-        uses: denoland/setup-deno@v1
+      # Disable the modern Linux security feature “AppArmor” so the Chromium
+      # developer build installed by Astral can be used in tests:
+      # https://issues.chromium.org/issues/373753919
+      - name: Disable AppArmor
+        run: echo 0 | sudo tee /proc/sys/kernel/apparmor_restrict_unprivileged_userns
+        if: matrix.os == 'ubuntu-latest'
+      - uses: actions/checkout@v4
+      - uses: denoland/setup-deno@v2
         with:
-          deno-version: "^2.1.6"
-      - name: Format check
-        run: deno fmt --check
-      - name: Lint
-        run: deno lint
-      - name: Type check
-        run: ./scripts/type-check.sh
-      - name: Test
-        run: ./scripts/test.sh
+          deno-version: ${{ env.DENO_VERSION }}
+      - run: ./scripts/test.sh

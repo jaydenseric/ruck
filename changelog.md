@@ -22,6 +22,17 @@
 
 ### Patch
 
+- Updated the GitHub Actions CI config:
+  - No longer run the workflow on pull request.
+  - Enable manual workflow dispatching.
+  - Run checks in seperate jobs.
+  - For the test job on Linux, disable the modern security feature “AppArmor” so
+    the Chromium developer build installed by Astral can be used (see
+    [crbug.com/373753919](https://crbug.com/373753919)).
+  - Removed custom step names.
+  - Use Deno v2.
+  - Updated actions/checkout to v4.
+  - Updated actions/setup-deno to v2.
 - Updated the project and readme import maps for the latest React v18.3.1 URLs.
 - Configured Deno to not auto-generate a lockfile.
 - Fixed formatting issues caused by updating Deno.
