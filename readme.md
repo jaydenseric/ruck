@@ -597,17 +597,9 @@ A Ruck project contains:
 These CLI scripts are used for development and
 [GitHub Actions CI](./.github/workflows/ci.yml) checks.
 
-#### Install
-
-To install development dependencies (primarily [Puppeteer](https://pptr.dev)):
-
-```sh
-./scripts/install.sh
-```
-
 #### Test
 
-Beforehand, run the install script. To run the tests:
+To run the tests:
 
 ```sh
 ./scripts/test.sh

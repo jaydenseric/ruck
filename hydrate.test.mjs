@@ -1,10 +1,10 @@
 // @ts-check
 
-import puppeteer from "puppeteer";
+import { launch } from "@astral/astral";
 import { createElement as h, Fragment } from "react";
 
 import serveProjectFiles from "./test/serveProjectFiles.mjs";
-import testPuppeteerPage from "./test/testPuppeteerPage.mjs";
+import testBrowserPage from "./test/testBrowserPage.mjs";
 import readImportMapFile from "./readImportMapFile.mjs";
 
 Deno.test("`hydrate` in a DOM environment.", async () => {
@@ -32,14 +32,14 @@ Deno.test("`hydrate` in a DOM environment.", async () => {
     const htmlRuckHeadEnd = `<meta name="ruck-head-end" />`;
     const htmlRuckBodyReactRoot = `<div id="ruck-app"></div>`;
 
-    const browser = await puppeteer.launch();
+    const browser = await launch();
 
     try {
       // Todo: Refactor to use Deno test steps once this Deno bug is fixed:
       // https://github.com/denoland/deno/issues/15425
 
       // Test `hydrate` with option `router` not a function.
-      await testPuppeteerPage(
+      await testBrowserPage(
         browser,
         projectFilesOriginUrl,
         async (page) => {
@@ -81,7 +81,7 @@ Deno.test("`hydrate` in a DOM environment.", async () => {
       );
 
       // Test `hydrate` with Ruck body React app DOM node missing.
-      await testPuppeteerPage(
+      await testBrowserPage(
         browser,
         projectFilesOriginUrl,
         async (page) => {
@@ -121,7 +121,7 @@ Deno.test("`hydrate` in a DOM environment.", async () => {
       );
 
       // Test `hydrate` with Ruck head React app start DOM node missing.
-      await testPuppeteerPage(
+      await testBrowserPage(
         browser,
         projectFilesOriginUrl,
         async (page) => {
@@ -161,7 +161,7 @@ Deno.test("`hydrate` in a DOM environment.", async () => {
       );
 
       // Test `hydrate` with Ruck head React app end DOM node missing.
-      await testPuppeteerPage(
+      await testBrowserPage(
         browser,
         projectFilesOriginUrl,
         async (page) => {

@@ -1,15 +1,16 @@
 // @ts-check
 
+import { launch } from "@astral/astral";
 import { assert } from "@std/assert/assert";
 import { assertStrictEquals } from "@std/assert/strict-equals";
 import { getFreePort } from "free_port/mod.ts";
-import puppeteer from "puppeteer";
 import { createElement as h } from "react";
 import { act, create } from "react-test-renderer";
 
 import ReactHookTest from "./test/ReactHookTest.mjs";
+import browserPageUrl from "./test/browserPageUrl.mjs";
 import serveProjectFiles from "./test/serveProjectFiles.mjs";
-import testPuppeteerPage from "./test/testPuppeteerPage.mjs";
+import testBrowserPage from "./test/testBrowserPage.mjs";
 import NavigateContext from "./NavigateContext.mjs";
 import readImportMapFile from "./readImportMapFile.mjs";
 import serve from "./serve.mjs";
@@ -103,11 +104,11 @@ Deno.test("`useOnClickRouteLink` in a DOM environment.", async () => {
     });
 
     try {
-      const browser = await puppeteer.launch();
+      const browser = await launch();
       const browserUserAgent = await browser.userAgent();
 
       try {
-        await testPuppeteerPage(
+        await testBrowserPage(
           browser,
           projectFilesOriginUrl,
           async (page) => {
@@ -123,37 +124,37 @@ Deno.test("`useOnClickRouteLink` in a DOM environment.", async () => {
             // client side navigation…
 
             await page.keyboard.down("Alt");
-            await page.click('a[href="/b"]');
+            await page.locator('a[href="/b"]').click();
             await page.keyboard.up("Alt");
 
-            assertStrictEquals(page.url(), urlPageA);
+            assertStrictEquals(await browserPageUrl(page), urlPageA);
 
             // Test holding the control key when clicking the link prevents a
             // client side navigation…
 
             await page.keyboard.down("Control");
-            await page.click('a[href="/b"]');
+            await page.locator('a[href="/b"]').click();
             await page.keyboard.up("Control");
 
-            assertStrictEquals(page.url(), urlPageA);
+            assertStrictEquals(await browserPageUrl(page), urlPageA);
 
             // Test holding a meta key when clicking the link prevents a client
             // side navigation…
 
             await page.keyboard.down("Meta");
-            await page.click('a[href="/b"]');
+            await page.locator('a[href="/b"]').click();
             await page.keyboard.up("Meta");
 
             if (browserUserAgent.includes("Macintosh")) {
               // macOS Chrome opens a link clicked while the meta (command) key
               // is pressed in a new tab, so the current page URL should not
               // have changed.
-              assertStrictEquals(page.url(), urlPageA);
+              assertStrictEquals(await browserPageUrl(page), urlPageA);
             } else {
               // Linux Chrome opens a link clicked while a meta (command) key is
               // pressed in the current tab, so the current page URL should have
               // changed.
-              assertStrictEquals(page.url(), urlPageB);
+              assertStrictEquals(await browserPageUrl(page), urlPageB);
 
               // Manually go to page A to prepare the next test.
               await page.goto(urlPageA);
@@ -163,17 +164,17 @@ Deno.test("`useOnClickRouteLink` in a DOM environment.", async () => {
             // client side navigation…
 
             await page.keyboard.down("Shift");
-            await page.click('a[href="/b"]');
+            await page.locator('a[href="/b"]').click();
             await page.keyboard.up("Shift");
 
-            assertStrictEquals(page.url(), urlPageA);
+            assertStrictEquals(await browserPageUrl(page), urlPageA);
 
             // Test a main mouse button click on the link causes a client side
             // navigation…
 
             const [response1] = await Promise.all([
               page.waitForNavigation(),
-              page.click('a[href="/b"]'),
+              page.locator('a[href="/b"]').click(),
             ]);
 
             // Check it was a client side navigation and not a native page load.
@@ -187,7 +188,11 @@ Deno.test("`useOnClickRouteLink` in a DOM environment.", async () => {
             // Test pressing enter key on the focused link causes a client side
             // navigation…
 
-            await page.focus('a[href="/b"]');
+            await /** @type {typeof page.locator<HTMLAnchorElement>} */ (
+              page.locator
+            )('a[href="/b"]').evaluate((element) => {
+              element.focus();
+            });
 
             const [response2] = await Promise.all([
               page.waitForNavigation(),
@@ -202,9 +207,9 @@ Deno.test("`useOnClickRouteLink` in a DOM environment.", async () => {
             // Test `event.preventDefault()` before the event handler runs
             // prevents a navigation…
 
-            await page.click('a[href="/a"]');
+            await page.locator('a[href="/a"]').click();
 
-            assertStrictEquals(page.url(), urlPageB);
+            assertStrictEquals(await browserPageUrl(page), urlPageB);
           },
         );
       } finally {

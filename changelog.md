@@ -27,6 +27,9 @@
   required by Deno v2.
 - Added a project `.zed/settings.json` file to make is easier to contribute
   using the Zed editor.
+- Migrated from
+  [`deno-puppeteer`](https://github.com/lucacasonato/deno-puppeteer) to
+  [`@astral/astral`](https://github.com/lino-levan/astral) in tests.
 
 ## 8.0.1
 
