@@ -19,6 +19,6 @@ jobs:
       - name: Lint
         run: deno lint
       - name: Type check
-        run: ./scripts/type-check.mjs
+        run: ./scripts/type-check.sh
       - name: Test
         run: ./scripts/test.sh
