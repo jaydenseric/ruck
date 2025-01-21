@@ -291,7 +291,7 @@ A Ruck project contains:
   type:
 
   ```js
-  /** @type {import("ruck/serve.mjs").Router} */
+  /** @import { Router } from "ruck/serve.mjs" */
   ```
 
   Ruck provides an (optional) declarative system for automatic loading and
@@ -308,6 +308,11 @@ A Ruck project contains:
   ```js
   // @ts-check
 
+  /**
+   * @import { RouteContentWithCss } from "ruck/routePlanForContentWithCss.mjs"
+   * @import { Router } from "ruck/serve.mjs"
+   */
+
   import { createElement as h } from "react";
   import routePlanForContentWithCss from "ruck/routePlanForContentWithCss.mjs";
 
@@ -321,7 +326,7 @@ A Ruck project contains:
 
   /**
    * Gets the Ruck app route plan for a URL.
-   * @type {import("ruck/serve.mjs").Router}
+   * @type {Router}
    */
   export default function router(url, headManager, isInitialRoute) {
     if (url.pathname === "/") {
@@ -396,7 +401,7 @@ A Ruck project contains:
   /**
    * Catches a dynamic import error for route content with CSS.
    * @param {Error} cause Import error.
-   * @returns {import("ruck/routePlanForContentWithCss.mjs").RouteContentWithCss}
+   * @returns {RouteContentWithCss}
    */
   function catchImportContentWithCss(cause) {
     console.error(new Error("Import rejection for route with CSS.", { cause }));
@@ -457,7 +462,7 @@ A Ruck project contains:
   React component that renders the entire app. It should have this JSDoc type:
 
   ```js
-  /** @type {import("ruck/serve.mjs").AppComponent} */
+  /** @import { AppComponent } from "ruck/serve.mjs" */
   ```
 
   It typically imports and uses several React hooks from Ruck:
@@ -474,6 +479,8 @@ A Ruck project contains:
   ```js
   // @ts-check
 
+  /** @import { AppComponent } from "ruck/serve.mjs" */
+
   import { createElement as h, Fragment, useMemo } from "react";
   import useCss from "ruck/useCss.mjs";
   import useHead from "ruck/useHead.mjs";
@@ -488,7 +495,7 @@ A Ruck project contains:
 
   /**
    * React component for the Ruck app.
-   * @type {import("ruck/serve.mjs").AppComponent}
+   * @type {AppComponent}
    */
   export default function App() {
     const route = useRoute();
@@ -553,6 +560,8 @@ A Ruck project contains:
   ```js
   // @ts-check
 
+  /** @import { ReactNode } from "react" */
+
   import { createElement as h } from "react";
   import useOnClickRouteLink from "ruck/useOnClickRouteLink.mjs";
   import useRoute from "ruck/useRoute.mjs";
@@ -565,7 +574,7 @@ A Ruck project contains:
    * React component for a navigation link.
    * @param {object} props Props.
    * @param {string} props.href Link URL.
-   * @param {import("react").ReactNode} [props.children] Children.
+   * @param {ReactNode} [props.children] Children.
    */
   export default function NavLink({ href, children }) {
     const route = useRoute();

@@ -1,12 +1,14 @@
 // @ts-check
 
+/** @import { ReactNode } from "react" */
+
 import { createElement as h, Fragment, useEffect } from "react";
 
 /**
  * A React component that runs a callback after children have mounted.
  * @param {object} props Props.
  * @param {() => void} props.callback Memoized callback.
- * @param {import("react").ReactNode} props.children React children.
+ * @param {ReactNode} props.children React children.
  */
 export default function Effect({ callback, children }) {
   useEffect(callback, [callback]);

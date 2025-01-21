@@ -1,5 +1,7 @@
 // @ts-check
 
+/** @import { MouseEventHandler } from "react" */
+
 import { useCallback } from "react";
 
 import useNavigate from "./useNavigate.mjs";
@@ -20,7 +22,7 @@ export default function useOnClickRouteLink() {
   const navigate = useNavigate();
 
   return useCallback(
-    /** @type {import("react").MouseEventHandler<HTMLAnchorElement>} */
+    /** @type {MouseEventHandler<HTMLAnchorElement>} */
     (event) => {
       if (
         !event.defaultPrevented &&

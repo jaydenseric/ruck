@@ -1,5 +1,7 @@
 // @ts-check
 
+/** @import { ReactTestRenderer } from "react-test-renderer" */
+
 import { launch } from "@astral/astral";
 import { assert } from "@std/assert/assert";
 import { assertStrictEquals } from "@std/assert/strict-equals";
@@ -23,7 +25,7 @@ Deno.test("`useOnClickRouteLink` memoization.", () => {
   /** @type {any} */
   const navigate1 = () => {};
 
-  /** @type {import("react-test-renderer").ReactTestRenderer | undefined} */
+  /** @type {ReactTestRenderer | undefined} */
   let testRenderer;
 
   act(() => {
@@ -36,9 +38,7 @@ Deno.test("`useOnClickRouteLink` memoization.", () => {
     );
   });
 
-  const tr =
-    /** @type {import("react-test-renderer").ReactTestRenderer} */
-    (testRenderer);
+  const tr = /** @type {ReactTestRenderer} */ (testRenderer);
 
   assertStrictEquals(results.length, 1);
   assertStrictEquals(typeof results[0], "function");

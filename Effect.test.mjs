@@ -1,5 +1,7 @@
 // @ts-check
 
+/** @import { ReactTestRenderer } from "react-test-renderer" */
+
 import { assertEquals } from "@std/assert/equals";
 import { assertStrictEquals } from "@std/assert/strict-equals";
 import { createElement as h } from "react";
@@ -28,7 +30,7 @@ Deno.test("`Effect` functionality.", () => {
 
   const children = "abc";
 
-  /** @type {import("react-test-renderer").ReactTestRenderer | undefined} */
+  /** @type {ReactTestRenderer | undefined} */
   let testRenderer;
 
   act(() => {
@@ -44,9 +46,7 @@ Deno.test("`Effect` functionality.", () => {
     );
   });
 
-  const tr =
-    /** @type {import("react-test-renderer").ReactTestRenderer} */
-    (testRenderer);
+  const tr = /** @type {ReactTestRenderer} */ (testRenderer);
 
   assertEquals(callbackCalls, [
     { callback: callbackInner, args: [] },

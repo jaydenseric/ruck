@@ -1,5 +1,13 @@
 // @ts-check
 
+/**
+ * @import Cache from "graphql-react/Cache.mjs"
+ * @import Loading from "graphql-react/Loading.mjs"
+ * @import { ReactNode } from "react"
+ * @import HeadManager from "./HeadManager.mjs"
+ * @import { Route, Router } from "./serve.mjs"
+ */
+
 import CacheContext from "graphql-react/CacheContext.mjs";
 import HydrationTimeStampContext from "graphql-react/HydrationTimeStampContext.mjs";
 import LoadingContext from "graphql-react/LoadingContext.mjs";
@@ -24,18 +32,15 @@ import scrollToHash from "./scrollToHash.mjs";
  * @param {number} props.hydrationTimeStamp Milliseconds since the
  *   [performance time origin](https://developer.mozilla.org/en-US/docs/Web/API/Performance/timeOrigin)
  *   (when the client JavaScript environment started running).
- * @param {import("./HeadManager.mjs").default} props.headManager Head tag
- *   manager.
- * @param {import("graphql-react/Cache.mjs").default} props.cache Data cache
- *   store.
- * @param {import("graphql-react/Loading.mjs").default} props.loading Loading
- *   store.
- * @param {import("./serve.mjs").Router} props.router Router.
- * @param {import("./serve.mjs").Route} props.initialRoute The initial route
- *   that was server side rendered.
+ * @param {HeadManager} props.headManager Head tag manager.
+ * @param {Cache} props.cache Data cache store.
+ * @param {Loading} props.loading Loading store.
+ * @param {Router} props.router Router.
+ * @param {Route} props.initialRoute The initial route that was server side
+ *   rendered.
  * @param {() => void} props.onEffectsDone Callback that runs after initial
  *   effects in children are done.
- * @param {import("react").ReactNode} [props.children] React children.
+ * @param {ReactNode} [props.children] React children.
  */
 export default function ClientProvider({
   hydrationTimeStamp,

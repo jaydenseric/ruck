@@ -1,5 +1,10 @@
 // @ts-check
 
+/**
+ * @import { ReactNode } from "react"
+ * @import { RoutePlan } from "./serve.mjs"
+ */
+
 import { createElement as h } from "react";
 
 import documentHasStyleSheet from "./documentHasStyleSheet.mjs";
@@ -14,9 +19,9 @@ import LinkCss from "./LinkCss.mjs";
  * @param {RouteContentWithCss
  *   | Promise<RouteContentWithCss>} routeContentWithCss Route content with CSS
  *   dependencies.
- * @param {import("./HeadManager.mjs").default} headManager Head tag manager.
+ * @param {HeadManager} headManager Head tag manager.
  * @param {boolean} isInitialRoute Is it the initial route.
- * @returns {import("./serve.mjs").RoutePlan}
+ * @returns {RoutePlan}
  */
 export default function routePlanForContentWithCss(
   routeContentWithCss,
@@ -39,7 +44,7 @@ export default function routePlanForContentWithCss(
     throw new TypeError("Argument 3 `isInitialRoute` must be a boolean.");
   }
 
-  /** @type {Set<import("react").ReactNode>} */
+  /** @type {Set<ReactNode>} */
   const links = new Set();
 
   /** @type {(() => void) | null} */
@@ -139,6 +144,6 @@ export default function routePlanForContentWithCss(
 /**
  * Ruck app route content with CSS dependencies.
  * @typedef {object} RouteContentWithCss
- * @prop {import("react").ReactNode} content Content.
+ * @prop {ReactNode} content Content.
  * @prop {Set<string>} css CSS absolute or relative URLs.
  */

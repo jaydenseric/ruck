@@ -17,6 +17,8 @@
 - Migrated from the deprecated Deno APIs `Deno.FsFile.rid`, `Deno.resources`,
   and `Deno.close` to manually calling the modern `Deno.FsFile` method
   `Symbol.dispose`.
+- Use the TypeScript JSDoc tag `@import` to import types in modules and readme
+  example code.
 
 ### Patch
 

@@ -1,5 +1,7 @@
 // @ts-check
 
+/** @import { ResponseInit } from "./serve.mjs" */
+
 import { STATUS_CODE, STATUS_TEXT } from "@std/http/status";
 import { contentType } from "@std/media-types/content-type";
 import { extname } from "@std/path/extname";
@@ -10,10 +12,9 @@ import { extname } from "@std/path/extname";
  * @param {URL} publicDir Public directory file URL.
  * @param {(
  *   request: Request,
- *   responseInit: import("./serve.mjs").ResponseInit
- * ) => import("./serve.mjs").ResponseInit
- *   | Promise<import("./serve.mjs").ResponseInit
- * >} [customizeResponseInit] Customizes the response init.
+ *   responseInit: ResponseInit
+ * ) => ResponseInit | Promise<ResponseInit>} [customizeResponseInit] Customizes
+ *   the response init.
  * @returns {Promise<Response>} Response that streams the public file.
  */
 export default async function publicFileResponse(
@@ -53,7 +54,7 @@ export default async function publicFileResponse(
 
     if (!isFile) throw new Deno.errors.NotFound();
 
-    /** @type {import("./serve.mjs").ResponseInit} */
+    /** @type {ResponseInit} */
     let responseInit = {
       status: STATUS_CODE.OK,
       statusText: STATUS_TEXT[STATUS_CODE.OK],

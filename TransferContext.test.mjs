@@ -1,5 +1,7 @@
 // @ts-check
 
+/** @import { Transfer } from "./serve.mjs" */
+
 import { assertStrictEquals } from "@std/assert/strict-equals";
 import { createElement as h, useContext } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
@@ -14,7 +16,7 @@ Deno.test("`TransferContext` used as a React context.", () => {
     return null;
   }
 
-  const value = /** @type {import("./serve.mjs").Transfer} */ ({});
+  const value = /** @type {Transfer} */ ({});
 
   renderToStaticMarkup(
     h(TransferContext.Provider, { value }, h(TestComponent)),

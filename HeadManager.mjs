@@ -1,5 +1,7 @@
 // @ts-check
 
+/** @import { ReactNode } from "react" */
+
 import { createElement as h, Fragment } from "react";
 
 /** Document head tag manager {@linkcode Fragment}. */
@@ -7,12 +9,7 @@ export default class HeadManager extends EventTarget {
   constructor() {
     super();
 
-    /**
-     * @type {Map<
-     *   import("react").ReactNode,
-     *   { key: string, priority: number }
-     * >}
-     */
+    /** @type {Map<ReactNode, { key: string, priority: number }>} */
     this.managed = new Map();
   }
 
@@ -29,12 +26,7 @@ export default class HeadManager extends EventTarget {
    *   rendering DOM mutations that can cause FOUC.
    */
   getHeadContent() {
-    /**
-     * @type {Map<
-     *   string,
-     *   { priority: number, content: import("react").ReactNode }
-     * >}
-     */
+    /** @type {Map<string, { priority: number, content: ReactNode }>} */
     const deduped = new Map();
 
     for (const [content, { key, priority }] of [...this.managed].reverse()) {
@@ -58,8 +50,7 @@ export default class HeadManager extends EventTarget {
   /**
    * Adds document head tags.
    * @param {string} key Head tag fragment key.
-   * @param {import("react").ReactNode} content Memoized React content
-   *   containing head tags.
+   * @param {ReactNode} content Memoized React content containing head tags.
    * @param {number} [priority=0] Priority. Higher priority managed head tags
    *   override lower priority ones with the same head tag fragment key.
    */
@@ -101,8 +92,8 @@ export default class HeadManager extends EventTarget {
 
   /**
    * Removes document head tags.
-   * @param {import("react").ReactNode} content Memoized React content
-   *   containing head tags to remove.
+   * @param {ReactNode} content Memoized React content containing head tags to
+   *   remove.
    */
   remove(content) {
     if (this.managed.has(content)) {

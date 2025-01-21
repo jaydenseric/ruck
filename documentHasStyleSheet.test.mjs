@@ -1,5 +1,9 @@
 // @ts-check
 
+/**
+ * @import * as documentHasStyleSheetExports from "./documentHasStyleSheet.mjs"
+ */
+
 import { launch } from "@astral/astral";
 
 import serveProjectFiles from "./test/serveProjectFiles.mjs";
@@ -26,7 +30,7 @@ Deno.test("`documentHasStyleSheet` in a DOM environment.", async () => {
         await page.evaluate(
           /** @param {number} projectFileServerPort Project file server port. */
           async (projectFileServerPort) => {
-            /** @type {import("./documentHasStyleSheet.mjs")} */
+            /** @type {documentHasStyleSheetExports} */
             const { default: documentHasStyleSheet } = await import(
               `http://localhost:${projectFileServerPort}/documentHasStyleSheet.mjs`
             );
@@ -95,7 +99,7 @@ Deno.test("`documentHasStyleSheet` in a DOM environment.", async () => {
         await page.evaluate(
           /** @param {number} projectFileServerPort Project file server port. */
           async (projectFileServerPort) => {
-            /** @type {import("./documentHasStyleSheet.mjs")} */
+            /** @type {documentHasStyleSheetExports} */
             const { default: documentHasStyleSheet } = await import(
               `http://localhost:${projectFileServerPort}/documentHasStyleSheet.mjs`
             );

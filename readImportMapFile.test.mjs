@@ -1,5 +1,7 @@
 // @ts-check
 
+/** @import { ImportMap } from "./assertImportMap.mjs" */
+
 import { assertEquals } from "@std/assert/equals";
 import { fail } from "@std/assert/fail";
 import { assertIsError } from "@std/assert/is-error";
@@ -104,7 +106,7 @@ Deno.test(
       import.meta.url,
     );
 
-    /** @type {import("./assertImportMap.mjs").ImportMap} */
+    /** @type {ImportMap} */
     const importMap = await readImportMapFile(importMapFileUrl);
 
     assertEquals(

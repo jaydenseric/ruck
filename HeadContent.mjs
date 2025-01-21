@@ -1,5 +1,7 @@
 // @ts-check
 
+/** @import HeadManager from "./HeadManager.mjs" */
+
 import {
   createElement as h,
   Fragment,
@@ -15,7 +17,7 @@ let updatePromise;
  * React component that renders the managed document head tags in response to
  * head manager `update` events.
  * @param {object} props Props.
- * @param {import("./HeadManager.mjs").default} props.headManager Head manager.
+ * @param {HeadManager} props.headManager Head manager.
  */
 export default function HeadContent({ headManager }) {
   const [content, setContent] = useState(() => headManager.getHeadContent());

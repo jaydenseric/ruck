@@ -1,5 +1,7 @@
 // @ts-check
 
+/** @import { AppComponent, Router } from "./serve.mjs" */
+
 import Cache from "graphql-react/Cache.mjs";
 import Loading from "graphql-react/Loading.mjs";
 import { createElement as h } from "react";
@@ -13,9 +15,8 @@ import HeadManager from "./HeadManager.mjs";
 /**
  * Hydrates the Ruck document head and body React apps after SSR.
  * @param {object} options Options.
- * @param {import("./serve.mjs").Router} options.router Router.
- * @param {import("./serve.mjs").AppComponent} options.appComponent App React
- *   component.
+ * @param {Router} options.router Router.
+ * @param {AppComponent} options.appComponent App React component.
  * @param {Record<string, any>} options.cacheData Cache data.
  */
 export default async function hydrate({ router, appComponent, cacheData }) {

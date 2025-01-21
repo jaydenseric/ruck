@@ -1,5 +1,7 @@
 // @ts-check
 
+/** @import { Page } from "@astral/astral" */
+
 import { Browser } from "@astral/astral";
 import { ensureDir } from "@std/fs/ensure-dir";
 import { fromFileUrl } from "@std/path/from-file-url";
@@ -12,8 +14,8 @@ const coverageDirUrl = new URL(".coverage/", projectDirUrl);
  * script coverage enabled.
  * @param {Browser} browser Astral browser.
  * @param {URL} projectFilesOriginUrl Project files origin URL.
- * @param {(page: import("@astral/astral").Page) => void | Promise<void>} callback
- *   Receives the Astral browser page, ready for testing.
+ * @param {(page: Page) => void | Promise<void>} callback Receives the Astral
+ *   browser page, ready for testing.
  */
 export default async function testBrowserPage(
   browser,

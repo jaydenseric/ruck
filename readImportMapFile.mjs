@@ -1,13 +1,14 @@
 // @ts-check
 
+/** @import { ImportMap } from "./assertImportMap.mjs" */
+
 import assertImportMap from "./assertImportMap.mjs";
 
 /**
  * Reads an import map JSON file.
  * @see https://github.com/WICG/import-maps
  * @param {URL} importMapFileUrl Import map file URL.
- * @returns {Promise<import("./assertImportMap.mjs").ImportMap>} Resolves the
- *   import map.
+ * @returns {Promise<ImportMap>} Resolves the import map.
  */
 export default async function readImportMapFile(importMapFileUrl) {
   if (!(importMapFileUrl instanceof URL)) {
@@ -28,7 +29,7 @@ export default async function readImportMapFile(importMapFileUrl) {
     );
   }
 
-  /** @type {import("./assertImportMap.mjs").ImportMap} */
+  /** @type {ImportMap} */
   let importMapData;
 
   try {

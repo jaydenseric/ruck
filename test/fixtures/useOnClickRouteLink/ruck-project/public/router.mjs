@@ -1,5 +1,10 @@
 // @ts-check
 
+/**
+ * @import { MouseEvent as ReactMouseEvent } from "react"
+ * @import { Router } from "ruck/serve.mjs"
+ */
+
 import { createElement as h } from "react";
 import useOnClickRouteLink from "ruck/useOnClickRouteLink.mjs";
 
@@ -26,10 +31,7 @@ function PageB() {
       onClick: (event) => {
         event.preventDefault();
         onClickRouteLink(
-          /**
-           * @type {import("react").MouseEvent<HTMLAnchorElement, MouseEvent>}
-           */
-          (event),
+          /** @type {ReactMouseEvent<HTMLAnchorElement, MouseEvent>} */ (event),
         );
       },
     },
@@ -37,7 +39,7 @@ function PageB() {
   );
 }
 
-/** @type {import("ruck/serve.mjs").Router} */
+/** @type {Router} */
 export default function router(url) {
   if (url.pathname === "/") return { content: h(PageA) };
   if (url.pathname === "/b") return { content: h(PageB) };

@@ -1,5 +1,7 @@
 // @ts-check
 
+/** @import * as hydrateExports from "./hydrate.mjs" */
+
 import { launch } from "@astral/astral";
 import { createElement as h, Fragment } from "react";
 
@@ -54,10 +56,8 @@ Deno.test("`hydrate` in a DOM environment.", async () => {
 </html>`);
 
           await page.evaluate(async () => {
-            const { default: hydrate } =
-              await /** @type {Promise<import("./hydrate.mjs")>} */ (import(
-                "ruck/hydrate.mjs"
-              ));
+            /** @type {hydrateExports} */
+            const { default: hydrate } = await import("ruck/hydrate.mjs");
 
             try {
               await hydrate({
@@ -95,10 +95,8 @@ Deno.test("`hydrate` in a DOM environment.", async () => {
 </html>`);
 
           await page.evaluate(async () => {
-            const { default: hydrate } =
-              await /** @type {Promise<import("./hydrate.mjs")>} */ (import(
-                "ruck/hydrate.mjs"
-              ));
+            /** @type {hydrateExports} */
+            const { default: hydrate } = await import("ruck/hydrate.mjs");
 
             try {
               await hydrate({
@@ -135,10 +133,8 @@ Deno.test("`hydrate` in a DOM environment.", async () => {
 </html>`);
 
           await page.evaluate(async () => {
-            const { default: hydrate } =
-              await /** @type {Promise<import("./hydrate.mjs")>} */ (import(
-                "ruck/hydrate.mjs"
-              ));
+            /** @type {hydrateExports} */
+            const { default: hydrate } = await import("ruck/hydrate.mjs");
 
             try {
               await hydrate({
@@ -175,10 +171,8 @@ Deno.test("`hydrate` in a DOM environment.", async () => {
 </html>`);
 
           await page.evaluate(async () => {
-            const { default: hydrate } =
-              await /** @type {Promise<import("./hydrate.mjs")>} */ (import(
-                "ruck/hydrate.mjs"
-              ));
+            /** @type {hydrateExports} */
+            const { default: hydrate } = await import("ruck/hydrate.mjs");
 
             try {
               await hydrate({

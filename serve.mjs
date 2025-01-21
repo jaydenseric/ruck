@@ -1,5 +1,10 @@
 // @ts-check
 
+/**
+ * @import { ReactElement, ReactNode } from "react"
+ * @import { ImportMap } from "./assertImportMap.mjs"
+ */
+
 import { STATUS_CODE, STATUS_TEXT } from "@std/http/status";
 import { toFileUrl } from "@std/path/to-file-url";
 import Cache from "graphql-react/Cache.mjs";
@@ -23,8 +28,8 @@ import TransferContext from "./TransferContext.mjs";
 /**
  * Serves a Ruck app.
  * @param {object} options Options.
- * @param {import("./assertImportMap.mjs").ImportMap
- *   | URL} options.clientImportMap Client import map object or JSON file URL.
+ * @param {ImportMap | URL} options.clientImportMap Client import map object or
+ *   JSON file URL.
  * @param {string} [options.esModuleShimsSrc]
  *   [`es-module-shims`](https://github.com/guybedford/es-module-shims) script
  *   `src` URL. Defaults to `"https://unpkg.com/es-module-shims"`.
@@ -79,7 +84,7 @@ export default async function serve({
     throw new TypeError("Option `signal` must be an `AbortSignal` instance.");
   }
 
-  /** @type {import("./assertImportMap.mjs").ImportMap} */
+  /** @type {ImportMap} */
   let clientImportMapContent;
 
   if (clientImportMap instanceof URL) {
@@ -182,7 +187,7 @@ export default async function serve({
         );
       }
 
-      /** @type {import("react").ReactNode} */
+      /** @type {ReactNode} */
       let routeContent;
 
       try {
@@ -299,7 +304,7 @@ hydrate({
 /**
  * Isomorphic React component that renders the Ruck React app.
  * @callback AppComponent
- * @returns {import("react").ReactElement}
+ * @returns {ReactElement}
  */
 
 /**
@@ -307,23 +312,23 @@ hydrate({
  * rendered Ruck app page.
  * @callback HtmlComponent
  * @param {HtmlComponentProps} props Props.
- * @returns {import("react").ReactElement}
+ * @returns {ReactElement}
  */
 
 /**
  * {@linkcode HtmlComponent} React component props.
  * @typedef {object} HtmlComponentProps
- * @prop {import("react").ReactElement} esModuleShimsScript
+ * @prop {ReactElement} esModuleShimsScript
  *   [`es-module-shims`](https://github.com/guybedford/es-module-shims) script.
- * @prop {import("react").ReactElement} importMapScript Import map script.
- *   Should be the first script in the HTML.
- * @prop {import("react").ReactNode} headReactRoot HTML head React root for Ruck
- *   managed head tags. Should be early in the HTML head, typically after the
- *   import map script as it may contain scripts.
- * @prop {import("react").ReactNode} bodyReactRoot HTML body React root for the
- *   main Ruck app content.
- * @prop {import("react").ReactElement} hydrationScript Ruck app hydration
- *   script. Should be towards the end of the HTML body.
+ * @prop {ReactElement} importMapScript Import map script. Should be the first
+ *   script in the HTML.
+ * @prop {ReactNode} headReactRoot HTML head React root for Ruck managed head
+ *   tags. Should be early in the HTML head, typically after the import map
+ *   script as it may contain scripts.
+ * @prop {ReactNode} bodyReactRoot HTML body React root for the main Ruck app
+ *   content.
+ * @prop {ReactElement} hydrationScript Ruck app hydration script. Should be
+ *   towards the end of the HTML body.
  */
 
 /**
@@ -338,7 +343,7 @@ hydrate({
  * Ruck app route that has loaded and is ready to render.
  * @typedef {object} Route
  * @prop {URL} url Route URL.
- * @prop {import("react").ReactNode} content Route content.
+ * @prop {ReactNode} content Route content.
  * @prop {() => void} [cleanup] Callback that runs when navigation to this route
  *   aborts, or after navigation to the next route for a different page. Doesn’t
  *   run during SSR.
@@ -347,8 +352,7 @@ hydrate({
 /**
  * Ruck app route plan.
  * @typedef {object} RoutePlan
- * @prop {import("react").ReactNode
- *   | Promise<import("react").ReactNode>} content Route content.
+ * @prop {ReactNode | Promise<ReactNode>} content Route content.
  * @prop {() => void} [cleanup] Callback that runs when navigation to this route
  *   aborts, or after navigation to the next route for a different page. Doesn’t
  *   run during SSR.
@@ -358,7 +362,7 @@ hydrate({
  * Isomorphic function that gets the Ruck app route for a URL.
  * @callback Router
  * @param {URL} url Ruck app route URL.
- * @param {import("./HeadManager.mjs").default} headManager Head tag manager.
+ * @param {HeadManager} headManager Head tag manager.
  * @param {boolean} isInitialRoute Is it the initial route.
  * @returns {RoutePlan}
  */

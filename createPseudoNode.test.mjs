@@ -1,5 +1,7 @@
 // @ts-check
 
+/** @import * as createPseudoNodeExports from "./createPseudoNode.mjs" */
+
 import { launch } from "@astral/astral";
 
 import serveProjectFiles from "./test/serveProjectFiles.mjs";
@@ -36,7 +38,7 @@ Deno.test("`createPseudoNode` in a DOM environment.", async () => {
              * @param {number} projectFileServerPort Project file server port.
              */
             async (projectFileServerPort) => {
-              /** @type {import("./createPseudoNode.mjs")} */
+              /** @type {createPseudoNodeExports} */
               const { default: createPseudoNode } = await import(
                 `http://localhost:${projectFileServerPort}/createPseudoNode.mjs`
               );
@@ -81,7 +83,7 @@ Deno.test("`createPseudoNode` in a DOM environment.", async () => {
              * @param {number} projectFileServerPort Project file server port.
              */
             async (projectFileServerPort) => {
-              /** @type {import("./createPseudoNode.mjs")} */
+              /** @type {createPseudoNodeExports} */
               const { default: createPseudoNode } = await import(
                 `http://localhost:${projectFileServerPort}/createPseudoNode.mjs`
               );
@@ -126,7 +128,7 @@ Deno.test("`createPseudoNode` in a DOM environment.", async () => {
              * @param {number} projectFileServerPort Project file server port.
              */
             async (projectFileServerPort) => {
-              /** @type {import("./createPseudoNode.mjs")} */
+              /** @type {createPseudoNodeExports} */
               const { default: createPseudoNode } = await import(
                 `http://localhost:${projectFileServerPort}/createPseudoNode.mjs`
               );
@@ -172,7 +174,7 @@ Deno.test("`createPseudoNode` in a DOM environment.", async () => {
              * @param {number} projectFileServerPort Project file server port.
              */
             async (projectFileServerPort) => {
-              /** @type {import("./createPseudoNode.mjs")} */
+              /** @type {createPseudoNodeExports} */
               const { default: createPseudoNode } = await import(
                 `http://localhost:${projectFileServerPort}/createPseudoNode.mjs`
               );
@@ -217,7 +219,7 @@ Deno.test("`createPseudoNode` in a DOM environment.", async () => {
              * @param {number} projectFileServerPort Project file server port.
              */
             async (projectFileServerPort) => {
-              /** @type {import("./createPseudoNode.mjs")} */
+              /** @type {createPseudoNodeExports} */
               const { default: createPseudoNode } = await import(
                 `http://localhost:${projectFileServerPort}/createPseudoNode.mjs`
               );
@@ -266,7 +268,7 @@ Deno.test("`createPseudoNode` in a DOM environment.", async () => {
              * @param {number} projectFileServerPort Project file server port.
              */
             async (projectFileServerPort) => {
-              /** @type {import("./createPseudoNode.mjs")} */
+              /** @type {createPseudoNodeExports} */
               const { default: createPseudoNode } = await import(
                 `http://localhost:${projectFileServerPort}/createPseudoNode.mjs`
               );
@@ -303,7 +305,7 @@ Deno.test("`createPseudoNode` in a DOM environment.", async () => {
              * @param {number} projectFileServerPort Project file server port.
              */
             async (projectFileServerPort) => {
-              /** @type {import("./createPseudoNode.mjs")} */
+              /** @type {createPseudoNodeExports} */
               const { default: createPseudoNode } = await import(
                 `http://localhost:${projectFileServerPort}/createPseudoNode.mjs`
               );
@@ -363,7 +365,7 @@ Deno.test("`createPseudoNode` in a DOM environment.", async () => {
              * @param {number} projectFileServerPort Project file server port.
              */
             async (projectFileServerPort) => {
-              /** @type {import("./createPseudoNode.mjs")} */
+              /** @type {createPseudoNodeExports} */
               const { default: createPseudoNode } = await import(
                 `http://localhost:${projectFileServerPort}/createPseudoNode.mjs`
               );
@@ -433,7 +435,7 @@ Deno.test("`createPseudoNode` in a DOM environment.", async () => {
              * @param {number} projectFileServerPort Project file server port.
              */
             async (projectFileServerPort) => {
-              /** @type {import("./createPseudoNode.mjs")} */
+              /** @type {createPseudoNodeExports} */
               const { default: createPseudoNode } = await import(
                 `http://localhost:${projectFileServerPort}/createPseudoNode.mjs`
               );
@@ -480,7 +482,7 @@ Deno.test("`createPseudoNode` in a DOM environment.", async () => {
              * @param {number} projectFileServerPort Project file server port.
              */
             async (projectFileServerPort) => {
-              /** @type {import("./createPseudoNode.mjs")} */
+              /** @type {createPseudoNodeExports} */
               const { default: createPseudoNode } = await import(
                 `http://localhost:${projectFileServerPort}/createPseudoNode.mjs`
               );
@@ -527,7 +529,7 @@ Deno.test("`createPseudoNode` in a DOM environment.", async () => {
              * @param {number} projectFileServerPort Project file server port.
              */
             async (projectFileServerPort) => {
-              /** @type {import("./createPseudoNode.mjs")} */
+              /** @type {createPseudoNodeExports} */
               const { default: createPseudoNode } = await import(
                 `http://localhost:${projectFileServerPort}/createPseudoNode.mjs`
               );
@@ -575,7 +577,7 @@ Deno.test("`createPseudoNode` in a DOM environment.", async () => {
              * @param {number} projectFileServerPort Project file server port.
              */
             async (projectFileServerPort) => {
-              /** @type {import("./createPseudoNode.mjs")} */
+              /** @type {createPseudoNodeExports} */
               const { default: createPseudoNode } = await import(
                 `http://localhost:${projectFileServerPort}/createPseudoNode.mjs`
               );
