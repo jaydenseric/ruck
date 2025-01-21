@@ -25,6 +25,7 @@
 - Fixed formatting issues caused by updating Deno.
 - Added in project and readme scripts the CLI `deno` flag `--allow-import`, as
   required by Deno v2.
+- Modernized the project find min compatible Deno version script.
 - Modernized the project type check script.
 - Modernized the test helper function `serveProjectFiles`.
 - Added a project `.zed/settings.json` file to make is easier to contribute

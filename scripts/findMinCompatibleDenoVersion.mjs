@@ -32,21 +32,36 @@ async function binarySearch(array, predicate) {
  * @param {string} version Deno version. SemVer without a leading `v`.
  */
 async function installDenoVersion(version) {
-  const process = Deno.run({ cmd: ["deno", "upgrade", "--version", version] });
-  const status = await process.status();
-  if (!status.success) throw new Error("Deno installation failed.");
+  const command = new Deno.Command("deno", {
+    args: ["upgrade", "--version", version],
+  });
+  const { success } = await command.output();
+
+  if (!success) throw new Error("Deno installation failed.");
 }
 
-const response = await fetch(
-  "https://raw.githubusercontent.com/denoland/dotland/main/versions.json",
-);
+const response = await fetch("https://crates.io/api/v1/crates/deno");
 const json = await response.json();
 
 /**
- * Deno versions. SemVer with a leading `v`.
+ * Deno versions, excluding yanked and pre-releases. SemVer without a leading
+ * `v`.
  * @type {Array<string>}
  */
-const denoVersions = json.cli;
+const denoVersions = json.versions.reduce(
+  /**
+   * @param {Array<string>} versions Accumulated versions.
+   * @param {any} version Deno version data.
+   */
+  (versions, version) => {
+    if (!version.yanked && !version.num.includes("-")) {
+      versions.push(version.num);
+    }
+
+    return versions;
+  },
+  [],
+);
 
 /** Original Deno version. SemVer without a leading `v`. */
 const originalDenoVersion = Deno.version.deno;
@@ -61,13 +76,16 @@ try {
   const latestFailingDenoVersionIndex = await binarySearch(
     denoVersions,
     async (version) => {
-      console.log(`Installing Deno ${version}…`);
-      await installDenoVersion(version.replace(/^v/u, ""));
+      console.log(`Installing Deno v${version}…`);
 
-      console.log(`Testing Deno ${version}…`);
-      const process = Deno.run({ cmd: ["./scripts/test.sh"] });
-      const status = await process.status();
-      return !status.success;
+      await installDenoVersion(version);
+
+      console.log(`Testing Deno v${version}…`);
+
+      const command = new Deno.Command("./scripts/test.sh");
+      const { success } = await command.output();
+
+      return !success;
     },
   );
 
@@ -76,6 +94,7 @@ try {
   }
 } finally {
   console.log(`Restoring Deno v${originalDenoVersion}…`);
+
   await installDenoVersion(originalDenoVersion);
 }
 
