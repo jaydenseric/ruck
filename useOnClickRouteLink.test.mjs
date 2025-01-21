@@ -74,7 +74,9 @@ Deno.test("`useOnClickRouteLink` memoization.", () => {
   assert(results[2] !== results[1]);
 });
 
-Deno.test("`useOnClickRouteLink` in a DOM environment.", async () => {
+// Todo: Un-ignore these tests after this Astral issue is resolved:
+// https://github.com/lino-levan/astral/issues/124#issuecomment-2603389874
+Deno.test.ignore("`useOnClickRouteLink` in a DOM environment.", async () => {
   const abortController = new AbortController();
   const projectFileServer = serveProjectFiles(abortController.signal);
 
