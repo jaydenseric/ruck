@@ -9,11 +9,11 @@ import readImportMapFile from "./readImportMapFile.mjs";
 
 Deno.test("`hydrate` in a DOM environment.", async () => {
   const abortController = new AbortController();
-  const projectFileServer = await serveProjectFiles(abortController.signal);
+  const projectFileServer = serveProjectFiles(abortController.signal);
 
   try {
     const projectFilesOriginUrl = new URL(
-      `http://localhost:${projectFileServer.port}`,
+      `http://localhost:${projectFileServer.addr.port}`,
     );
     const clientImportMap = await readImportMapFile(
       new URL("importMap.json", import.meta.url),
@@ -204,6 +204,6 @@ Deno.test("`hydrate` in a DOM environment.", async () => {
     }
   } finally {
     abortController.abort();
-    await projectFileServer.close;
+    await projectFileServer.finished;
   }
 });

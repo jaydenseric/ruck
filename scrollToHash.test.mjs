@@ -22,11 +22,11 @@ Deno.test("`scrollToHash` with argument 1 `hash` not a string.", () => {
 
 Deno.test("`scrollToHash` with target existing.", async () => {
   const abortController = new AbortController();
-  const projectFileServer = await serveProjectFiles(abortController.signal);
+  const projectFileServer = serveProjectFiles(abortController.signal);
 
   try {
     const projectFilesOriginUrl = new URL(
-      `http://localhost:${projectFileServer.port}`,
+      `http://localhost:${projectFileServer.addr.port}`,
     );
     const browser = await launch();
 
@@ -128,7 +128,7 @@ Deno.test("`scrollToHash` with target existing.", async () => {
             }
           },
           {
-            args: [projectFileServer.port],
+            args: [projectFileServer.addr.port],
           },
         );
       });
@@ -137,6 +137,6 @@ Deno.test("`scrollToHash` with target existing.", async () => {
     }
   } finally {
     abortController.abort();
-    await projectFileServer.close;
+    await projectFileServer.finished;
   }
 });

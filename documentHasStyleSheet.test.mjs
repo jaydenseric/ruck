@@ -7,11 +7,11 @@ import testBrowserPage from "./test/testBrowserPage.mjs";
 
 Deno.test("`documentHasStyleSheet` in a DOM environment.", async () => {
   const abortController = new AbortController();
-  const projectFileServer = await serveProjectFiles(abortController.signal);
+  const projectFileServer = serveProjectFiles(abortController.signal);
 
   try {
     const projectFilesOriginUrl = new URL(
-      `http://localhost:${projectFileServer.port}`,
+      `http://localhost:${projectFileServer.addr.port}`,
     );
     const browser = await launch();
 
@@ -20,7 +20,7 @@ Deno.test("`documentHasStyleSheet` in a DOM environment.", async () => {
         // Test with a document without a base URI…
 
         await page.goto(
-          `http://localhost:${projectFileServer.port}/test/fixtures/documentHasStyleSheet/without-base.html`,
+          `http://localhost:${projectFileServer.addr.port}/test/fixtures/documentHasStyleSheet/without-base.html`,
         );
 
         await page.evaluate(
@@ -82,14 +82,14 @@ Deno.test("`documentHasStyleSheet` in a DOM environment.", async () => {
             }
           },
           {
-            args: [projectFileServer.port],
+            args: [projectFileServer.addr.port],
           },
         );
 
         // Test with a document with a base URI…
 
         await page.goto(
-          `http://localhost:${projectFileServer.port}/test/fixtures/documentHasStyleSheet/with-base.html`,
+          `http://localhost:${projectFileServer.addr.port}/test/fixtures/documentHasStyleSheet/with-base.html`,
         );
 
         await page.evaluate(
@@ -135,7 +135,7 @@ Deno.test("`documentHasStyleSheet` in a DOM environment.", async () => {
             }
           },
           {
-            args: [projectFileServer.port],
+            args: [projectFileServer.addr.port],
           },
         );
       });
@@ -144,6 +144,6 @@ Deno.test("`documentHasStyleSheet` in a DOM environment.", async () => {
     }
   } finally {
     abortController.abort();
-    await projectFileServer.close;
+    await projectFileServer.finished;
   }
 });

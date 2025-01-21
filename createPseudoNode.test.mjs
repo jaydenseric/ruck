@@ -7,11 +7,11 @@ import testBrowserPage from "./test/testBrowserPage.mjs";
 
 Deno.test("`createPseudoNode` in a DOM environment.", async () => {
   const abortController = new AbortController();
-  const projectFileServer = await serveProjectFiles(abortController.signal);
+  const projectFileServer = serveProjectFiles(abortController.signal);
 
   try {
     const projectFilesOriginUrl = new URL(
-      `http://localhost:${projectFileServer.port}`,
+      `http://localhost:${projectFileServer.addr.port}`,
     );
     const browser = await launch();
 
@@ -61,7 +61,7 @@ Deno.test("`createPseudoNode` in a DOM environment.", async () => {
               }
             },
             {
-              args: [projectFileServer.port],
+              args: [projectFileServer.addr.port],
             },
           );
         },
@@ -106,7 +106,7 @@ Deno.test("`createPseudoNode` in a DOM environment.", async () => {
               }
             },
             {
-              args: [projectFileServer.port],
+              args: [projectFileServer.addr.port],
             },
           );
         },
@@ -151,7 +151,7 @@ Deno.test("`createPseudoNode` in a DOM environment.", async () => {
               }
             },
             {
-              args: [projectFileServer.port],
+              args: [projectFileServer.addr.port],
             },
           );
         },
@@ -197,7 +197,7 @@ Deno.test("`createPseudoNode` in a DOM environment.", async () => {
               }
             },
             {
-              args: [projectFileServer.port],
+              args: [projectFileServer.addr.port],
             },
           );
         },
@@ -246,7 +246,7 @@ Deno.test("`createPseudoNode` in a DOM environment.", async () => {
               }
             },
             {
-              args: [projectFileServer.port],
+              args: [projectFileServer.addr.port],
             },
           );
         },
@@ -283,7 +283,7 @@ Deno.test("`createPseudoNode` in a DOM environment.", async () => {
               }
             },
             {
-              args: [projectFileServer.port],
+              args: [projectFileServer.addr.port],
             },
           );
         },
@@ -343,7 +343,7 @@ Deno.test("`createPseudoNode` in a DOM environment.", async () => {
               }
             },
             {
-              args: [projectFileServer.port],
+              args: [projectFileServer.addr.port],
             },
           );
         },
@@ -413,7 +413,7 @@ Deno.test("`createPseudoNode` in a DOM environment.", async () => {
               }
             },
             {
-              args: [projectFileServer.port],
+              args: [projectFileServer.addr.port],
             },
           );
         },
@@ -460,7 +460,7 @@ Deno.test("`createPseudoNode` in a DOM environment.", async () => {
               }
             },
             {
-              args: [projectFileServer.port],
+              args: [projectFileServer.addr.port],
             },
           );
         },
@@ -507,7 +507,7 @@ Deno.test("`createPseudoNode` in a DOM environment.", async () => {
               }
             },
             {
-              args: [projectFileServer.port],
+              args: [projectFileServer.addr.port],
             },
           );
         },
@@ -555,7 +555,7 @@ Deno.test("`createPseudoNode` in a DOM environment.", async () => {
               }
             },
             {
-              args: [projectFileServer.port],
+              args: [projectFileServer.addr.port],
             },
           );
         },
@@ -603,7 +603,7 @@ Deno.test("`createPseudoNode` in a DOM environment.", async () => {
               }
             },
             {
-              args: [projectFileServer.port],
+              args: [projectFileServer.addr.port],
             },
           );
         },
@@ -613,6 +613,6 @@ Deno.test("`createPseudoNode` in a DOM environment.", async () => {
     }
   } finally {
     abortController.abort();
-    await projectFileServer.close;
+    await projectFileServer.finished;
   }
 });
