@@ -41,6 +41,9 @@
 - Modernized the project find min compatible Deno version script.
 - Modernized the project type check script.
 - Modernized the test helper function `serveProjectFiles`.
+- Implemented Deno test steps now that
+  [denoland/deno#15425](https://github.com/denoland/deno/issues/15425) is no
+  longer an issue.
 - Added a project `.zed/settings.json` file to make is easier to contribute
   using the Zed editor.
 - Migrated from

@@ -9,7 +9,7 @@ import serveProjectFiles from "./test/serveProjectFiles.mjs";
 import testBrowserPage from "./test/testBrowserPage.mjs";
 import readImportMapFile from "./readImportMapFile.mjs";
 
-Deno.test("`hydrate` in a DOM environment.", async () => {
+Deno.test("`hydrate` in a DOM environment.", async (t) => {
   const abortController = new AbortController();
   const projectFileServer = serveProjectFiles(abortController.signal);
 
@@ -37,15 +37,14 @@ Deno.test("`hydrate` in a DOM environment.", async () => {
     const browser = await launch();
 
     try {
-      // Todo: Refactor to use Deno test steps once this Deno bug is fixed:
-      // https://github.com/denoland/deno/issues/15425
-
-      // Test `hydrate` with option `router` not a function.
-      await testBrowserPage(
-        browser,
-        projectFilesOriginUrl,
-        async (page) => {
-          await page.setContent(/* HTML */ `<!DOCTYPE html>
+      await t.step(
+        "`hydrate` with option `router` not a function.",
+        async () => {
+          await testBrowserPage(
+            browser,
+            projectFilesOriginUrl,
+            async (page) => {
+              await page.setContent(/* HTML */ `<!DOCTYPE html>
 <html>
   <head>
     ${scriptImportMap}
@@ -55,37 +54,41 @@ Deno.test("`hydrate` in a DOM environment.", async () => {
   ${htmlRuckBodyReactRoot}
 </html>`);
 
-          await page.evaluate(async () => {
-            /** @type {hydrateExports} */
-            const { default: hydrate } = await import("ruck/hydrate.mjs");
+              await page.evaluate(async () => {
+                /** @type {hydrateExports} */
+                const { default: hydrate } = await import("ruck/hydrate.mjs");
 
-            try {
-              await hydrate({
-                appComponent: () => h(Fragment),
-                // @ts-expect-error Testing invalid.
-                router: true,
-                cacheData: {},
+                try {
+                  await hydrate({
+                    appComponent: () => h(Fragment),
+                    // @ts-expect-error Testing invalid.
+                    router: true,
+                    cacheData: {},
+                  });
+
+                  throw new Error("Expected an error.");
+                } catch (error) {
+                  if (
+                    !(error instanceof TypeError) ||
+                    error.message !== "Option `router` must be a function."
+                  ) {
+                    throw error;
+                  }
+                }
               });
-
-              throw new Error("Expected an error.");
-            } catch (error) {
-              if (
-                !(error instanceof TypeError) ||
-                error.message !== "Option `router` must be a function."
-              ) {
-                throw error;
-              }
-            }
-          });
+            },
+          );
         },
       );
 
-      // Test `hydrate` with Ruck body React app DOM node missing.
-      await testBrowserPage(
-        browser,
-        projectFilesOriginUrl,
-        async (page) => {
-          await page.setContent(/* HTML */ `<!DOCTYPE html>
+      await t.step(
+        "`hydrate` with Ruck body React app DOM node missing.",
+        async () => {
+          await testBrowserPage(
+            browser,
+            projectFilesOriginUrl,
+            async (page) => {
+              await page.setContent(/* HTML */ `<!DOCTYPE html>
 <html>
   <head>
     ${scriptImportMap}
@@ -94,36 +97,40 @@ Deno.test("`hydrate` in a DOM environment.", async () => {
   </head>
 </html>`);
 
-          await page.evaluate(async () => {
-            /** @type {hydrateExports} */
-            const { default: hydrate } = await import("ruck/hydrate.mjs");
+              await page.evaluate(async () => {
+                /** @type {hydrateExports} */
+                const { default: hydrate } = await import("ruck/hydrate.mjs");
 
-            try {
-              await hydrate({
-                appComponent: /** @type {any} */ (() => {}),
-                router: /** @type {any} */ (() => {}),
-                cacheData: {},
+                try {
+                  await hydrate({
+                    appComponent: /** @type {any} */ (() => {}),
+                    router: /** @type {any} */ (() => {}),
+                    cacheData: {},
+                  });
+
+                  throw new Error("Expected an error.");
+                } catch (error) {
+                  if (
+                    !(error instanceof Error) ||
+                    error.message !== "Ruck body React app DOM node missing."
+                  ) {
+                    throw error;
+                  }
+                }
               });
-
-              throw new Error("Expected an error.");
-            } catch (error) {
-              if (
-                !(error instanceof Error) ||
-                error.message !== "Ruck body React app DOM node missing."
-              ) {
-                throw error;
-              }
-            }
-          });
+            },
+          );
         },
       );
 
-      // Test `hydrate` with Ruck head React app start DOM node missing.
-      await testBrowserPage(
-        browser,
-        projectFilesOriginUrl,
-        async (page) => {
-          await page.setContent(/* HTML */ `<!DOCTYPE html>
+      await t.step(
+        "`hydrate` with Ruck head React app start DOM node missing.",
+        async () => {
+          await testBrowserPage(
+            browser,
+            projectFilesOriginUrl,
+            async (page) => {
+              await page.setContent(/* HTML */ `<!DOCTYPE html>
 <html>
   <head>
     ${scriptImportMap}
@@ -132,36 +139,41 @@ Deno.test("`hydrate` in a DOM environment.", async () => {
   ${htmlRuckBodyReactRoot}
 </html>`);
 
-          await page.evaluate(async () => {
-            /** @type {hydrateExports} */
-            const { default: hydrate } = await import("ruck/hydrate.mjs");
+              await page.evaluate(async () => {
+                /** @type {hydrateExports} */
+                const { default: hydrate } = await import("ruck/hydrate.mjs");
 
-            try {
-              await hydrate({
-                appComponent: /** @type {any} */ (() => {}),
-                router: /** @type {any} */ (() => {}),
-                cacheData: {},
+                try {
+                  await hydrate({
+                    appComponent: /** @type {any} */ (() => {}),
+                    router: /** @type {any} */ (() => {}),
+                    cacheData: {},
+                  });
+
+                  throw new Error("Expected an error.");
+                } catch (error) {
+                  if (
+                    !(error instanceof Error) ||
+                    error.message !==
+                      "Ruck head React app start DOM node missing."
+                  ) {
+                    throw error;
+                  }
+                }
               });
-
-              throw new Error("Expected an error.");
-            } catch (error) {
-              if (
-                !(error instanceof Error) ||
-                error.message !== "Ruck head React app start DOM node missing."
-              ) {
-                throw error;
-              }
-            }
-          });
+            },
+          );
         },
       );
 
-      // Test `hydrate` with Ruck head React app end DOM node missing.
-      await testBrowserPage(
-        browser,
-        projectFilesOriginUrl,
-        async (page) => {
-          await page.setContent(/* HTML */ `<!DOCTYPE html>
+      await t.step(
+        "`hydrate` with Ruck head React app end DOM node missing.",
+        async () => {
+          await testBrowserPage(
+            browser,
+            projectFilesOriginUrl,
+            async (page) => {
+              await page.setContent(/* HTML */ `<!DOCTYPE html>
 <html>
   <head>
     ${scriptImportMap}
@@ -170,27 +182,30 @@ Deno.test("`hydrate` in a DOM environment.", async () => {
   ${htmlRuckBodyReactRoot}
 </html>`);
 
-          await page.evaluate(async () => {
-            /** @type {hydrateExports} */
-            const { default: hydrate } = await import("ruck/hydrate.mjs");
+              await page.evaluate(async () => {
+                /** @type {hydrateExports} */
+                const { default: hydrate } = await import("ruck/hydrate.mjs");
 
-            try {
-              await hydrate({
-                appComponent: /** @type {any} */ (() => {}),
-                router: /** @type {any} */ (() => {}),
-                cacheData: {},
+                try {
+                  await hydrate({
+                    appComponent: /** @type {any} */ (() => {}),
+                    router: /** @type {any} */ (() => {}),
+                    cacheData: {},
+                  });
+
+                  throw new Error("Expected an error.");
+                } catch (error) {
+                  if (
+                    !(error instanceof Error) ||
+                    error.message !==
+                      "Ruck head React app end DOM node missing."
+                  ) {
+                    throw error;
+                  }
+                }
               });
-
-              throw new Error("Expected an error.");
-            } catch (error) {
-              if (
-                !(error instanceof Error) ||
-                error.message !== "Ruck head React app end DOM node missing."
-              ) {
-                throw error;
-              }
-            }
-          });
+            },
+          );
         },
       );
     } finally {
