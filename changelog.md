@@ -10,8 +10,28 @@
     the package [https://deno.land/std@0.154.0](https://deno.land/std@0.154.0).
   - Ruck now serves JavaScript files with the content type `text/javascript`
     instead of `application/javascript`.
-- Migrated the HTTP server from the deprecated Deno standard library function to
-  `Deno.serve`.
+- Updated the function `serve` that creates the Ruck app HTTP server:
+  - Migrated from the deprecated Deno standard library function to `Deno.serve`.
+  - It now resolves the created Deno HTTP server instance, of type
+    `Deno.HttpServer<Deno.NetAddr>`. To migrate:
+
+    ```diff
+      const abortController = new AbortController();
+    - const { close } = await serve({
+    + const ruckAppHttpServer = await serve({
+        clientImportMap,
+        port,
+        signal: abortController.signal,
+      });
+    ```
+
+    Later, when you need to abort the server and await it closing…
+
+    ```diff
+      abortController.abort();
+    - await close;
+    + await ruckAppHttpServer.finished;
+    ```
 - Migrated from the deprecated Deno standard library function
   `readableStreamFromReader` to the new Deno API `Deno.FsFile.readable`.
 - Migrated from the deprecated Deno APIs `Deno.FsFile.rid`, `Deno.resources`,

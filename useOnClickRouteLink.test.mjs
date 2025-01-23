@@ -95,7 +95,7 @@ Deno.test.ignore("`useOnClickRouteLink` in a DOM environment.", async () => {
     clientImportMap.imports["ruck/"] = projectFilesOriginUrl.href;
 
     const ruckAppPort = await getFreePort(3000);
-    const { close } = await serve({
+    const ruckServer = await serve({
       clientImportMap,
       publicDir: new URL(
         "test/fixtures/useOnClickRouteLink/ruck-project/public/",
@@ -219,7 +219,7 @@ Deno.test.ignore("`useOnClickRouteLink` in a DOM environment.", async () => {
       }
     } finally {
       abortController.abort();
-      await close;
+      await ruckServer.finished;
     }
   } finally {
     abortController.abort();

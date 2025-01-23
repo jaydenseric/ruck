@@ -37,8 +37,8 @@ import TransferContext from "./TransferContext.mjs";
  * @param {number} options.port Port to serve on.
  * @param {AbortSignal} [options.signal] Abort controller signal to close the
  *   server.
- * @returns {Promise<{ close: Promise<void> }>} Resolves once the server is
- *   listening a `close` promise that resolves once the server closes.
+ * @returns {Promise<Deno.HttpServer<Deno.NetAddr>>} Resolves the listening HTTP
+ *   server.
  */
 export default async function serve({
   clientImportMap,
@@ -119,8 +119,11 @@ export default async function serve({
     throw new Error(`Error importing \`${appFileUrl.href}\`.`, { cause });
   }
 
-  const server = Deno.serve(
-    { port, signal },
+  return Deno.serve(
+    {
+      port,
+      signal,
+    },
     async (request) => {
       // The route URL should be what the client originally used to start the
       // request.
@@ -285,8 +288,6 @@ hydrate({
       }
     },
   );
-
-  return { close: server.finished };
 }
 
 /**

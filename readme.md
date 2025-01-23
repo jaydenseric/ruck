@@ -170,7 +170,7 @@ A Ruck project contains:
 
   import serve from "ruck/serve.mjs";
 
-  serve({
+  const ruckAppHttpServer = await serve({
     clientImportMap: new URL(
       Deno.env.get("RUCK_DEV") === "true"
         ? "../importMap.client.dev.json"
@@ -181,9 +181,7 @@ A Ruck project contains:
   });
 
   console.info(
-    `Ruck app HTTP server listening on http://localhost:${
-      Deno.env.get("RUCK_PORT")
-    }`,
+    `Ruck app HTTP server listening on http://localhost:${ruckAppHttpServer.addr.port}`,
   );
   ```
 
