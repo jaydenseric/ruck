@@ -17,6 +17,11 @@
 - Migrated from the deprecated Deno APIs `Deno.FsFile.rid`, `Deno.resources`,
   and `Deno.close` to manually calling the modern `Deno.FsFile` method
   `Symbol.dispose`.
+- Ruck app pages no longer include an
+  [ES Module Shims](https://github.com/guybedford/es-module-shims) script in the
+  server side rendered HTML, as now all modern browsers support import maps.
+  - Removed the function `serve` option `esModuleShimsSrc`.
+  - Removed the React component `Html` prop `esModuleShimsScript`.
 - Use the TypeScript JSDoc tag `@import` to import types in modules and readme
   example code.
 

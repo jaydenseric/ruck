@@ -30,9 +30,6 @@ import TransferContext from "./TransferContext.mjs";
  * @param {object} options Options.
  * @param {ImportMap | URL} options.clientImportMap Client import map object or
  *   JSON file URL.
- * @param {string} [options.esModuleShimsSrc]
- *   [`es-module-shims`](https://github.com/guybedford/es-module-shims) script
- *   `src` URL. Defaults to `"https://unpkg.com/es-module-shims"`.
  * @param {URL} [options.publicDir] Public directory file URL. Defaults to a
  *   `public` directory in the CWD.
  * @param {HtmlComponent} [options.htmlComponent] React component that renders
@@ -45,7 +42,6 @@ import TransferContext from "./TransferContext.mjs";
  */
 export default async function serve({
   clientImportMap,
-  esModuleShimsSrc = "https://unpkg.com/es-module-shims",
   publicDir = new URL("public/", toFileUrl(Deno.cwd() + "/")),
   htmlComponent = Html,
   port,
@@ -58,10 +54,6 @@ export default async function serve({
     throw new TypeError(
       "Option `clientImportMap` must be an import map object or `URL` instance.",
     );
-  }
-
-  if (typeof esModuleShimsSrc !== "string") {
-    throw new TypeError("Option `esModuleShimsSrc` must be a string.");
   }
 
   if (!(publicDir instanceof URL)) {
@@ -250,10 +242,6 @@ ${
               TransferContext.Provider,
               { value: transfer },
               h(htmlComponent, {
-                esModuleShimsScript: h("script", {
-                  async: true,
-                  src: esModuleShimsSrc,
-                }),
                 importMapScript: h("script", {
                   type: "importmap",
                   dangerouslySetInnerHTML: {
@@ -318,8 +306,6 @@ hydrate({
 /**
  * {@linkcode HtmlComponent} React component props.
  * @typedef {object} HtmlComponentProps
- * @prop {ReactElement} esModuleShimsScript
- *   [`es-module-shims`](https://github.com/guybedford/es-module-shims) script.
  * @prop {ReactElement} importMapScript Import map script. Should be the first
  *   script in the HTML.
  * @prop {ReactNode} headReactRoot HTML head React root for Ruck managed head

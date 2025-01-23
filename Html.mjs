@@ -10,7 +10,6 @@ import { createElement as h } from "react";
  * @type {HtmlComponent}
  */
 export default function Html({
-  esModuleShimsScript,
   importMapScript,
   headReactRoot,
   bodyReactRoot,
@@ -19,7 +18,7 @@ export default function Html({
   return h(
     "html",
     { lang: "en" },
-    h("head", null, esModuleShimsScript, importMapScript, headReactRoot),
+    h("head", null, importMapScript, headReactRoot),
     h("body", null, bodyReactRoot, hydrationScript),
   );
 }

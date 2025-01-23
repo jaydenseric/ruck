@@ -76,10 +76,7 @@ A Ruck project contains:
 
   This enables Deno and DOM types for project and imported dependency modules.
 - [Import map](https://github.com/WICG/import-maps) JSON files that tell your
-  IDE, Deno, and browsers where to import dependencies from. Ruck automatically
-  uses [`es-module-shims`](https://github.com/guybedford/es-module-shims) so you
-  don’t need to worry about poor
-  [browser support for import maps](https://caniuse.com/import-maps).
+  IDE, Deno, and browsers where to import dependencies from.
 
   Ideally use separate development and production import maps for the server and
   client. This way a version of React that has more detailed error messages can

@@ -32,20 +32,6 @@ Deno.test("`serve` with option `clientImportMap` an invalid import map object.",
   );
 });
 
-Deno.test("`serve` with option `esModuleShimsSrc` not a string.", async () => {
-  await assertRejects(
-    () =>
-      serve({
-        clientImportMap: new URL("./importMap.json", import.meta.url),
-        // @ts-expect-error Testing invalid.
-        esModuleShimsSrc: true,
-        port: 3000,
-      }),
-    TypeError,
-    "Option `esModuleShimsSrc` must be a string.",
-  );
-});
-
 Deno.test("`serve` with option `publicDir` not a `URL` instance.", async () => {
   await assertRejects(
     () =>
