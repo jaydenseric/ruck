@@ -30,7 +30,7 @@
 - Updated the GitHub Actions CI config:
   - No longer run the workflow on pull request.
   - Enable manual workflow dispatching.
-  - Run checks in seperate jobs.
+  - Run checks in separate jobs.
   - For the test job on Linux, disable the modern security feature “AppArmor” so
     the Chromium developer build installed by Astral can be used (see
     [crbug.com/373753919](https://crbug.com/373753919)).
