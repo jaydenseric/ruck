@@ -34,7 +34,9 @@ import TransferContext from "./TransferContext.mjs";
  *   `public` directory in the CWD.
  * @param {HtmlComponent} [options.htmlComponent] React component that renders
  *   the HTML for Ruck app page responses. Defaults to {@linkcode Html}.
- * @param {number} options.port Port to serve on.
+ * @param {number} [options.port] Port to serve on. Set `0` to listen on any
+ *   available port (later get the listening port via the resolved HTTP server
+ *   property `addr.port`). Defaults to `0`.
  * @param {AbortSignal} [options.signal] Abort controller signal to close the
  *   server.
  * @returns {Promise<Deno.HttpServer<Deno.NetAddr>>} Resolves the listening HTTP
@@ -44,7 +46,7 @@ export default async function serve({
   clientImportMap,
   publicDir = new URL("public/", toFileUrl(Deno.cwd() + "/")),
   htmlComponent = Html,
-  port,
+  port = 0,
   signal,
 }) {
   if (

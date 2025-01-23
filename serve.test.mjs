@@ -10,7 +10,6 @@ Deno.test("`serve` with option `clientImportMap` not an import map object or `UR
       serve({
         // @ts-expect-error Testing invalid.
         clientImportMap: true,
-        port: 3000,
       }),
     TypeError,
     "Option `clientImportMap` must be an import map object or `URL` instance.",
@@ -25,7 +24,6 @@ Deno.test("`serve` with option `clientImportMap` an invalid import map object.",
           // @ts-expect-error Testing invalid.
           imports: true,
         },
-        port: 3000,
       }),
     TypeError,
     "Option `clientImportMap` must be an import map object.",
@@ -39,7 +37,6 @@ Deno.test("`serve` with option `publicDir` not a `URL` instance.", async () => {
         clientImportMap: new URL("./importMap.json", import.meta.url),
         // @ts-expect-error Testing invalid.
         publicDir: true,
-        port: 3000,
       }),
     TypeError,
     "Option `publicDir` must be a `URL` instance.",
@@ -54,7 +51,6 @@ Deno.test(
         serve({
           clientImportMap: new URL("./importMap.json", import.meta.url),
           publicDir: new URL(import.meta.url),
-          port: 3000,
         }),
       TypeError,
       "Option `publicDir` must be a URL ending with `/`.",
@@ -67,7 +63,6 @@ Deno.test("`serve` with option `htmlComponent` not a function.", async () => {
     () =>
       serve({
         clientImportMap: new URL("./importMap.json", import.meta.url),
-        port: 3000,
         // @ts-expect-error Testing invalid.
         htmlComponent: true,
       }),
@@ -96,7 +91,6 @@ Deno.test(
       () =>
         serve({
           clientImportMap: new URL("./importMap.json", import.meta.url),
-          port: 3000,
           // @ts-expect-error Testing invalid.
           signal: true,
         }),

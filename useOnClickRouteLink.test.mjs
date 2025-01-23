@@ -5,7 +5,6 @@
 import { launch } from "@astral/astral";
 import { assert } from "@std/assert/assert";
 import { assertStrictEquals } from "@std/assert/strict-equals";
-import { getFreePort } from "free_port/mod.ts";
 import { createElement as h } from "react";
 import { act, create } from "react-test-renderer";
 
@@ -94,14 +93,12 @@ Deno.test.ignore("`useOnClickRouteLink` in a DOM environment.", async () => {
 
     clientImportMap.imports["ruck/"] = projectFilesOriginUrl.href;
 
-    const ruckAppPort = await getFreePort(3000);
     const ruckServer = await serve({
       clientImportMap,
       publicDir: new URL(
         "test/fixtures/useOnClickRouteLink/ruck-project/public/",
         import.meta.url,
       ),
-      port: ruckAppPort,
       signal: abortController.signal,
     });
 
@@ -114,8 +111,8 @@ Deno.test.ignore("`useOnClickRouteLink` in a DOM environment.", async () => {
           browser,
           projectFilesOriginUrl,
           async (page) => {
-            const urlPageA = `http://localhost:${ruckAppPort}/`;
-            const urlPageB = `http://localhost:${ruckAppPort}/b`;
+            const urlPageA = `http://localhost:${ruckServer.addr.port}/`;
+            const urlPageB = `http://localhost:${ruckServer.addr.port}/b`;
 
             await page.goto(urlPageA);
 

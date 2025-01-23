@@ -12,8 +12,13 @@
     instead of `application/javascript`.
 - Updated the function `serve` that creates the Ruck app HTTP server:
   - Migrated from the deprecated Deno standard library function to `Deno.serve`.
+  - The option `port` is now optional and defaults to `0`. Set `0` to listen on
+    any available port (later get the listening port via the resolved HTTP
+    server property `addr.port`).
   - It now resolves the created Deno HTTP server instance, of type
-    `Deno.HttpServer<Deno.NetAddr>`. To migrate:
+    `Deno.HttpServer<Deno.NetAddr>`.
+
+    To migrate:
 
     ```diff
       const abortController = new AbortController();
