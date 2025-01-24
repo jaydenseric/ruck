@@ -123,6 +123,8 @@ export default async function serve({
 
   return Deno.serve(
     {
+      // Disable the default console output.
+      onListen() {},
       port,
       signal,
     },

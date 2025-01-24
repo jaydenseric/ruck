@@ -21,6 +21,8 @@ export default function serveProjectFiles(signal) {
 
   return Deno.serve(
     {
+      // Disable the default console output.
+      onListen() {},
       port: 0,
       signal,
     },
