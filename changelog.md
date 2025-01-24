@@ -8,6 +8,16 @@
 - Updated the Deno standard library dependencies.
   - They are now [https://jsr.io/@std](https://jsr.io/@std) packages, instead of
     the package [https://deno.land/std@0.154.0](https://deno.land/std@0.154.0).
+
+    To migrate, in your server import maps (i.e. `importMap.server.dev.json` and
+    `importMap.server.json`):
+
+    ```diff
+    - "std/": "https://deno.land/std@0.154.0/",
+    + "@std/http/": "jsr:/@std/http@^1.0.12/",
+    + "@std/media-types/": "jsr:/@std/media-types@^1.1.0/",
+    + "@std/path/": "jsr:/@std/path@^1.0.8/",
+    ```
   - Ruck now serves JavaScript files with the content type `text/javascript`
     instead of `application/javascript`.
 - Updated the function `serve` that creates the Ruck app HTTP server:
