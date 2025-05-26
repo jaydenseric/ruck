@@ -46,7 +46,8 @@ export default function documentHasStyleSheet(href) {
           entries.length &&
           // Apparently `responseEnd` doesn’t just relate to a server response;
           // it will be present if a network error ended the request.
-          entries[entries.length - 1].responseEnd
+          /** @type {PerformanceResourceTiming} */ (entries[entries.length - 1])
+            .responseEnd
         ) {
           return true;
         }

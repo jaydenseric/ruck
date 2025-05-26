@@ -4,6 +4,8 @@
 
 ### Patch
 
+- Enabled project TypeScript config `compilerOptions.noUncheckedIndexedAccess`
+  and fixed related issues.
 - Improved the project find min compatible Deno version script.
 - Disabled type checking for the project test script.
 - Use the assertion function `assertInstanceOf` in tests.

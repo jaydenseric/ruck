@@ -6,7 +6,8 @@
       "dom.asynciterable",
       "deno.ns",
       "deno.unstable"
-    ]
+    ],
+    "noUncheckedIndexedAccess": true
   },
   "fmt": {
     "exclude": [
