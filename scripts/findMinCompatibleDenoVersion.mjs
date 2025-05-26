@@ -20,7 +20,7 @@ async function binarySearch(array, predicate) {
   while (1 + min < max) {
     const mid = min + ((max - min) >> 1);
 
-    if (await predicate(array[mid])) max = mid;
+    if (await predicate(/** @type {T} */ (array[mid]))) max = mid;
     else min = mid;
   }
 
@@ -41,18 +41,28 @@ async function installDenoVersion(version) {
 }
 
 const response = await fetch("https://crates.io/api/v1/crates/deno");
+
+if (!response.ok) {
+  throw new Error(
+    `Deno versions fetch HTTP error: ${response.status} ${response.statusText}.`,
+  );
+}
+
+/**
+ * @type {{
+ *   versions: Array<{
+ *     num: string,
+ *     yanked: boolean,
+ *   }>,
+ * }}
+ */
 const json = await response.json();
 
 /**
  * Deno versions, excluding yanked and pre-releases. SemVer without a leading
  * `v`.
- * @type {Array<string>}
  */
 const denoVersions = json.versions.reduce(
-  /**
-   * @param {Array<string>} versions Accumulated versions.
-   * @param {any} version Deno version data.
-   */
   (versions, version) => {
     if (!version.yanked && !version.num.includes("-")) {
       versions.push(version.num);
@@ -60,7 +70,7 @@ const denoVersions = json.versions.reduce(
 
     return versions;
   },
-  [],
+  /** @type {Array<string>} */ ([]),
 );
 
 /** Original Deno version. SemVer without a leading `v`. */
@@ -80,17 +90,31 @@ try {
 
       await installDenoVersion(version);
 
-      console.log(`Testing Deno v${version}…`);
+      console.log("Type checking…");
 
-      const command = new Deno.Command("./scripts/test.sh");
-      const { success } = await command.output();
+      const { success: typeCheckSuccess } = await new Deno.Command(
+        "./scripts/type-check.sh",
+      )
+        .output();
 
-      return !success;
+      if (!typeCheckSuccess) return true;
+
+      console.log("Testing…");
+
+      const { success: testSuccess } = await new Deno.Command(
+        "./scripts/test.sh",
+      )
+        .output();
+
+      if (!testSuccess) return true;
+
+      return false;
     },
   );
 
   if (latestFailingDenoVersionIndex) {
-    minCompatibleDenoVersion = denoVersions[latestFailingDenoVersionIndex - 1];
+    minCompatibleDenoVersion =
+      /** @type {string} */ (denoVersions[latestFailingDenoVersionIndex - 1]);
   }
 } finally {
   console.log(`Restoring Deno v${originalDenoVersion}…`);
