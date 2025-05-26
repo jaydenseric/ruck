@@ -1,5 +1,11 @@
 # Ruck changelog
 
+## Next
+
+### Patch
+
+- Disabled type checking for the project test script.
+
 ## 9.0.0
 
 ### Major

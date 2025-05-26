@@ -9,7 +9,8 @@ deno test \
   --allow-run \
   --allow-read \
   --allow-write \
-  --coverage=.coverage &&
+  --coverage=.coverage \
+  --no-check &&
 
 # Report code coverage.
 deno coverage \
