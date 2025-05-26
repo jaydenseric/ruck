@@ -9,6 +9,7 @@
 - Improved the project find min compatible Deno version script.
 - Disabled type checking for the project test script.
 - Use the assertion function `assertInstanceOf` in tests.
+- Added tests for the private function `jsonToRawHtmlScriptValue`.
 
 ## 9.0.0
 
