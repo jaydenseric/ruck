@@ -5,6 +5,7 @@
 ### Patch
 
 - Disabled type checking for the project test script.
+- Use the assertion function `assertInstanceOf` in tests.
 
 ## 9.0.0
 

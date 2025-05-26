@@ -1,7 +1,7 @@
 // @ts-check
 
-import { assert } from "@std/assert/assert";
 import { assertEquals } from "@std/assert/equals";
+import { assertInstanceOf } from "@std/assert/instance-of";
 import { assertRejects } from "@std/assert/rejects";
 import { assertStrictEquals } from "@std/assert/strict-equals";
 
@@ -105,7 +105,7 @@ Deno.test("`publicFileResponse` with an extensionless file.", async () => {
     publicDir,
   );
 
-  assert(response.headers instanceof Headers);
+  assertInstanceOf(response.headers, Headers);
   assertEquals(Array.from(response.headers.entries()), []);
   assertStrictEquals(
     await response.text(),
@@ -123,7 +123,7 @@ Deno.test("`publicFileResponse` with an unknown file extension.", async () => {
     publicDir,
   );
 
-  assert(response.headers instanceof Headers);
+  assertInstanceOf(response.headers, Headers);
   assertEquals(Array.from(response.headers.entries()), []);
   assertStrictEquals(
     await response.text(),
@@ -141,7 +141,7 @@ Deno.test("`publicFileResponse` with a CSS file.", async () => {
     publicDir,
   );
 
-  assert(response.headers instanceof Headers);
+  assertInstanceOf(response.headers, Headers);
   assertEquals(Array.from(response.headers.entries()), [
     ["content-type", "text/css; charset=UTF-8"],
   ]);
@@ -161,7 +161,7 @@ Deno.test("`publicFileResponse` with a JavaScript module.", async () => {
     publicDir,
   );
 
-  assert(response.headers instanceof Headers);
+  assertInstanceOf(response.headers, Headers);
   assertEquals(Array.from(response.headers.entries()), [
     ["content-type", "text/javascript; charset=UTF-8"],
   ]);
@@ -212,7 +212,7 @@ Deno.test(
       },
     );
 
-    assert(response.headers instanceof Headers);
+    assertInstanceOf(response.headers, Headers);
     assertEquals(Array.from(response.headers.entries()), [
       addedHeadersEntry,
       ["content-type", "text/javascript; charset=UTF-8"],

@@ -1,6 +1,7 @@
 // @ts-check
 
 import { assertEquals } from "@std/assert/equals";
+import { assertInstanceOf } from "@std/assert/instance-of";
 import { assertStrictEquals } from "@std/assert/strict-equals";
 import { assertThrows } from "@std/assert/throws";
 import { createElement as h } from "react";
@@ -11,7 +12,7 @@ import HeadManager from "./HeadManager.mjs";
 Deno.test("`HeadManager` constructor.", () => {
   const headManager = new HeadManager();
 
-  assertStrictEquals(headManager instanceof EventTarget, true);
+  assertInstanceOf(headManager, EventTarget);
   assertEquals(headManager.managed, new Map());
   assertStrictEquals(typeof headManager.add, "function");
   assertStrictEquals(typeof headManager.remove, "function");
@@ -104,7 +105,7 @@ Deno.test("`HeadManager` method `add`, unpopulated, priority default.", () => {
   headManager.add(key, content);
 
   assertStrictEquals(events.length, 1);
-  assertStrictEquals(events[0] instanceof CustomEvent, true);
+  assertInstanceOf(events[0], CustomEvent);
   assertStrictEquals(events[0].type, "update");
   assertStrictEquals(events[0].cancelable, false);
 });
@@ -130,7 +131,7 @@ Deno.test(
     headManager.add(key, content, priority);
 
     assertStrictEquals(events.length, 1);
-    assertStrictEquals(events[0] instanceof CustomEvent, true);
+    assertInstanceOf(events[0], CustomEvent);
     assertStrictEquals(events[0].type, "update");
     assertStrictEquals(events[0].cancelable, false);
   },
@@ -250,7 +251,7 @@ Deno.test("`HeadManager` method `add`, populated, content different.", () => {
   headManager.add(secondKey, secondContent);
 
   assertStrictEquals(events.length, 1);
-  assertStrictEquals(events[0] instanceof CustomEvent, true);
+  assertInstanceOf(events[0], CustomEvent);
   assertStrictEquals(events[0].type, "update");
   assertStrictEquals(events[0].cancelable, false);
 });
@@ -284,7 +285,7 @@ Deno.test("`HeadManager` method `remove`, existing.", () => {
   headManager.remove(firstContent);
 
   assertStrictEquals(events.length, 1);
-  assertStrictEquals(events[0] instanceof CustomEvent, true);
+  assertInstanceOf(events[0], CustomEvent);
   assertStrictEquals(events[0].type, "update");
   assertStrictEquals(events[0].cancelable, false);
 });
