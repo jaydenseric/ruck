@@ -7,7 +7,7 @@ import { ensureDir } from "@std/fs/ensure-dir";
 import { fromFileUrl } from "@std/path/from-file-url";
 
 const projectDirUrl = new URL("../", import.meta.url);
-const coverageDirUrl = new URL(".coverage/", projectDirUrl);
+const coverageDirUrl = new URL("coverage/", projectDirUrl);
 
 /**
  * Creates a new Astral browser page for testing served project files with
