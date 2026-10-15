@@ -2,25 +2,30 @@
 
 /** @import { Transfer } from "./serve.mjs" */
 
+import { suite, test } from "node:test";
 import { assertStrictEquals } from "@std/assert/strict-equals";
 import { createElement as h, useContext } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 
 import TransferContext from "./TransferContext.mjs";
 
-Deno.test("`TransferContext` used as a React context.", () => {
-  let contextValue;
+suite("React context `TransferContext`.", {
+  concurrency: true,
+}, () => {
+  test("Usage.", () => {
+    let contextValue;
 
-  function TestComponent() {
-    contextValue = useContext(TransferContext);
-    return null;
-  }
+    function TestComponent() {
+      contextValue = useContext(TransferContext);
+      return null;
+    }
 
-  const value = /** @type {Transfer} */ ({});
+    const value = /** @type {Transfer} */ ({});
 
-  renderToStaticMarkup(
-    h(TransferContext.Provider, { value }, h(TestComponent)),
-  );
+    renderToStaticMarkup(
+      h(TransferContext.Provider, { value }, h(TestComponent)),
+    );
 
-  assertStrictEquals(contextValue, value);
+    assertStrictEquals(contextValue, value);
+  });
 });

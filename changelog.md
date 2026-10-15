@@ -27,6 +27,7 @@
   for TypeScript Go.
 - Replaced the test helper class `Defer` with the native
   `Promise.withResolvers()`.
+- Structured tests better with `suite` and `test` imported from `node:test`.
 
 ## 9.0.0
 
