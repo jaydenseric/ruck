@@ -1,40 +1,43 @@
 name: CI
-on: [push, workflow_dispatch]
-env:
-  DENO_VERSION: "^2.3.0"
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
 jobs:
   format-check:
     name: Format check
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: denoland/setup-deno@v2
         with:
-          deno-version: ${{ env.DENO_VERSION }}
+          deno-version: latest
       - run: deno fmt --check
   lint:
     name: Lint
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: denoland/setup-deno@v2
         with:
-          deno-version: ${{ env.DENO_VERSION }}
+          deno-version: latest
       - run: deno lint
   type-check:
     name: Type check
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: denoland/setup-deno@v2
         with:
-          deno-version: ${{ env.DENO_VERSION }}
+          deno-version: latest
       - run: ./scripts/type-check.sh
   test:
     name: Test
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest]
+        deno: ["2.3.0", "2"]
     runs-on: ${{ matrix.os }}
     steps:
       # Disable the modern Linux security feature “AppArmor” so the Chromium
@@ -43,8 +46,8 @@ jobs:
       - name: Disable AppArmor
         run: echo 0 | sudo tee /proc/sys/kernel/apparmor_restrict_unprivileged_userns
         if: matrix.os == 'ubuntu-latest'
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: denoland/setup-deno@v2
         with:
-          deno-version: ${{ env.DENO_VERSION }}
+          deno-version: ${{ matrix.deno }}
       - run: ./scripts/test.sh

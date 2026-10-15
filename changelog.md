@@ -17,6 +17,12 @@
 - Modernized the project test script and changed the code coverage directory
   name from `.coverage` to the deno default `coverage`.
 - Fixed formatting issues caused by updating Deno.
+- Updated the GitHub Actions CI config:
+  - Improved the triggers.
+  - Use the latest Deno version for format, lint, and type checks.
+  - Run tests with the lower and upper bounds of each supported major Deno
+    version.
+  - Updated actions/checkout to v7.
 
 ## 9.0.0
 
