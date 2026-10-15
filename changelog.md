@@ -23,6 +23,8 @@
   - Run tests with the lower and upper bounds of each supported major Deno
     version.
   - Updated actions/checkout to v7.
+- Update the VS Code config to disable the conflicting experimental extension
+  for TypeScript Go.
 
 ## 9.0.0
 
