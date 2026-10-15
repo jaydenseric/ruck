@@ -16,6 +16,7 @@
 - Added tests for the private function `jsonToRawHtmlScriptValue`.
 - Modernized the project test script and changed the code coverage directory
   name from `.coverage` to the deno default `coverage`.
+- Fixed formatting issues caused by updating Deno.
 
 ## 9.0.0
 
