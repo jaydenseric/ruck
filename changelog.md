@@ -28,6 +28,7 @@
 - Replaced the test helper class `Defer` with the native
   `Promise.withResolvers()`.
 - Structured tests better with `suite` and `test` imported from `node:test`.
+- Simplified tests with `using` syntax.
 
 ## 9.0.0
 

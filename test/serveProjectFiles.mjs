@@ -9,22 +9,14 @@ const publicDir = new URL("../", import.meta.url);
 /**
  * Serves the files of this project on a free port so the modules can be
  * imported and tested in a headless browser environment.
- * @param {AbortSignal} [signal] Abort signal to close the file server.
  * @returns The Deno HTTP server.
  */
-export default function serveProjectFiles(signal) {
-  if (signal !== undefined && !(signal instanceof AbortSignal)) {
-    throw new TypeError(
-      "Argument 1 `signal` must be an `AbortSignal` instance.",
-    );
-  }
-
+export default function serveProjectFiles() {
   return Deno.serve(
     {
       // Disable the default console output.
       onListen() {},
       port: 0,
-      signal,
     },
     async (request) => {
       try {

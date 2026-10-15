@@ -25,18 +25,15 @@ suite("Function `scrollToHash`.", {
   });
 
   test("Target existing.", async () => {
-    const abortController = new AbortController();
-    const projectFileServer = serveProjectFiles(abortController.signal);
+    await using projectFileServer = serveProjectFiles();
 
-    try {
-      const projectFilesOriginUrl = new URL(
-        `http://localhost:${projectFileServer.addr.port}`,
-      );
-      const browser = await launch();
+    const projectFilesOriginUrl = new URL(
+      `http://localhost:${projectFileServer.addr.port}`,
+    );
+    await using browser = await launch();
 
-      try {
-        await testBrowserPage(browser, projectFilesOriginUrl, async (page) => {
-          await page.setContent(/* HTML */ `<!DOCTYPE html>
+    await testBrowserPage(browser, projectFilesOriginUrl, async (page) => {
+      await page.setContent(/* HTML */ `<!DOCTYPE html>
 <html>
   <head>
     <style>
@@ -61,87 +58,80 @@ suite("Function `scrollToHash`.", {
   </body>
 </html>`);
 
-          await page.evaluate(
-            /**
-             * @param {number} projectFileServerPort Project file server port.
-             */
-            async (projectFileServerPort) => {
-              const { default: scrollToHash } =
-                /** @type {typeof import("./scrollToHash.mjs")} */ (
-                  await import(
-                    `http://localhost:${projectFileServerPort}/scrollToHash.mjs`
-                  )
-                );
+      await page.evaluate(
+        /**
+         * @param {number} projectFileServerPort Project file server port.
+         */
+        async (projectFileServerPort) => {
+          const { default: scrollToHash } =
+            /** @type {typeof import("./scrollToHash.mjs")} */ (
+              await import(
+                `http://localhost:${projectFileServerPort}/scrollToHash.mjs`
+              )
+            );
 
-              const targetElement = /** @type {HTMLDivElement} */ (
-                document.getElementById("target")
-              );
-
-              const {
-                promise: targetInView,
-                resolve: targetInViewResolve,
-                reject: targetInViewReject,
-              } = /** @type {PromiseWithResolvers<void>} */ (
-                Promise.withResolvers()
-              );
-
-              const targetInViewTimeout = setTimeout(() => {
-                targetInViewReject(
-                  new Error(
-                    "Target element wasn’t within the viewport in time.",
-                  ),
-                );
-              }, 4000);
-
-              const intersectionObserver = new IntersectionObserver(
-                (entries) => {
-                  for (const { isIntersecting } of entries) {
-                    if (isIntersecting) {
-                      clearTimeout(targetInViewTimeout);
-                      targetInViewResolve();
-                    }
-                  }
-                },
-                { threshold: 1 },
-              );
-
-              intersectionObserver.observe(targetElement);
-
-              scrollToHash("#target");
-
-              await targetInView;
-
-              intersectionObserver.unobserve(targetElement);
-
-              scrollToHash();
-
-              const scrollingElement = /** @type {Element} */ (
-                document.scrollingElement
-              );
-
-              if (scrollingElement.scrollLeft !== 0) {
-                throw new Error(
-                  "Page scroll should be at the start horizontally.",
-                );
-              }
-
-              if (scrollingElement.scrollTop !== 0) {
-                throw new Error(
-                  "Page scroll should be at the start vertically.",
-                );
-              }
-            },
-            {
-              args: [projectFileServer.addr.port],
-            },
+          const targetElement = /** @type {HTMLDivElement} */ (
+            document.getElementById("target")
           );
-        });
-      } finally {
-        await browser.close();
-      }
-    } finally {
-      abortController.abort();
-      await projectFileServer.finished;
-    }
+
+          const {
+            promise: targetInView,
+            resolve: targetInViewResolve,
+            reject: targetInViewReject,
+          } = /** @type {PromiseWithResolvers<void>} */ (
+            Promise.withResolvers()
+          );
+
+          const targetInViewTimeout = setTimeout(() => {
+            targetInViewReject(
+              new Error(
+                "Target element wasn’t within the viewport in time.",
+              ),
+            );
+          }, 4000);
+
+          const intersectionObserver = new IntersectionObserver(
+            (entries) => {
+              for (const { isIntersecting } of entries) {
+                if (isIntersecting) {
+                  clearTimeout(targetInViewTimeout);
+                  targetInViewResolve();
+                }
+              }
+            },
+            { threshold: 1 },
+          );
+
+          intersectionObserver.observe(targetElement);
+
+          scrollToHash("#target");
+
+          await targetInView;
+
+          intersectionObserver.unobserve(targetElement);
+
+          scrollToHash();
+
+          const scrollingElement = /** @type {Element} */ (
+            document.scrollingElement
+          );
+
+          if (scrollingElement.scrollLeft !== 0) {
+            throw new Error(
+              "Page scroll should be at the start horizontally.",
+            );
+          }
+
+          if (scrollingElement.scrollTop !== 0) {
+            throw new Error(
+              "Page scroll should be at the start vertically.",
+            );
+          }
+        },
+        {
+          args: [projectFileServer.addr.port],
+        },
+      );
+    });
   });
 });

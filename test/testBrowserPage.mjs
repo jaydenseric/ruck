@@ -38,48 +38,44 @@ export default async function testBrowserPage(
     throw new TypeError("Argument 5 `callback` must be a function.");
   }
 
-  const page = await browser.newPage();
+  await using page = await browser.newPage();
+
+  page.addEventListener("console", ({ detail }) => {
+    console.group("Astral browser page console event:");
+    console.dir(detail);
+    console.groupEnd();
+  });
+
+  const celestial = page.unsafelyGetCelestialBindings();
+
+  await celestial.Profiler.enable();
+  await celestial.Profiler.startPreciseCoverage({});
 
   try {
-    page.addEventListener("console", ({ detail }) => {
-      console.group("Astral browser page console event:");
-      console.dir(detail);
-      console.groupEnd();
-    });
-
-    const celestial = page.unsafelyGetCelestialBindings();
-
-    await celestial.Profiler.enable();
-    await celestial.Profiler.startPreciseCoverage({});
-
-    try {
-      await callback(page);
-    } finally {
-      const { result } = await celestial.Profiler.takePreciseCoverage();
-
-      await ensureDir(fromFileUrl(coverageDirUrl));
-
-      /** @type {Array<Promise<void>>} */
-      const writes = [];
-
-      for (const scriptCoverage of result) {
-        if (scriptCoverage.url.startsWith(projectFilesOriginUrl.href)) {
-          writes.push(
-            Deno.writeTextFile(
-              new URL(`${crypto.randomUUID()}.json`, coverageDirUrl),
-              JSON.stringify({
-                ...scriptCoverage,
-                url: projectDirUrl.href +
-                  scriptCoverage.url.slice(projectFilesOriginUrl.href.length),
-              }),
-            ),
-          );
-        }
-      }
-
-      await Promise.all(writes);
-    }
+    await callback(page);
   } finally {
-    await page.close();
+    const { result } = await celestial.Profiler.takePreciseCoverage();
+
+    await ensureDir(fromFileUrl(coverageDirUrl));
+
+    /** @type {Array<Promise<void>>} */
+    const writes = [];
+
+    for (const scriptCoverage of result) {
+      if (scriptCoverage.url.startsWith(projectFilesOriginUrl.href)) {
+        writes.push(
+          Deno.writeTextFile(
+            new URL(`${crypto.randomUUID()}.json`, coverageDirUrl),
+            JSON.stringify({
+              ...scriptCoverage,
+              url: projectDirUrl.href +
+                scriptCoverage.url.slice(projectFilesOriginUrl.href.length),
+            }),
+          ),
+        );
+      }
+    }
+
+    await Promise.all(writes);
   }
 }
