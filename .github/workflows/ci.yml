@@ -1,7 +1,7 @@
 name: CI
 on: [push, workflow_dispatch]
 env:
-  DENO_VERSION: "^2.1.6"
+  DENO_VERSION: "^2.3.0"
 jobs:
   format-check:
     name: Format check
