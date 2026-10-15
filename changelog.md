@@ -25,6 +25,8 @@
   - Updated actions/checkout to v7.
 - Update the VS Code config to disable the conflicting experimental extension
   for TypeScript Go.
+- Replaced the test helper class `Defer` with the native
+  `Promise.withResolvers()`.
 
 ## 9.0.0
 

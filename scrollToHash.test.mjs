@@ -60,20 +60,12 @@ Deno.test("`scrollToHash` with target existing.", async () => {
         await page.evaluate(
           /** @param {number} projectFileServerPort Project file server port. */
           async (projectFileServerPort) => {
-            const [{ default: Defer }, { default: scrollToHash }] =
-              await Promise
-                .all([
-                  /** @type {Promise<import("./test/Defer.mjs")>} */ (
-                    import(
-                      `http://localhost:${projectFileServerPort}/test/Defer.mjs`
-                    )
-                  ),
-                  /** @type {Promise<import("./scrollToHash.mjs")>} */ (
-                    import(
-                      `http://localhost:${projectFileServerPort}/scrollToHash.mjs`
-                    )
-                  ),
-                ]);
+            const { default: scrollToHash } =
+              /** @type {typeof import("./scrollToHash.mjs")} */ (
+                await import(
+                  `http://localhost:${projectFileServerPort}/scrollToHash.mjs`
+                )
+              );
 
             const targetElement = /** @type {HTMLDivElement} */ (
               document.getElementById("target")
@@ -83,7 +75,9 @@ Deno.test("`scrollToHash` with target existing.", async () => {
               promise: targetInView,
               resolve: targetInViewResolve,
               reject: targetInViewReject,
-            } = new Defer();
+            } = /** @type {PromiseWithResolvers<void>} */ (
+              Promise.withResolvers()
+            );
 
             const targetInViewTimeout = setTimeout(() => {
               targetInViewReject(
