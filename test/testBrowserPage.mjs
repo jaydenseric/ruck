@@ -14,13 +14,12 @@ const coverageDirUrl = new URL("coverage/", projectDirUrl);
  * script coverage enabled.
  * @param {Browser} browser Astral browser.
  * @param {URL} projectFilesOriginUrl Project files origin URL.
- * @param {(page: Page) => void | Promise<void>} callback Receives the Astral
- *   browser page, ready for testing.
+ * @returns {Promise<AsyncDisposable & { page: Page }>} Async disposable handle
+ *   and the Astral browser page, ready for testing.
  */
 export default async function testBrowserPage(
   browser,
   projectFilesOriginUrl,
-  callback,
 ) {
   if (!(browser instanceof Browser)) {
     throw new TypeError(
@@ -30,15 +29,12 @@ export default async function testBrowserPage(
 
   if (!(projectFilesOriginUrl instanceof URL)) {
     throw new TypeError(
-      "Argument 3 `projectFilesOriginUrl` must be a `URL` instance.",
+      "Argument 2 `projectFilesOriginUrl` must be a `URL` instance.",
     );
   }
 
-  if (typeof callback !== "function") {
-    throw new TypeError("Argument 5 `callback` must be a function.");
-  }
-
-  await using page = await browser.newPage();
+  await using resources = new AsyncDisposableStack();
+  const page = resources.use(await browser.newPage());
 
   page.addEventListener("console", ({ detail }) => {
     console.group("Astral browser page console event:");
@@ -54,9 +50,7 @@ export default async function testBrowserPage(
     detailed: true,
   });
 
-  try {
-    await callback(page);
-  } finally {
+  resources.defer(async () => {
     const { result } = await celestial.Profiler.takePreciseCoverage();
     await celestial.Profiler.stopPreciseCoverage();
 
@@ -85,5 +79,12 @@ export default async function testBrowserPage(
     }
 
     await Promise.all(writes);
-  }
+  });
+
+  const disposable = resources.move();
+
+  return {
+    [Symbol.asyncDispose]: () => disposable.disposeAsync(),
+    page,
+  };
 }

@@ -108,9 +108,13 @@ suite("Function `hydrate`.", {
     ) {
       test(
         expectedErrorMessage,
-        () =>
-          testBrowserPage(browser, projectFilesOriginUrl, async (page) => {
-            await page.setContent(/* HTML */ `<!DOCTYPE html>
+        async () => {
+          await using disposable = await testBrowserPage(
+            browser,
+            projectFilesOriginUrl,
+          );
+
+          await disposable.page.setContent(/* HTML */ `<!DOCTYPE html>
 <html>
   <head>
     ${scriptImportMap}
@@ -119,33 +123,33 @@ suite("Function `hydrate`.", {
   ${htmlBody}
 </html>`);
 
-            const result = await page.evaluate(
-              async () => {
-                /** @type {hydrateExports} */
-                const { default: hydrate } = await import("ruck/hydrate.mjs");
+          const result = await disposable.page.evaluate(
+            async () => {
+              /** @type {hydrateExports} */
+              const { default: hydrate } = await import("ruck/hydrate.mjs");
 
-                try {
-                  await hydrate({
-                    appComponent: /** @type {any} */ (() => {}),
-                    router: /** @type {any} */ (() => {}),
-                    cacheData: {},
-                  });
-                } catch (error) {
-                  return error instanceof Error
-                    ? {
-                      name: error.name,
-                      message: error.message,
-                    }
-                    : JSON.stringify(error, null, 2);
-                }
-              },
-            );
+              try {
+                await hydrate({
+                  appComponent: /** @type {any} */ (() => {}),
+                  router: /** @type {any} */ (() => {}),
+                  cacheData: {},
+                });
+              } catch (error) {
+                return error instanceof Error
+                  ? {
+                    name: error.name,
+                    message: error.message,
+                  }
+                  : JSON.stringify(error, null, 2);
+              }
+            },
+          );
 
-            assertEquals(result, {
-              name: "Error",
-              message: expectedErrorMessage,
-            });
-          }),
+          assertEquals(result, {
+            name: "Error",
+            message: expectedErrorMessage,
+          });
+        },
       );
     }
   });

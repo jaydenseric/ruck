@@ -92,42 +92,46 @@ suite("Function `documentHasStyleSheet`.", {
   ) {
     test(
       testName,
-      () =>
-        testBrowserPage(browser, projectFilesOriginUrl, async (page) => {
-          await page.goto(
-            new URL(
-              `test/fixtures/documentHasStyleSheet/${fixtureHtmlFilename}`,
-              projectFilesOriginUrl,
-            ).href,
-          );
+      async () => {
+        await using disposable = await testBrowserPage(
+          browser,
+          projectFilesOriginUrl,
+        );
 
-          const result = await page.evaluate(
-            /**
-             * @param {string} projectFilesOriginHref Project files origin URL
-             *   `href`.
-             * @param {string} styleSheetHref Style sheet `href`.
-             */
-            async (projectFilesOriginHref, styleSheetHref) => {
-              /** @type {documentHasStyleSheetExports} */
-              const { default: documentHasStyleSheet } = await import(
-                new URL(
-                  "documentHasStyleSheet.mjs",
-                  projectFilesOriginHref,
-                ).href
-              );
+        await disposable.page.goto(
+          new URL(
+            `test/fixtures/documentHasStyleSheet/${fixtureHtmlFilename}`,
+            projectFilesOriginUrl,
+          ).href,
+        );
 
-              return documentHasStyleSheet(styleSheetHref);
-            },
-            {
-              args: [
-                projectFilesOriginUrl.href,
-                styleSheetHref,
-              ],
-            },
-          );
+        const result = await disposable.page.evaluate(
+          /**
+           * @param {string} projectFilesOriginHref Project files origin URL
+           *   `href`.
+           * @param {string} styleSheetHref Style sheet `href`.
+           */
+          async (projectFilesOriginHref, styleSheetHref) => {
+            /** @type {documentHasStyleSheetExports} */
+            const { default: documentHasStyleSheet } = await import(
+              new URL(
+                "documentHasStyleSheet.mjs",
+                projectFilesOriginHref,
+              ).href
+            );
 
-          assertStrictEquals(result, expectedResult);
-        }),
+            return documentHasStyleSheet(styleSheetHref);
+          },
+          {
+            args: [
+              projectFilesOriginUrl.href,
+              styleSheetHref,
+            ],
+          },
+        );
+
+        assertStrictEquals(result, expectedResult);
+      },
     );
   }
 });

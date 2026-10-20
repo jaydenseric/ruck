@@ -99,34 +99,34 @@ suite("React hook `useOnClickRouteLink`.", {
     assert(results[2] !== results[1]);
   });
 
-  test("Default action already prevented.", () =>
-    serveRuckFixtureForBrowser(
+  test("Default action already prevented.", async () => {
+    await using disposable = await serveRuckFixtureForBrowser(
       browser,
       projectFilesOriginUrl,
       "useOnClickRouteLink/default-action-already-prevented",
-      async (page, appOriginUrl) => {
-        await page.goto(appOriginUrl.href);
+    );
 
-        await page.evaluate(() => {
-          addEventListener(
-            "ruckroutechangestart",
-            () => {
-              document.documentElement.dataset.testRouteChangeStarted = "true";
-            },
-            { once: true },
-          );
-        });
+    await disposable.page.goto(disposable.appOriginUrl.href);
 
-        await page.locator("a[href]").click();
+    await disposable.page.evaluate(() => {
+      addEventListener(
+        "ruckroutechangestart",
+        () => {
+          document.documentElement.dataset.testRouteChangeStarted = "true";
+        },
+        { once: true },
+      );
+    });
 
-        assertStrictEquals(
-          await page.evaluate(() =>
-            document.documentElement.dataset.testRouteChangeStarted
-          ),
-          undefined,
-        );
-      },
-    ));
+    await disposable.page.locator("a[href]").click();
+
+    assertStrictEquals(
+      await disposable.page.evaluate(() =>
+        document.documentElement.dataset.testRouteChangeStarted
+      ),
+      undefined,
+    );
+  });
 
   suite("Clicks that shouldn’t navigate.", {
     concurrency: true,
@@ -165,35 +165,34 @@ suite("React hook `useOnClickRouteLink`.", {
           ],
         ])
     ) {
-      test(testName, () =>
-        serveRuckFixtureForBrowser(
+      test(testName, async () => {
+        await using disposable = await serveRuckFixtureForBrowser(
           browser,
           projectFilesOriginUrl,
           "useOnClickRouteLink/route-link",
-          async (page, appOriginUrl) => {
-            await page.goto(appOriginUrl.href);
+        );
 
-            await page.evaluate(() => {
-              addEventListener(
-                "ruckroutechangestart",
-                () => {
-                  document.documentElement.dataset.testRouteChangeStarted =
-                    "true";
-                },
-                { once: true },
-              );
-            });
+        await disposable.page.goto(disposable.appOriginUrl.href);
 
-            await execute(page);
+        await disposable.page.evaluate(() => {
+          addEventListener(
+            "ruckroutechangestart",
+            () => {
+              document.documentElement.dataset.testRouteChangeStarted = "true";
+            },
+            { once: true },
+          );
+        });
 
-            assertStrictEquals(
-              await page.evaluate(() =>
-                document.documentElement.dataset.testRouteChangeStarted
-              ),
-              undefined,
-            );
-          },
-        ));
+        await execute(disposable.page);
+
+        assertStrictEquals(
+          await disposable.page.evaluate(() =>
+            document.documentElement.dataset.testRouteChangeStarted
+          ),
+          undefined,
+        );
+      });
     }
   });
 
@@ -217,59 +216,59 @@ suite("React hook `useOnClickRouteLink`.", {
           ],
         ])
     ) {
-      test(testName, () =>
-        serveRuckFixtureForBrowser(
+      test(testName, async () => {
+        await using disposable = await serveRuckFixtureForBrowser(
           browser,
           projectFilesOriginUrl,
           "useOnClickRouteLink/route-link",
-          async (page, appOriginUrl) => {
-            await page.goto(appOriginUrl.href);
+        );
 
-            await page.evaluate(() => {
-              addEventListener(
-                "ruckroutechangestart",
-                /** @type {EventListener} */ (
-                  (
-                    /**
-                     * @type {CustomEvent<{
-                     *   url: URL,
-                     *   abortController: AbortController,
-                     * }>}
-                     */
-                    event,
-                  ) => {
-                    document.documentElement.dataset.testRouteChangeUrl =
-                      event.detail.url.pathname;
-                  }
-                ),
-                { once: true },
-              );
-              addEventListener(
-                "click",
-                (event) => {
-                  document.documentElement.dataset.testClickDefaultPrevented =
-                    String(event.defaultPrevented);
-                },
-                { once: true },
-              );
-            });
+        await disposable.page.goto(disposable.appOriginUrl.href);
 
-            await execute(page);
+        await disposable.page.evaluate(() => {
+          addEventListener(
+            "ruckroutechangestart",
+            /** @type {EventListener} */ (
+              (
+                /**
+                 * @type {CustomEvent<{
+                 *   url: URL,
+                 *   abortController: AbortController,
+                 * }>}
+                 */
+                event,
+              ) => {
+                document.documentElement.dataset.testRouteChangeUrl =
+                  event.detail.url.pathname;
+              }
+            ),
+            { once: true },
+          );
+          addEventListener(
+            "click",
+            (event) => {
+              document.documentElement.dataset.testClickDefaultPrevented =
+                String(event.defaultPrevented);
+            },
+            { once: true },
+          );
+        });
 
-            assertStrictEquals(
-              await page.evaluate(() =>
-                document.documentElement.dataset.testRouteChangeUrl
-              ),
-              "/b",
-            );
-            assertStrictEquals(
-              await page.evaluate(() =>
-                document.documentElement.dataset.testClickDefaultPrevented
-              ),
-              "true",
-            );
-          },
-        ));
+        await execute(disposable.page);
+
+        assertStrictEquals(
+          await disposable.page.evaluate(() =>
+            document.documentElement.dataset.testRouteChangeUrl
+          ),
+          "/b",
+        );
+        assertStrictEquals(
+          await disposable.page.evaluate(() =>
+            document.documentElement.dataset.testClickDefaultPrevented
+          ),
+          "true",
+        );
+      });
     }
   });
 });
