@@ -1,8 +1,8 @@
 {
   "imports": {
     "@astral/astral": "jsr:@astral/astral@^0.5.6",
-    "@std/assert/": "jsr:/@std/assert@^1.0.10/",
-    "@std/fs/": "jsr:/@std/fs@^1.0.9/",
+    "@std/assert/": "jsr:/@std/assert@^1.0.19/",
+    "@std/fs/": "jsr:/@std/fs@^1.0.24/",
     "@std/http/": "jsr:/@std/http@^1.0.12/",
     "@std/media-types/": "jsr:/@std/media-types@^1.1.0/",
     "@std/path/": "jsr:/@std/path@^1.0.8/",
