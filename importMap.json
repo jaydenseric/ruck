@@ -1,6 +1,6 @@
 {
   "imports": {
-    "@astral/astral": "jsr:@astral/astral@^0.5.2",
+    "@astral/astral": "jsr:@astral/astral@^0.5.6",
     "@std/assert/": "jsr:/@std/assert@^1.0.10/",
     "@std/fs/": "jsr:/@std/fs@^1.0.9/",
     "@std/http/": "jsr:/@std/http@^1.0.12/",

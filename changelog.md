@@ -8,6 +8,7 @@
 
 ### Patch
 
+- Updated dev dependencies.
 - Enabled project TypeScript config `compilerOptions.noUncheckedIndexedAccess`
   and fixed related issues.
 - Improved the project find min compatible Deno version script.
