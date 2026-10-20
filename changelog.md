@@ -32,6 +32,7 @@
   `Promise.withResolvers()`.
 - Structured tests better with `suite` and `test` imported from `node:test`.
 - Simplified tests with `using` syntax.
+- Rewrote all the headless browser related tests.
 
 ## 9.0.0
 

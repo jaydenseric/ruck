@@ -1,7 +1,13 @@
 // @ts-check
 
-import { suite, test } from "node:test";
+/**
+ * @import { Browser } from "@astral/astral"
+ * @import * as scrollToHashExports from "./scrollToHash.mjs"
+ */
+
+import { after, before, suite, test } from "node:test";
 import { launch } from "@astral/astral";
+import { assertEquals } from "@std/assert/equals";
 import { assertThrows } from "@std/assert/throws";
 
 import serveProjectFiles from "./test/serveProjectFiles.mjs";
@@ -11,6 +17,30 @@ import scrollToHash from "./scrollToHash.mjs";
 suite("Function `scrollToHash`.", {
   concurrency: true,
 }, () => {
+  const resources = new AsyncDisposableStack();
+
+  // Todo: Avoid the before hook once Deno supports `suite` from `node:test`
+  // having an async callback:
+  // https://github.com/denoland/deno/issues/36876
+
+  /** @type {Browser} */
+  let browser;
+
+  /** @type {URL} */
+  let projectFilesOriginUrl;
+
+  before(async () => {
+    browser = resources.use(await launch());
+
+    const projectFileServer = resources.use(serveProjectFiles());
+
+    projectFilesOriginUrl = new URL(
+      `http://localhost:${projectFileServer.addr.port}`,
+    );
+  });
+
+  after(() => resources.disposeAsync());
+
   test("Argument 1 `hash` not a string.", () => {
     assertThrows(
       () => {
@@ -24,15 +54,123 @@ suite("Function `scrollToHash`.", {
     );
   });
 
-  test("Target existing.", async () => {
-    await using projectFileServer = serveProjectFiles();
+  test("Hash undefined.", () =>
+    // Scrolling to an undefined hash should scroll the window to the start.
+    testBrowserPage(browser, projectFilesOriginUrl, async (page) => {
+      await page.setContent(/* HTML */ `<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      body {
+        margin: 0;
+        width: 200dvw;
+        height: 200dvh;
+      }
+    </style>
+  </head>
+  <body></body>
+</html>`);
 
-    const projectFilesOriginUrl = new URL(
-      `http://localhost:${projectFileServer.addr.port}`,
-    );
-    await using browser = await launch();
+      const result = await page.evaluate(
+        /**
+         * @param {string} projectFilesOriginHref Project files origin URL
+         *   `href`.
+         */
+        async (projectFilesOriginHref) => {
+          /** @type {scrollToHashExports} */
+          const { default: scrollToHash } = await import(
+            new URL("scrollToHash.mjs", projectFilesOriginHref).href
+          );
 
-    await testBrowserPage(browser, projectFilesOriginUrl, async (page) => {
+          const scrollingElement = /** @type {Element} */ (
+            document.scrollingElement
+          );
+
+          // Scroll the window as much as possible.
+          scrollTo(scrollingElement.scrollWidth, scrollingElement.scrollHeight);
+
+          scrollToHash();
+
+          const { scrollLeft, scrollTop } = scrollingElement;
+
+          return {
+            scrollLeft,
+            scrollTop,
+          };
+        },
+        {
+          args: [projectFilesOriginUrl.href],
+        },
+      );
+
+      assertEquals(result, {
+        scrollLeft: 0,
+        scrollTop: 0,
+      });
+    }));
+
+  test("Hash target element missing.", () =>
+    // For a page that’s scrolled a certain amount, scrolling to a missing hash
+    // target element shouldn’t change the scroll position.
+    testBrowserPage(browser, projectFilesOriginUrl, async (page) => {
+      await page.setContent(/* HTML */ `<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      body {
+        margin: 0;
+        width: 200dvw;
+        height: 200dvh;
+      }
+    </style>
+  </head>
+  <body></body>
+</html>`);
+
+      const result = await page.evaluate(
+        /**
+         * @param {string} projectFilesOriginHref Project files origin URL
+         *   `href`.
+         */
+        async (projectFilesOriginHref) => {
+          /** @type {scrollToHashExports} */
+          const { default: scrollToHash } = await import(
+            new URL("scrollToHash.mjs", projectFilesOriginHref).href
+          );
+
+          const scrollingElement = /** @type {Element} */ (
+            document.scrollingElement
+          );
+
+          scrollTo(scrollingElement.scrollWidth, scrollingElement.scrollHeight);
+
+          const { scrollLeft, scrollTop } = scrollingElement;
+
+          scrollToHash("#missing");
+
+          return {
+            scrollUnchanged: scrollingElement.scrollLeft === scrollLeft &&
+              scrollingElement.scrollTop === scrollTop,
+          };
+        },
+        {
+          args: [projectFilesOriginUrl.href],
+        },
+      );
+
+      assertEquals(result, { scrollUnchanged: true });
+    }));
+
+  test("Hash target element existing.", () => {
+    // The hash target element starts clipped within nested scrollable
+    // containers (including the viewport), out of view. Scrolling to the hash
+    // should scroll the target element’s ancestor containers until it’s fully
+    // in view.
+
+    /** Hash target element ID. */
+    const targetId = "target";
+
+    return testBrowserPage(browser, projectFilesOriginUrl, async (page) => {
       await page.setContent(/* HTML */ `<!DOCTYPE html>
 <html>
   <head>
@@ -41,37 +179,56 @@ suite("Function `scrollToHash`.", {
         margin: 0;
       }
 
-      #padding {
-        padding: 200vh 200vw;
+      .container {
+        /*
+         * Enable sizing the nested hash target element to this scroll container
+         * without assuming viewport or scrollbar dimensions.
+         */
+        container-type: size;
+        width: 100dvw;
+        height: 100dvh;
+        overflow: auto;
       }
 
-      #target {
-        width: 1px;
-        height: 1px;
+      .padding {
+        /* Preserve padding after scrolled content. */
+        width: max-content;
+        /*
+         * A viewport amount of padding all the way around the scroll target to
+         * allow detection of too little/much scrolling.
+         */
+        padding: 100dvh 100dvw;
+      }
+
+      #${targetId} {
+        width: 100cqw;
+        height: 100cqh;
       }
     </style>
   </head>
-  <body>
-    <div id="padding">
-      <div id="target"></div>
+  <body class="padding">
+    <div class="container">
+      <div class="padding">
+        <div id="${targetId}"></div>
+      </div>
     </div>
   </body>
 </html>`);
 
       await page.evaluate(
         /**
-         * @param {number} projectFileServerPort Project file server port.
+         * @param {string} projectFilesOriginHref Project files origin URL
+         *   `href`.
+         * @param {string} targetId Target element ID.
          */
-        async (projectFileServerPort) => {
-          const { default: scrollToHash } =
-            /** @type {typeof import("./scrollToHash.mjs")} */ (
-              await import(
-                `http://localhost:${projectFileServerPort}/scrollToHash.mjs`
-              )
-            );
+        async (projectFilesOriginHref, targetId) => {
+          /** @type {scrollToHashExports} */
+          const { default: scrollToHash } = await import(
+            new URL("scrollToHash.mjs", projectFilesOriginHref).href
+          );
 
           const targetElement = /** @type {HTMLDivElement} */ (
-            document.getElementById("target")
+            document.getElementById(targetId)
           );
 
           const {
@@ -82,54 +239,32 @@ suite("Function `scrollToHash`.", {
             Promise.withResolvers()
           );
 
-          const targetInViewTimeout = setTimeout(() => {
-            targetInViewReject(
-              new Error(
-                "Target element wasn’t within the viewport in time.",
-              ),
-            );
-          }, 4000);
-
           const intersectionObserver = new IntersectionObserver(
             (entries) => {
-              for (const { isIntersecting } of entries) {
-                if (isIntersecting) {
-                  clearTimeout(targetInViewTimeout);
-                  targetInViewResolve();
-                }
-              }
+              if (entries[0]?.intersectionRatio === 1) targetInViewResolve();
             },
             { threshold: 1 },
           );
-
-          intersectionObserver.observe(targetElement);
-
-          scrollToHash("#target");
-
-          await targetInView;
-
-          intersectionObserver.unobserve(targetElement);
-
-          scrollToHash();
-
-          const scrollingElement = /** @type {Element} */ (
-            document.scrollingElement
+          const targetInViewTimeout = setTimeout(
+            () =>
+              targetInViewReject(
+                new Error("Target element wasn’t within the viewport in time."),
+              ),
+            4000,
           );
 
-          if (scrollingElement.scrollLeft !== 0) {
-            throw new Error(
-              "Page scroll should be at the start horizontally.",
-            );
-          }
+          try {
+            intersectionObserver.observe(targetElement);
+            scrollToHash(`#${targetId}`);
 
-          if (scrollingElement.scrollTop !== 0) {
-            throw new Error(
-              "Page scroll should be at the start vertically.",
-            );
+            await targetInView;
+          } finally {
+            clearTimeout(targetInViewTimeout);
+            intersectionObserver.disconnect();
           }
         },
         {
-          args: [projectFileServer.addr.port],
+          args: [projectFilesOriginUrl.href, targetId],
         },
       );
     });

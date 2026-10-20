@@ -1,8 +1,11 @@
 // @ts-check
 
-/** @import { ReactTestRenderer } from "react-test-renderer" */
+/**
+ * @import { Browser, Page } from "@astral/astral"
+ * @import { ReactTestRenderer } from "react-test-renderer"
+ */
 
-import { suite, test } from "node:test";
+import { after, before, suite, test } from "node:test";
 import { launch } from "@astral/astral";
 import { assert } from "@std/assert/assert";
 import { assertStrictEquals } from "@std/assert/strict-equals";
@@ -10,17 +13,38 @@ import { createElement as h } from "react";
 import { act, create } from "react-test-renderer";
 
 import ReactHookTest from "./test/ReactHookTest.mjs";
-import browserPageUrl from "./test/browserPageUrl.mjs";
+import serveRuckFixtureForBrowser from "./test/serveRuckFixtureForBrowser.mjs";
 import serveProjectFiles from "./test/serveProjectFiles.mjs";
-import testBrowserPage from "./test/testBrowserPage.mjs";
 import NavigateContext from "./NavigateContext.mjs";
-import readImportMapFile from "./readImportMapFile.mjs";
-import serve from "./serve.mjs";
 import useOnClickRouteLink from "./useOnClickRouteLink.mjs";
 
 suite("React hook `useOnClickRouteLink`.", {
   concurrency: true,
 }, () => {
+  const resources = new AsyncDisposableStack();
+
+  // Todo: Avoid the before hook once Deno supports `suite` from `node:test`
+  // having an async callback:
+  // https://github.com/denoland/deno/issues/36876
+
+  /** @type {Browser} */
+  let browser;
+
+  /** @type {URL} */
+  let projectFilesOriginUrl;
+
+  before(async () => {
+    browser = resources.use(await launch());
+
+    const projectFileServer = resources.use(serveProjectFiles());
+
+    projectFilesOriginUrl = new URL(
+      `http://localhost:${projectFileServer.addr.port}`,
+    );
+  });
+
+  after(() => resources.disposeAsync());
+
   test("Memoization.", () => {
     /** @type {Array<unknown>} */
     const results = [];
@@ -40,7 +64,6 @@ suite("React hook `useOnClickRouteLink`.", {
         ),
       );
     });
-
     const tr = /** @type {ReactTestRenderer} */ (testRenderer);
 
     assertStrictEquals(results.length, 1);
@@ -55,7 +78,6 @@ suite("React hook `useOnClickRouteLink`.", {
         ),
       );
     });
-
     assertStrictEquals(results.length, 2);
     assertStrictEquals(results[0], results[1]);
 
@@ -77,138 +99,177 @@ suite("React hook `useOnClickRouteLink`.", {
     assert(results[2] !== results[1]);
   });
 
-  // Todo: Un-skip these tests after this Astral issue is resolved:
-  // https://github.com/lino-levan/astral/issues/124#issuecomment-2603389874
-  test("In a DOM environment.", { skip: true }, async () => {
-    await using projectFileServer = serveProjectFiles();
-
-    const projectFilesOriginUrl = new URL(
-      `http://localhost:${projectFileServer.addr.port}`,
-    );
-    const clientImportMap = await readImportMapFile(
-      new URL("importMap.json", import.meta.url),
-    );
-
-    if (!clientImportMap.imports) {
-      throw new TypeError("Import map field `imports` missing.");
-    }
-
-    clientImportMap.imports["ruck/"] = projectFilesOriginUrl.href;
-
-    await using ruckServer = await serve({
-      clientImportMap,
-      publicDir: new URL(
-        "test/fixtures/useOnClickRouteLink/ruck-project/public/",
-        import.meta.url,
-      ),
-    });
-
-    await using browser = await launch();
-    const browserUserAgent = await browser.userAgent();
-
-    await testBrowserPage(
+  test("Default action already prevented.", () =>
+    serveRuckFixtureForBrowser(
       browser,
       projectFilesOriginUrl,
-      async (page) => {
-        const urlPageA = `http://localhost:${ruckServer.addr.port}/`;
-        const urlPageB = `http://localhost:${ruckServer.addr.port}/b`;
+      "useOnClickRouteLink/default-action-already-prevented",
+      async (page, appOriginUrl) => {
+        await page.goto(appOriginUrl.href);
 
-        await page.goto(urlPageA);
-
-        // Check the Ruck app is ready at page A.
-        assert(await page.$("#page-a"));
-
-        // Test holding the alt key when clicking the link prevents a client
-        // side navigation…
-
-        await page.keyboard.down("Alt");
-        await page.locator('a[href="/b"]').click();
-        await page.keyboard.up("Alt");
-
-        assertStrictEquals(await browserPageUrl(page), urlPageA);
-
-        // Test holding the control key when clicking the link prevents a
-        // client side navigation…
-
-        await page.keyboard.down("Control");
-        await page.locator('a[href="/b"]').click();
-        await page.keyboard.up("Control");
-
-        assertStrictEquals(await browserPageUrl(page), urlPageA);
-
-        // Test holding a meta key when clicking the link prevents a client
-        // side navigation…
-
-        await page.keyboard.down("Meta");
-        await page.locator('a[href="/b"]').click();
-        await page.keyboard.up("Meta");
-
-        if (browserUserAgent.includes("Macintosh")) {
-          // macOS Chrome opens a link clicked while the meta (command) key is
-          // pressed in a new tab, so the current page URL should not have
-          // changed.
-          assertStrictEquals(await browserPageUrl(page), urlPageA);
-        } else {
-          // Linux Chrome opens a link clicked while a meta (command) key is
-          // pressed in the current tab, so the current page URL should have
-          // changed.
-          assertStrictEquals(await browserPageUrl(page), urlPageB);
-
-          // Manually go to page A to prepare the next test.
-          await page.goto(urlPageA);
-        }
-
-        // Test holding the shift key when clicking the link prevents a client
-        // side navigation…
-
-        await page.keyboard.down("Shift");
-        await page.locator('a[href="/b"]').click();
-        await page.keyboard.up("Shift");
-
-        assertStrictEquals(await browserPageUrl(page), urlPageA);
-
-        // Test a main mouse button click on the link causes a client side
-        // navigation…
-
-        const [response1] = await Promise.all([
-          page.waitForNavigation(),
-          page.locator('a[href="/b"]').click(),
-        ]);
-
-        // Check it was a client side navigation and not a native page load.
-        assert(response1 === null);
-
-        assert(await page.$("#page-b"));
-
-        // Manually go to page A to prepare the next test.
-        await page.goto(urlPageA);
-
-        // Test pressing enter key on the focused link causes a client side
-        // navigation…
-
-        await /** @type {typeof page.locator<HTMLAnchorElement>} */ (
-          page.locator
-        )('a[href="/b"]').evaluate((element) => {
-          element.focus();
+        await page.evaluate(() => {
+          addEventListener(
+            "ruckroutechangestart",
+            () => {
+              document.documentElement.dataset.testRouteChangeStarted = "true";
+            },
+            { once: true },
+          );
         });
 
-        const [response2] = await Promise.all([
-          page.waitForNavigation(),
-          page.keyboard.press("Enter"),
-        ]);
+        await page.locator("a[href]").click();
 
-        // Check it was a client side navigation and not a native page load.
-        assert(response2 === null);
-
-        assert(await page.$("#page-b"));
-
-        // Test `event.preventDefault()` before the event handler runs
-        // prevents a navigation…
-
-        await page.locator('a[href="/a"]').click();
-
-        assertStrictEquals(await browserPageUrl(page), urlPageB);
+        assertStrictEquals(
+          await page.evaluate(() =>
+            document.documentElement.dataset.testRouteChangeStarted
+          ),
+          undefined,
+        );
       },
-    );
+    ));
+
+  suite("Clicks that shouldn’t navigate.", {
+    concurrency: true,
+  }, () => {
+    for (
+      const [testName, execute]
+        of /** @satisfies {Array<[testName: string, execute: (page: Page) => Promise<void>]>} */
+        ([
+          [
+            "Alt click.",
+            async (page) => {
+              await page.keyboard.down("Alt");
+              await page.locator("a[href]").click();
+            },
+          ],
+          [
+            "Control click.",
+            async (page) => {
+              await page.keyboard.down("Control");
+              await page.locator("a[href]").click();
+            },
+          ],
+          [
+            "Meta click.",
+            async (page) => {
+              await page.keyboard.down("Meta");
+              await page.locator("a[href]").click();
+            },
+          ],
+          [
+            "Shift click.",
+            async (page) => {
+              await page.keyboard.down("Shift");
+              await page.locator("a[href]").click();
+            },
+          ],
+        ])
+    ) {
+      test(testName, () =>
+        serveRuckFixtureForBrowser(
+          browser,
+          projectFilesOriginUrl,
+          "useOnClickRouteLink/route-link",
+          async (page, appOriginUrl) => {
+            await page.goto(appOriginUrl.href);
+
+            await page.evaluate(() => {
+              addEventListener(
+                "ruckroutechangestart",
+                () => {
+                  document.documentElement.dataset.testRouteChangeStarted =
+                    "true";
+                },
+                { once: true },
+              );
+            });
+
+            await execute(page);
+
+            assertStrictEquals(
+              await page.evaluate(() =>
+                document.documentElement.dataset.testRouteChangeStarted
+              ),
+              undefined,
+            );
+          },
+        ));
+    }
+  });
+
+  suite("Clicks that should navigate.", {
+    concurrency: true,
+  }, () => {
+    for (
+      const [testName, execute]
+        of /** @satisfies {Array<[testName: string, execute: (page: Page) => Promise<void>]>} */
+        ([
+          [
+            "Main mouse button click.",
+            (page) => page.locator("a[href]").click(),
+          ],
+          [
+            "Enter key.",
+            async (page) => {
+              await page.locator("a[href]").focus();
+              await page.keyboard.press("Enter");
+            },
+          ],
+        ])
+    ) {
+      test(testName, () =>
+        serveRuckFixtureForBrowser(
+          browser,
+          projectFilesOriginUrl,
+          "useOnClickRouteLink/route-link",
+          async (page, appOriginUrl) => {
+            await page.goto(appOriginUrl.href);
+
+            await page.evaluate(() => {
+              addEventListener(
+                "ruckroutechangestart",
+                /** @type {EventListener} */ (
+                  (
+                    /**
+                     * @type {CustomEvent<{
+                     *   url: URL,
+                     *   abortController: AbortController,
+                     * }>}
+                     */
+                    event,
+                  ) => {
+                    document.documentElement.dataset.testRouteChangeUrl =
+                      event.detail.url.pathname;
+                  }
+                ),
+                { once: true },
+              );
+              addEventListener(
+                "click",
+                (event) => {
+                  document.documentElement.dataset.testClickDefaultPrevented =
+                    String(event.defaultPrevented);
+                },
+                { once: true },
+              );
+            });
+
+            await execute(page);
+
+            assertStrictEquals(
+              await page.evaluate(() =>
+                document.documentElement.dataset.testRouteChangeUrl
+              ),
+              "/b",
+            );
+            assertStrictEquals(
+              await page.evaluate(() =>
+                document.documentElement.dataset.testClickDefaultPrevented
+              ),
+              "true",
+            );
+          },
+        ));
+    }
   });
 });

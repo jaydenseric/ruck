@@ -1,152 +1,133 @@
 // @ts-check
 
 /**
+ * @import { Browser } from "@astral/astral"
  * @import * as documentHasStyleSheetExports from "./documentHasStyleSheet.mjs"
  */
 
-import { suite, test } from "node:test";
+import { after, before, suite, test } from "node:test";
 import { launch } from "@astral/astral";
+import { assertStrictEquals } from "@std/assert/strict-equals";
+import { assertThrows } from "@std/assert/throws";
 
 import serveProjectFiles from "./test/serveProjectFiles.mjs";
 import testBrowserPage from "./test/testBrowserPage.mjs";
+import documentHasStyleSheet from "./documentHasStyleSheet.mjs";
 
 suite("Function `documentHasStyleSheet`.", {
   concurrency: true,
 }, () => {
-  test("In a DOM environment.", async () => {
-    await using projectFileServer = serveProjectFiles();
+  const resources = new AsyncDisposableStack();
 
-    const projectFilesOriginUrl = new URL(
+  // Todo: Avoid the before hook once Deno supports `suite` from `node:test`
+  // having an async callback:
+  // https://github.com/denoland/deno/issues/36876
+
+  /** @type {Browser} */
+  let browser;
+
+  /** @type {URL} */
+  let projectFilesOriginUrl;
+
+  before(async () => {
+    browser = resources.use(await launch());
+
+    const projectFileServer = resources.use(serveProjectFiles());
+
+    projectFilesOriginUrl = new URL(
       `http://localhost:${projectFileServer.addr.port}`,
     );
-    await using browser = await launch();
-
-    await testBrowserPage(browser, projectFilesOriginUrl, async (page) => {
-      // Test with a document without a base URI…
-
-      await page.goto(
-        `http://localhost:${projectFileServer.addr.port}/test/fixtures/documentHasStyleSheet/without-base.html`,
-      );
-
-      await page.evaluate(
-        /**
-         * @param {number} projectFileServerPort Project file server port.
-         */
-        async (projectFileServerPort) => {
-          /** @type {documentHasStyleSheetExports} */
-          const { default: documentHasStyleSheet } = await import(
-            `http://localhost:${projectFileServerPort}/documentHasStyleSheet.mjs`
-          );
-
-          try {
-            documentHasStyleSheet(
-              // @ts-expect-error Testing invalid.
-              true,
-            );
-
-            throw new Error("Expected an error.");
-          } catch (error) {
-            if (
-              !(error instanceof TypeError) ||
-              error.message !== "Argument 1 `href` must be a string."
-            ) {
-              throw error;
-            }
-          }
-
-          // Test with a not loaded style sheet.
-          for (
-            const href of [
-              // Absolute.
-              `http://localhost:${projectFileServerPort}/test/fixtures/documentHasStyleSheet/css/missing.css`,
-              // Origin relative.
-              "/test/fixtures/documentHasStyleSheet/css/missing.css",
-              // Base relative.
-              "css/missing.css",
-            ]
-          ) {
-            if (documentHasStyleSheet(href) !== false) {
-              throw new Error("Incorrect return value.");
-            }
-          }
-
-          // Test with loaded style sheets.
-          for (const name of ["empty", "parsable", "unparsable"]) {
-            for (
-              const href of [
-                // Absolute.
-                `http://localhost:${projectFileServerPort}/test/fixtures/documentHasStyleSheet/css/${name}.css`,
-                // Origin relative.
-                `/test/fixtures/documentHasStyleSheet/css/${name}.css`,
-                // Base relative.
-                `css/${name}.css`,
-              ]
-            ) {
-              if (documentHasStyleSheet(href) !== true) {
-                throw new Error("Incorrect return value.");
-              }
-            }
-          }
-        },
-        {
-          args: [projectFileServer.addr.port],
-        },
-      );
-
-      // Test with a document with a base URI…
-
-      await page.goto(
-        `http://localhost:${projectFileServer.addr.port}/test/fixtures/documentHasStyleSheet/with-base.html`,
-      );
-
-      await page.evaluate(
-        /**
-         * @param {number} projectFileServerPort Project file server port.
-         */
-        async (projectFileServerPort) => {
-          /** @type {documentHasStyleSheetExports} */
-          const { default: documentHasStyleSheet } = await import(
-            `http://localhost:${projectFileServerPort}/documentHasStyleSheet.mjs`
-          );
-
-          // Test with a not loaded style sheet.
-          for (
-            const href of [
-              // Absolute.
-              `http://localhost:${projectFileServerPort}/test/fixtures/documentHasStyleSheet/css/missing.css`,
-              // Origin relative.
-              "/test/fixtures/documentHasStyleSheet/css/missing.css",
-              // Base relative.
-              "missing.css",
-            ]
-          ) {
-            if (documentHasStyleSheet(href) !== false) {
-              throw new Error("Incorrect return value.");
-            }
-          }
-
-          // Test with loaded style sheets.
-          for (const name of ["empty", "parsable", "unparsable"]) {
-            for (
-              const href of [
-                // Absolute.
-                `http://localhost:${projectFileServerPort}/test/fixtures/documentHasStyleSheet/css/${name}.css`,
-                // Origin relative.
-                `/test/fixtures/documentHasStyleSheet/css/${name}.css`,
-                // Base relative.
-                `${name}.css`,
-              ]
-            ) {
-              if (documentHasStyleSheet(href) !== true) {
-                throw new Error("Incorrect return value.");
-              }
-            }
-          }
-        },
-        {
-          args: [projectFileServer.addr.port],
-        },
-      );
-    });
   });
+
+  after(() => resources.disposeAsync());
+
+  test("Argument 1 `href` not a string.", () => {
+    assertThrows(
+      () => {
+        documentHasStyleSheet(
+          // @ts-expect-error Testing invalid.
+          true,
+        );
+      },
+      TypeError,
+      "Argument 1 `href` must be a string.",
+    );
+  });
+
+  for (
+    const [testName, fixtureHtmlFilename, styleSheetHref, expectedResult]
+      of /** @satisfies {Array<[testName: string, fixtureHtmlFilename: string, styleSheetHref: string, expectedResult: boolean]>} */
+      ([
+        [
+          "Style sheet missing.",
+          "without-base.html",
+          "css/missing.css",
+          false,
+        ],
+        [
+          "Style sheet empty.",
+          "without-base.html",
+          "css/empty.css",
+          true,
+        ],
+        [
+          "Style sheet parsable.",
+          "without-base.html",
+          "css/parsable.css",
+          true,
+        ],
+        [
+          "Style sheet unparsable.",
+          "without-base.html",
+          "css/unparsable.css",
+          true,
+        ],
+        [
+          "With a base URI.",
+          "with-base.html",
+          "parsable.css",
+          true,
+        ],
+      ])
+  ) {
+    test(
+      testName,
+      () =>
+        testBrowserPage(browser, projectFilesOriginUrl, async (page) => {
+          await page.goto(
+            new URL(
+              `test/fixtures/documentHasStyleSheet/${fixtureHtmlFilename}`,
+              projectFilesOriginUrl,
+            ).href,
+          );
+
+          const result = await page.evaluate(
+            /**
+             * @param {string} projectFilesOriginHref Project files origin URL
+             *   `href`.
+             * @param {string} styleSheetHref Style sheet `href`.
+             */
+            async (projectFilesOriginHref, styleSheetHref) => {
+              /** @type {documentHasStyleSheetExports} */
+              const { default: documentHasStyleSheet } = await import(
+                new URL(
+                  "documentHasStyleSheet.mjs",
+                  projectFilesOriginHref,
+                ).href
+              );
+
+              return documentHasStyleSheet(styleSheetHref);
+            },
+            {
+              args: [
+                projectFilesOriginUrl.href,
+                styleSheetHref,
+              ],
+            },
+          );
+
+          assertStrictEquals(result, expectedResult);
+        }),
+    );
+  }
 });
