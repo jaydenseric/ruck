@@ -26,6 +26,8 @@
   - Updated actions/checkout to v7.
 - Update the VS Code config to disable the conflicting experimental extension
   for TypeScript Go.
+- Updated the test helper function `testBrowserPage` to produce higher quality
+  and better formatted code coverage data.
 - Replaced the test helper class `Defer` with the native
   `Promise.withResolvers()`.
 - Structured tests better with `suite` and `test` imported from `node:test`.

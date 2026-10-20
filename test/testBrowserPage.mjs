@@ -49,12 +49,16 @@ export default async function testBrowserPage(
   const celestial = page.unsafelyGetCelestialBindings();
 
   await celestial.Profiler.enable();
-  await celestial.Profiler.startPreciseCoverage({});
+  await celestial.Profiler.startPreciseCoverage({
+    callCount: true,
+    detailed: true,
+  });
 
   try {
     await callback(page);
   } finally {
     const { result } = await celestial.Profiler.takePreciseCoverage();
+    await celestial.Profiler.stopPreciseCoverage();
 
     await ensureDir(fromFileUrl(coverageDirUrl));
 
@@ -66,11 +70,15 @@ export default async function testBrowserPage(
         writes.push(
           Deno.writeTextFile(
             new URL(`${crypto.randomUUID()}.json`, coverageDirUrl),
-            JSON.stringify({
-              ...scriptCoverage,
-              url: projectDirUrl.href +
-                scriptCoverage.url.slice(projectFilesOriginUrl.href.length),
-            }),
+            JSON.stringify(
+              {
+                ...scriptCoverage,
+                url: projectDirUrl.href +
+                  scriptCoverage.url.slice(projectFilesOriginUrl.href.length),
+              },
+              null,
+              2,
+            ),
           ),
         );
       }
