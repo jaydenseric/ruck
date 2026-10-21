@@ -8,6 +8,8 @@
 
 ### Patch
 
+- Fixed function `routePlanForContentWithCss` ineffectively validating resolved
+  route content, fixing [#8](https://github.com/jaydenseric/ruck/issues/8).
 - Updated dev dependencies.
 - Enabled project TypeScript config `compilerOptions.noUncheckedIndexedAccess`
   and fixed related issues.

@@ -53,7 +53,7 @@ export default function routePlanForContentWithCss(
   return {
     content: Promise.resolve(routeContentWithCss).then(
       async (resolvedRouteContent) => {
-        if (typeof routeContentWithCss !== "object" || !routeContentWithCss) {
+        if (typeof resolvedRouteContent !== "object" || !resolvedRouteContent) {
           throw new TypeError(
             "Function `routePlanForContentWithCss` argument 1 `routeContentWithCss` must resolve an object.",
           );

@@ -1,6 +1,7 @@
 // @ts-check
 
 import { suite, test } from "node:test";
+import { assertRejects } from "@std/assert/rejects";
 import { assertThrows } from "@std/assert/throws";
 
 import HeadManager from "./HeadManager.mjs";
@@ -21,6 +22,19 @@ suite("Function `routePlanForContentWithCss`.", {
       },
       TypeError,
       "Argument 1 `routeContentWithCss` must be an object or promise.",
+    );
+  });
+
+  test("Argument 1 `routeContentWithCss` resolving not an object.", async () => {
+    await assertRejects(
+      () => /** @type {Promise<unknown>} */ (routePlanForContentWithCss(
+        // @ts-expect-error Testing invalid.
+        Promise.resolve(true),
+        new HeadManager(),
+        true,
+      ).content),
+      TypeError,
+      "Function `routePlanForContentWithCss` argument 1 `routeContentWithCss` must resolve an object.",
     );
   });
 
