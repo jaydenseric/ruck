@@ -4,7 +4,7 @@
 
 ### Major
 
-- Updated the required Deno version to v2.3+.
+- Updated the required Deno version to v2.9.8+.
 
 ### Patch
 
